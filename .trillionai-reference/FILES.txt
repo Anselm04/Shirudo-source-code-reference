@@ -11,7 +11,6 @@ a63b1a17cd2b432b0013380241de72409cf40243  .agents/skills/security-audit/SKILL.md
 b05be675ed85d19f6d8c9a8c04c209b01db7890a  .github/actions/kernel-obs/action.yml
 c21d8a6548c6b2943b2f4dbad13c799141512594  .github/actions/lvh/action.yml
 2903bf2bfd531e7676930be6c9739e49965a7d95  .github/codeql/codeql-config.yml
-c8317b708f9f85a9ae6bcbc26659a6e503fd1467  .github/dependabot.yml
 61ede143c3b2a36653a7236f0112f1cefcbeb3a1  .github/scripts/afl-deps.sh
 7d3d879a915186dcc2ce42d27161e067cf06e2c2  .github/scripts/build-commits.sh
 3438c0e9544bc7186432b260a7f9933059e7ecbc  .github/scripts/build-debian.sh

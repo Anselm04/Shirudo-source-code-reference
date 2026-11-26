@@ -1,4 +1,5 @@
 .claude/skills
+.github/dependabot.yml
 .github/workflows/build-commits.yml
 .github/workflows/build-kernel-packages.yml
 .github/workflows/build.yml
