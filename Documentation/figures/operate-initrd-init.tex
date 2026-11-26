@@ -1,0 +1,26 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The steps of init in the initrd: images and keyrings 0.12 s, loading
+% and attaching the guards 0.46 s, and binding the measurement register
+% 0.56 s (operate/plan/overhead.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (720,76);
+
+  \foreach \x/\w/\c/\t in {0/59.8/fig-s1/0.12 s, 61.8/223.9/fig-s2/0.46 s,
+      287.8/272.2/fig-s3/0.56 s} {
+    \fill[\c, bar] (\x,8) rectangle ++(\w,28);
+    \node[anchor=base west, text=fig-on, font=\bfseries] at (\x+8,26) {\t};
+  }
+
+  \foreach \x/\c/\t in {0/fig-s1/Images and keyrings, 165.4/fig-s2/Guards,
+      245/fig-s3/Measurement register} {
+    \fill[\c, rounded corners=1.5bp] (\x,57) rectangle ++(10,10);
+    \node[anchor=base west, note] at (\x+16,66) {\t};
+  }
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,119 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% Which registry object names which by digest, from the tag a target
+% resolves to the .upatch the kernel verifies, for a package installed
+% from an index, a direct install by tag and a upatch tree
+% (concepts/background/oci.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    obj/.style={box, rounded corners=3bp},
+    signed/.style={draw=fig-accent, fill=fig-accent, fill opacity=0.08,
+      text opacity=1, rounded corners=3bp},
+    bytag/.style={flow, dash pattern=on 3.75bp off 3bp}]
+  \useasboundingbox (0,0) rectangle (840,580);
+
+  % Package from a repository, x 10..290; upatch tree, x 440..690.
+  \draw[obj] (10,92) rectangle (290,122);
+  \draw[signed] (10,150) rectangle (290,272);
+  \draw[obj] (10,300) rectangle (290,330);
+  \draw[obj] (10,372) rectangle (220,418);
+  \draw[obj] (236,372) rectangle (290,402);
+  \draw[signed] (10,446) rectangle (220,476);
+
+  \draw[obj] (440,92) rectangle (690,122);
+  \draw[signed] (440,150) rectangle (690,272);
+  \draw[obj] (712,150) rectangle (832,234);
+  \draw[obj] (440,300) rectangle (690,330);
+  \draw[signed] (440,372) rectangle (690,418);
+
+  \draw[obj] (10,500) rectangle (690,534);
+
+  \draw[bytag] (150,66) -- (150,90);
+  \draw[bytag] (565,66) -- (565,90);
+  \draw[flow] (150,122) -- (150,148);
+  \draw[flow] (565,122) -- (565,148);
+  \draw[flow] (150,272) -- (150,298);
+  \draw[flow] (565,272) -- (565,298);
+  \draw[flow] (690,192) -- (710,192);
+  \draw[bytag] (330,315) -- (292,315);
+  \draw[flow] (100,330) -- (100,370);
+  \draw[flow] (263,330) -- (263,370);
+  \draw[link] (100,418) -- (100,446);
+  \draw[flow] (565,330) -- (565,370);
+  \draw[flow] (100,476) -- (100,498);
+  \draw[flow] (565,418) -- (565,498);
+
+  \node[anchor=base, title] at (150,22) {Package from a repository};
+  \node[anchor=base, title] at (565,22) {upatch tree};
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node[code] at (150,58) {<namespace>/bpm-index:stable};
+    \node[code] at (565,58) {<repository>:stable};
+
+    \node at (150,112) {index manifest};
+    \node at (565,112) {publication manifest};
+
+    \node at (150,170) {index and its signature};
+    \node[small, note] at (150,190) {each entry names one package version's};
+    \node[mono] at (150,206) {manifest\_digest, package\_digest,};
+    \node[mono] at (150,222) {package\_size};
+    \node[small, color=fig-accent] at (150,244)
+      {verified against the repository};
+    \node[small, color=fig-accent] at (150,260)
+      {certificate in the signed config};
+
+    \node at (565,170) {publication and its signature};
+    \node[small, note] at (565,190) {each operation names its artifact's};
+    \node[mono] at (565,206) {manifest\_digest, layer\_digest,};
+    \node[mono] at (565,222) {payload\_sha256};
+    \node[small, color=fig-accent] at (565,244)
+      {verified against the active};
+    \node[small, color=fig-accent] at (565,260) {config's trusted set};
+
+    \node[small] at (772,172) {earlier};
+    \node[small] at (772,188) {publications:};
+    \node[small, note] at (772,208) {the parent and};
+    \node[small, note] at (772,224) {sealed segments};
+
+    \node at (150,320) {package manifest};
+    \node at (565,320) {artifact manifest};
+    \node[mono] at (375,300) {oci://...:<tag>};
+    \node[small, note] at (375,334) {direct install};
+
+    \node at (115,392) {.bee layer};
+    \node[small, note] at (115,410) {and the index's package\_digest};
+    \node[small] at (263,392) {config};
+    \node at (565,392) {.upatch layer};
+    \node[small, note] at (565,410)
+      {its header must carry payload\_sha256};
+    \node at (115,466) {.upatch files};
+
+    \node at (350,522) {The kernel verifies each loader's signature at
+      BPF\_PROG\_LOAD, against the .bpf keyring};
+  \end{scope}
+
+  \begin{scope}[small, note, every node/.append style={anchor=base west}]
+    \node at (156,286) {manifest\_digest};
+    \node at (571,286) {manifest\_digest};
+    \node at (571,140) {layer digests};
+    \node at (156,140) {layer digests};
+    \node at (106,354) {layer digest};
+    \node at (106,436) {holds};
+    \node at (571,354) {layer digest};
+  \end{scope}
+
+  % Legend.
+  \draw[flow] (10,566) -- (44,566);
+  \draw[bytag] (196,566) -- (230,566);
+  \draw[signed] (510,557) rectangle ++(24,14);
+  \begin{scope}[small, note, every node/.append style={anchor=base west}]
+    \node at (52,570) {names by digest};
+    \node at (238,570) {a tag: the registry picks the manifest};
+    \node at (542,570) {signed};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

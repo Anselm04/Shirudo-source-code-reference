@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// Copyright (c) 2026 Authors of shirudo
+//
+// What the BPF sources' macros mean, for Coccinelle to parse them.
+
+#define SEC(name)
+#define __ksym
+#define __kptr
+#define __arena
+#define __always_inline
+#define __noinline
+#define __weak
+#define __hidden
+#define __uint(name, val) int name
+#define __type(name, val) val *name
+#define __array(name, val) val *name
+#define BPF_PROG(name, args...) name(args)
+#define BPF_KPROBE(name, args...) name(args)
+#define BPF_KRETPROBE(name, args...) name(args)
+#define OBS_FN(name) name
+#define OBS_CAT(a, b) a##b
+#define BUILD_BUG_ON(cond) extern int build_bug_on
+#define BUILD_BUG_ON_MSG(cond, msg) extern int build_bug_on

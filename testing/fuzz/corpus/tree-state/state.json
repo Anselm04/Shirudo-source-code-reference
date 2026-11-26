@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "tree_id": "prod",
+  "generation": 3,
+  "last_seq": 5,
+  "projection_root": "5c7761b120a9cf59e79e5a078227b450b7a39294db74bb3ba28e28c6ae196d27",
+  "projection_root_tpm": "5c7761b120a9cf59e79e5a078227b450b7a39294db74bb3ba28e28c6ae196d27",
+  "manifest_digest": "sha256:05b3abf2579a5eb66403cd78be557fd860633a1fe2103c7642030defe32c657f",
+  "head_seq": 5,
+  "segment_base_seq": 0
+}

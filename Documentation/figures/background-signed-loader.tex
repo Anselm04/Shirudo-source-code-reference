@@ -1,0 +1,83 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% What one signature covers, the loader's instructions followed by its
+% data with the signed sections, and how the target hands both to the
+% kernel's check: a frozen, exclusive metadata map and BPF_PROG_LOAD
+% with fd_array (concepts/background/bpf-signing.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    strip/.style={box, rounded corners=0bp},
+    sect/.style={draw=fig-accent, fill=fig-accent, fill opacity=0.08,
+      text opacity=1}]
+  \useasboundingbox (0,0) rectangle (840,330);
+
+  % The signed bytes.
+  \draw[draw=fig-accent]
+    (10,34) -- (10,26) -- (830,26) -- (830,34);
+  \draw[strip] (10,42) rectangle (150,86);
+  \draw[strip] (150,42) rectangle (206,86);
+  \draw[strip] (206,42) rectangle (330,86);
+  \draw[strip] (330,42) rectangle (480,86);
+  \foreach \x in {480,536,592,648,704}
+    \draw[sect] (\x,42) rectangle ++(56,44);
+  \draw[sect] (760,42) rectangle (830,86);
+  \draw[link, thin] (150,96) -- (150,102) -- (478,102) -- (478,96);
+  \draw[link, thin] (482,96) -- (482,102) -- (830,102) -- (830,96);
+  \draw[link, thin, dash pattern=on 2.25bp off 3bp] (10,138) -- (830,138);
+
+  % The target's calls.
+  \draw[box] (10,160) rectangle (270,256);
+  \draw[box] (300,160) rectangle (560,256);
+  \draw[box] (590,160) rectangle (830,256);
+  \draw[flow] (80,86) -- (80,158);
+  \draw[flow] (430,86) -- (430,158);
+  \draw[flow] (300,208) -- (272,208);
+  \draw[flow] (140,256) -- (140,282) -- (710,282) -- (710,258);
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node[small, color=fig-accent] at (420,18) {one ML-DSA-87 CMS
+      signature over loader\_insns || data};
+
+    \node[mono] at (80,62) {loader\_insns};
+    \node[small, note] at (80,78) {its instructions};
+    \node[small] at (178,62) {BTF};
+    \node[small] at (268,62) {maps and};
+    \node[small] at (268,78) {initial values};
+    \node[small] at (405,62) {payload programs,};
+    \node[small] at (405,78) {CO-RE records};
+    \foreach \x/\t in {508/NAME, 564/UPGM, 620/DCDB, 676/SHPL, 732/UNLD}
+      \node[mono] at (\x,68) {\t};
+    \node[small] at (795,62) {directory,};
+    \node[small] at (795,78) {trailer};
+    \node[small, note] at (262,116) {loader data, which gen\_loader emits};
+    \node[small, note, anchor=base west] at (437,132) {all of data};
+    \node[small, note] at (656,116) {signed sections shirudo appends};
+
+    \node[small, note, anchor=base east] at (830,132) {operator host};
+    \node[small, note, anchor=base east] at (830,154) {target};
+
+    \node[code] at (140,182) {BPF\_PROG\_LOAD};
+    \node[small] at (140,202) {loader\_insns, the signature};
+    \node[small] at (140,220) {keyring\_id: .bpf};
+    \node[small] at (140,238) {fd\_array: the map, cnt 1};
+
+    \node[code] at (430,182) {\_\_loader.map};
+    \node[small] at (430,202) {one-entry array, value: data};
+    \node[small] at (430,220) {exclusive to SHA-256(loader\_insns)};
+    \node[small] at (430,238) {frozen before the load};
+
+    \node[mono] at (710,182) {bpf\_prog\_verify\_signature()};
+    \node[small] at (710,202) {loader\_insns || frozen value};
+    \node[small] at (710,220) {against .bpf, verdict in prog->aux};
+    \node[small] at (710,238) {lsm/bpf\_prog\_load then reads it};
+  \end{scope}
+
+  \node[small, note, anchor=base west] at (10,310) {A load artifact
+    carries NAME, UPGM and optionally DCDB and SHPL; an unload directive
+    NAME and UNLD.};
+\end{tikzpicture}
+\end{document}

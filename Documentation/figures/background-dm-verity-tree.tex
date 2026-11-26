@@ -1,0 +1,57 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% A dm-verity hash tree over eight data blocks, each hash covering the
+% two blocks below it, with the path from D5 through H2 and H23 to the
+% root hash drawn heavier (concepts/background/dm-verity.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (760,290);
+
+  \foreach \x/\px in {52/90, 128/90, 204/242, 280/242, 356/394, 508/546,
+      584/546}
+    \draw[link] (\x,232) -- (\px,192);
+  \foreach \x/\px in {90/166, 242/166, 546/470}
+    \draw[link] (\x,160) -- (\px,120);
+  \draw[link] (166,88) -- (318,48);
+
+  \begin{scope}[link, line width=2.25bp]
+    \draw (432,232) -- (394,192);
+    \draw (394,160) -- (470,120);
+    \draw (470,88) -- (318,48);
+  \end{scope}
+
+  \begin{scope}[box, fill opacity=0.06, rounded corners=3bp]
+    \filldraw (134,88) rectangle ++(64,32);
+    \foreach \x in {58, 210, 514}
+      \filldraw (\x,160) rectangle ++(64,32);
+    \foreach \x in {26, 102, 178, 254, 330, 482, 558}
+      \filldraw (\x,232) rectangle ++(52,32);
+  \end{scope}
+
+  \begin{scope}[box, fill opacity=0.3, rounded corners=3bp,
+      line width=1.875bp]
+    \filldraw (258,16) rectangle ++(120,32);
+    \filldraw (438,88) rectangle ++(64,32);
+    \filldraw (362,160) rectangle ++(64,32);
+    \filldraw (406,232) rectangle ++(52,32);
+  \end{scope}
+
+  \begin{scope}[note, large]
+    \node[anchor=base] at (318,37) {root hash};
+    \node[anchor=base] at (166,109) {H01};
+    \node[anchor=base] at (470,109) {H23};
+    \foreach \x/\t in {90/H0, 242/H1, 394/H2, 546/H3}
+      \node[anchor=base] at (\x,181) {\t};
+    \foreach \i in {0,...,7}
+      \node[anchor=base] at (52+76*\i,253) {D\i};
+  \end{scope}
+
+  \foreach \y/\t in {37/trusted value, 109/hash blocks, 181/hash blocks,
+      253/data blocks}
+    \node[anchor=base west, note] at (636,\y) {\t};
+\end{tikzpicture}
+\end{document}

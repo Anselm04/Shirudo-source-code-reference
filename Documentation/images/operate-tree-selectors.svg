@@ -1,0 +1,655 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='760.0' height='330.0' viewBox='-72 -72 569.996 247.498' class='fig fig-f-ink' role='img'><!-- Documentation/figures/operate-tree-selectors.tex, sha256 80bad22a70a31fa5e60e746058e02d51978d2dcf628445f0628f9f94c9904a80 --><style>.fig-f-ink{fill:var(--fig-ink,#171b22)}.fig-s-ink{stroke:var(--fig-ink,#171b22)}.fig-f-muted{fill:var(--fig-muted,#5d6675)}.fig-s-muted{stroke:var(--fig-muted,#5d6675)}.fig-f-line{fill:var(--fig-line,#8a93a0)}.fig-s-line{stroke:var(--fig-line,#8a93a0)}.fig-f-grid{fill:var(--fig-grid,#e2e6eb)}.fig-s-grid{stroke:var(--fig-grid,#e2e6eb)}.fig-f-axis{fill:var(--fig-axis,#c3c9d1)}.fig-s-axis{stroke:var(--fig-axis,#c3c9d1)}.fig-f-accent{fill:var(--fig-accent,#8b1e3f)}.fig-s-accent{stroke:var(--fig-accent,#8b1e3f)}.fig-f-s1{fill:var(--fig-s1,#2a78d6)}.fig-s-s1{stroke:var(--fig-s1,#2a78d6)}.fig-f-s2{fill:var(--fig-s2,#eb6834)}.fig-s-s2{stroke:var(--fig-s2,#eb6834)}.fig-f-s3{fill:var(--fig-s3,#1baf7a)}.fig-s-s3{stroke:var(--fig-s3,#1baf7a)}.fig-f-s4{fill:var(--fig-s4,#eda100)}.fig-s-s4{stroke:var(--fig-s4,#eda100)}.fig-f-free{fill:var(--fig-free,#dde2e8)}.fig-s-free{stroke:var(--fig-free,#dde2e8)}.fig-f-on{fill:var(--fig-on,#ffffff)}.fig-s-on{stroke:var(--fig-on,#ffffff)}@media (prefers-color-scheme:dark){.fig-f-ink{fill:var(--fig-ink,#e4e8ee)}.fig-s-ink{stroke:var(--fig-ink,#e4e8ee)}.fig-f-muted{fill:var(--fig-muted,#9ba5b3)}.fig-s-muted{stroke:var(--fig-muted,#9ba5b3)}.fig-f-line{fill:var(--fig-line,#8a93a0)}.fig-s-line{stroke:var(--fig-line,#8a93a0)}.fig-f-grid{fill:var(--fig-grid,#262d37)}.fig-s-grid{stroke:var(--fig-grid,#262d37)}.fig-f-axis{fill:var(--fig-axis,#39414c)}.fig-s-axis{stroke:var(--fig-axis,#39414c)}.fig-f-accent{fill:var(--fig-accent,#e8899f)}.fig-s-accent{stroke:var(--fig-accent,#e8899f)}.fig-f-s1{fill:var(--fig-s1,#3987e5)}.fig-s-s1{stroke:var(--fig-s1,#3987e5)}.fig-f-s2{fill:var(--fig-s2,#d95926)}.fig-s-s2{stroke:var(--fig-s2,#d95926)}.fig-f-s3{fill:var(--fig-s3,#199e70)}.fig-s-s3{stroke:var(--fig-s3,#199e70)}.fig-f-s4{fill:var(--fig-s4,#c98500)}.fig-s-s4{stroke:var(--fig-s4,#c98500)}.fig-f-free{fill:var(--fig-free,#2f3640)}.fig-s-free{stroke:var(--fig-free,#2f3640)}.fig-f-on{fill:var(--fig-on,#ffffff)}.fig-s-on{stroke:var(--fig-on,#ffffff)}}</style>
+<defs>
+<use id='operate-tree-selectors-g3-44' href='#operate-tree-selectors-g1-44' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-84' href='#operate-tree-selectors-g1-84' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-97' href='#operate-tree-selectors-g1-97' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-98' href='#operate-tree-selectors-g1-98' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-99' href='#operate-tree-selectors-g1-99' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-100' href='#operate-tree-selectors-g1-100' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-101' href='#operate-tree-selectors-g1-101' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-103' href='#operate-tree-selectors-g1-103' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-105' href='#operate-tree-selectors-g1-105' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-108' href='#operate-tree-selectors-g1-108' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-110' href='#operate-tree-selectors-g1-110' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-111' href='#operate-tree-selectors-g1-111' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-112' href='#operate-tree-selectors-g1-112' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-113' href='#operate-tree-selectors-g1-113' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-114' href='#operate-tree-selectors-g1-114' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-115' href='#operate-tree-selectors-g1-115' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-116' href='#operate-tree-selectors-g1-116' transform='scale(1.162)'/>
+<use id='operate-tree-selectors-g3-117' href='#operate-tree-selectors-g1-117' transform='scale(1.162)'/>
+<path id='operate-tree-selectors-g1-28' d='M1.041 0H1.779V-4.11H3.705V0H4.442V-4.755H1.779V-6.174H2.801V-6.819H2.083C1.382-6.819 1.041-6.368 1.041-5.714V-4.755H.267V-4.11H1.041V0ZM4.073-5.87C4.387-5.87 4.525-6.036 4.525-6.285V-6.405C4.525-6.654 4.387-6.819 4.073-6.819S3.622-6.654 3.622-6.405V-6.285C3.622-6.036 3.76-5.87 4.073-5.87Z'/>
+<path id='operate-tree-selectors-g1-39' d='M1.299-6.912C.912-6.912 .737-6.69 .737-6.368V-6.239C.737-5.99 .848-5.806 1.097-5.75C.995-5.317 .774-4.995 .405-4.608H1.023C1.548-5.059 1.862-5.741 1.862-6.239V-6.368C1.862-6.69 1.686-6.912 1.299-6.912Z'/>
+<path id='operate-tree-selectors-g1-44' d='M1.253-1.078C.866-1.078 .691-.857 .691-.534V-.405C.691-.157 .802 .028 1.051 .083C.949 .516 .728 .839 .359 1.226H.977C1.502 .774 1.815 .092 1.815-.405V-.534C1.815-.857 1.64-1.078 1.253-1.078Z'/>
+<path id='operate-tree-selectors-g1-45' d='M3.041-2.405V-3.198H.636V-2.405H3.041Z'/>
+<path id='operate-tree-selectors-g1-46' d='M1.253 .111C1.64 .111 1.815-.111 1.815-.424V-.544C1.815-.857 1.64-1.078 1.253-1.078S.691-.857 .691-.544V-.424C.691-.111 .866 .111 1.253 .111Z'/>
+<path id='operate-tree-selectors-g1-48' d='M2.765 .111C4.304 .111 4.976-1.115 4.976-3.216S4.304-6.543 2.765-6.543S.553-5.317 .553-3.216S1.226 .111 2.765 .111ZM2.765-.562C1.76-.562 1.364-1.447 1.364-2.691V-3.741C1.364-4.986 1.76-5.87 2.765-5.87S4.165-4.986 4.165-3.741V-2.691C4.165-1.447 3.769-.562 2.765-.562Z'/>
+<path id='operate-tree-selectors-g1-49' d='M5.041 0V-.682H3.382V-6.432H2.175L.47-4.838L.922-4.35L2.543-5.861H2.608V-.682H.811V0H5.041Z'/>
+<path id='operate-tree-selectors-g1-50' d='M4.912-.682H1.53L3.262-2.239C4.082-2.977 4.672-3.677 4.672-4.672C4.672-5.769 3.953-6.543 2.7-6.543C1.456-6.543 .885-5.787 .636-5.032L1.327-4.764C1.502-5.373 1.871-5.852 2.663-5.852S3.852-5.363 3.852-4.654V-4.543C3.852-3.926 3.391-3.281 2.792-2.728L.691-.793V0H4.912V-.682Z'/>
+<path id='operate-tree-selectors-g1-51' d='M1.705-3.705V-3.032H2.461C3.364-3.032 3.843-2.599 3.843-1.843V-1.769C3.843-1.014 3.364-.581 2.461-.581C1.677-.581 1.299-.922 .968-1.428L.387-.986C.783-.433 1.355 .111 2.47 .111C3.778 .111 4.654-.654 4.654-1.76C4.654-2.728 3.99-3.244 3.299-3.382V-3.419C3.981-3.594 4.534-4.092 4.534-4.921C4.534-5.962 3.668-6.543 2.58-6.543C1.548-6.543 .986-6.008 .664-5.492L1.235-5.05C1.502-5.538 1.898-5.852 2.562-5.852C3.244-5.852 3.714-5.511 3.714-4.838V-4.774C3.714-4.156 3.271-3.705 2.405-3.705H1.705Z'/>
+<path id='operate-tree-selectors-g1-52' d='M4.193 0V-1.263H5.124V-1.908H4.193V-6.432H3.041L.35-1.944V-1.263H3.456V0H4.193ZM3.41-5.833H3.456V-1.908H1.078L3.41-5.833Z'/>
+<path id='operate-tree-selectors-g1-53' d='M4.589-6.432H1.143L.912-2.894L1.567-2.801C1.834-3.096 2.129-3.345 2.719-3.345C3.594-3.345 4.064-2.857 4.064-2.009V-1.917C4.064-1.069 3.594-.581 2.719-.581C1.944-.581 1.622-.922 1.29-1.428L.71-.986C1.097-.433 1.65 .111 2.719 .111C4.073 .111 4.884-.765 4.884-2.018C4.884-3.262 4.073-4.009 2.967-4.009C2.295-4.009 1.954-3.732 1.65-3.299H1.585L1.769-5.75H4.589V-6.432Z'/>
+<path id='operate-tree-selectors-g1-54' d='M2.774 .111C4.064 .111 4.912-.756 4.912-2.018C4.912-3.235 4.119-4 3.013-4C2.23-4 1.769-3.603 1.465-3.078L1.419-3.096C1.769-4.589 2.534-5.428 3.907-6.432H2.912C1.88-5.76 .617-4.267 .617-2.359C.617-.829 1.438 .111 2.774 .111ZM2.765-.562C1.917-.562 1.419-1.051 1.419-1.917V-1.991C1.419-2.857 1.917-3.345 2.765-3.345S4.11-2.857 4.11-1.991V-1.917C4.11-1.051 3.612-.562 2.765-.562Z'/>
+<path id='operate-tree-selectors-g1-55' d='M2.442 0L4.857-5.75V-6.432H.636V-4.571H1.327V-5.769H4.073L1.613 0H2.442Z'/>
+<path id='operate-tree-selectors-g1-56' d='M2.765 .111C4.23 .111 4.995-.691 4.995-1.751C4.995-2.626 4.469-3.133 3.695-3.345V-3.419C4.368-3.649 4.801-4.193 4.801-4.93C4.801-5.907 4.046-6.543 2.765-6.543S.728-5.907 .728-4.93C.728-4.193 1.161-3.649 1.834-3.419V-3.345C1.06-3.133 .534-2.626 .534-1.751C.534-.691 1.299 .111 2.765 .111ZM2.765-.562C1.871-.562 1.355-.986 1.355-1.714V-1.908C1.355-2.636 1.871-3.06 2.765-3.06S4.175-2.636 4.175-1.908V-1.714C4.175-.986 3.659-.562 2.765-.562ZM2.765-3.705C1.963-3.705 1.53-4.064 1.53-4.718V-4.857C1.53-5.511 1.963-5.87 2.765-5.87S4-5.511 4-4.857V-4.718C4-4.064 3.566-3.705 2.765-3.705Z'/>
+<path id='operate-tree-selectors-g1-58' d='M1.345 .111C1.733 .111 1.908-.111 1.908-.424V-.544C1.908-.857 1.733-1.078 1.345-1.078S.783-.857 .783-.544V-.424C.783-.111 .958 .111 1.345 .111ZM1.345-3.677C1.733-3.677 1.908-3.898 1.908-4.211V-4.331C1.908-4.645 1.733-4.866 1.345-4.866S.783-4.645 .783-4.331V-4.211C.783-3.898 .958-3.677 1.345-3.677Z'/>
+<path id='operate-tree-selectors-g1-59' d='M1.345-1.078C.958-1.078 .783-.857 .783-.534V-.405C.783-.157 .894 .028 1.143 .083C1.041 .516 .82 .839 .452 1.226H1.069C1.594 .774 1.908 .092 1.908-.405V-.534C1.908-.857 1.733-1.078 1.345-1.078ZM1.345-3.677C1.733-3.677 1.908-3.898 1.908-4.211V-4.331C1.908-4.645 1.733-4.866 1.345-4.866S.783-4.645 .783-4.331V-4.211C.783-3.898 .958-3.677 1.345-3.677Z'/>
+<path id='operate-tree-selectors-g1-61' d='M4.912-3.428V-4.055H.617V-3.428H4.912ZM4.912-1.585V-2.212H.617V-1.585H4.912Z'/>
+<path id='operate-tree-selectors-g1-79' d='M3.262 .111C4.921 .111 5.99-1.06 5.99-3.216S4.921-6.543 3.262-6.543S.534-5.373 .534-3.216S1.603 .111 3.262 .111ZM3.262-.581C2.147-.581 1.364-1.41 1.364-2.682V-3.751C1.364-5.022 2.147-5.852 3.262-5.852S5.161-5.022 5.161-3.751V-2.682C5.161-1.41 4.377-.581 3.262-.581Z'/>
+<path id='operate-tree-selectors-g1-84' d='M5.068-5.75V-6.432H.203V-5.75H2.249V0H3.023V-5.75H5.068Z'/>
+<path id='operate-tree-selectors-g1-95' d='M4.93 1.521V.875H.276V1.521H4.93Z'/>
+<path id='operate-tree-selectors-g1-97' d='M4.654 0V-.645H4.11V-3.262C4.11-4.267 3.428-4.866 2.285-4.866C1.428-4.866 .857-4.442 .599-3.935L1.041-3.52C1.299-3.953 1.677-4.23 2.249-4.23C3.004-4.23 3.373-3.861 3.373-3.189V-2.719H2.433C1.051-2.719 .405-2.221 .405-1.327C.405-.442 .995 .111 2 .111C2.663 .111 3.17-.194 3.373-.774H3.419C3.474-.332 3.695 0 4.239 0H4.654ZM2.12-.516C1.548-.516 1.18-.783 1.18-1.253V-1.447C1.18-1.908 1.557-2.166 2.396-2.166H3.373V-1.382C3.373-.894 2.848-.516 2.12-.516Z'/>
+<path id='operate-tree-selectors-g1-98' d='M.783 0H1.521V-.774H1.557C1.843-.184 2.295 .111 2.949 .111C4.138 .111 4.884-.857 4.884-2.378S4.138-4.866 2.949-4.866C2.295-4.866 1.806-4.58 1.557-3.981H1.521V-6.819H.783V0ZM2.746-.553C2.073-.553 1.521-.903 1.521-1.521V-3.29C1.521-3.815 2.073-4.202 2.746-4.202C3.576-4.202 4.092-3.631 4.092-2.783V-1.972C4.092-1.124 3.576-.553 2.746-.553Z'/>
+<path id='operate-tree-selectors-g1-99' d='M2.553 .111C3.456 .111 4.073-.332 4.377-1.014L3.843-1.373C3.585-.829 3.152-.544 2.553-.544C1.677-.544 1.226-1.143 1.226-1.972V-2.783C1.226-3.612 1.677-4.211 2.553-4.211C3.133-4.211 3.539-3.926 3.714-3.437L4.331-3.751C4.055-4.405 3.493-4.866 2.553-4.866C1.216-4.866 .433-3.898 .433-2.378S1.216 .111 2.553 .111Z'/>
+<path id='operate-tree-selectors-g1-100' d='M3.824 0H4.562V-6.819H3.824V-3.981H3.788C3.539-4.58 3.05-4.866 2.396-4.866C1.207-4.866 .461-3.898 .461-2.378S1.207 .111 2.396 .111C3.05 .111 3.502-.184 3.788-.774H3.824V0ZM2.599-.553C1.769-.553 1.253-1.124 1.253-1.972V-2.783C1.253-3.631 1.769-4.202 2.599-4.202C3.271-4.202 3.824-3.815 3.824-3.29V-1.521C3.824-.903 3.271-.553 2.599-.553Z'/>
+<path id='operate-tree-selectors-g1-101' d='M2.571 .111C3.465 .111 4.147-.332 4.451-.977L3.926-1.355C3.677-.829 3.216-.534 2.617-.534C1.733-.534 1.207-1.152 1.207-1.972V-2.193H4.626V-2.543C4.626-3.889 3.843-4.866 2.571-4.866C1.281-4.866 .433-3.889 .433-2.378S1.281 .111 2.571 .111ZM2.571-4.248C3.327-4.248 3.834-3.686 3.834-2.848V-2.746H1.207V-2.811C1.207-3.64 1.769-4.248 2.571-4.248Z'/>
+<path id='operate-tree-selectors-g1-102' d='M1.041 0H1.779V-4.11H2.801V-4.755H1.779V-6.174H2.801V-6.819H2.083C1.382-6.819 1.041-6.368 1.041-5.714V-4.755H.267V-4.11H1.041V0Z'/>
+<path id='operate-tree-selectors-g1-103' d='M4.792 .525C4.792-.258 4.285-.737 3.106-.737H2.092C1.659-.737 1.364-.811 1.364-1.097C1.364-1.392 1.677-1.548 1.991-1.631C2.129-1.603 2.295-1.585 2.451-1.585C3.539-1.585 4.248-2.258 4.248-3.225C4.248-3.732 4.046-4.156 3.705-4.451V-4.755H4.608V-5.4H3.898C3.502-5.4 3.345-5.133 3.345-4.764V-4.681C3.087-4.801 2.783-4.866 2.442-4.866C1.364-4.866 .654-4.193 .654-3.225C.654-2.562 .986-2.037 1.548-1.769V-1.733C1.069-1.613 .728-1.382 .728-.903C.728-.581 .885-.369 1.152-.24V-.138C.682-.009 .396 .267 .396 .783C.396 1.53 1.004 1.954 2.488 1.954C4.018 1.954 4.792 1.502 4.792 .525ZM4.101 .581C4.101 1.097 3.622 1.355 2.801 1.355H2.12C1.373 1.355 1.087 1.014 1.087 .599C1.087 .304 1.226 .092 1.53-.046H3.115C3.852-.046 4.101 .203 4.101 .581ZM2.451-2.175C1.825-2.175 1.428-2.47 1.428-3.096V-3.354C1.428-3.981 1.825-4.276 2.451-4.276S3.474-3.981 3.474-3.354V-3.096C3.474-2.47 3.078-2.175 2.451-2.175Z'/>
+<path id='operate-tree-selectors-g1-104' d='M.783 0H1.521V-3.299C1.521-3.907 2.092-4.202 2.682-4.202C3.391-4.202 3.76-3.769 3.76-2.921V0H4.497V-3.05C4.497-4.202 3.88-4.866 2.903-4.866C2.193-4.866 1.788-4.516 1.557-3.981H1.521V-6.819H.783V0Z'/>
+<path id='operate-tree-selectors-g1-105' d='M1.152-5.87C1.465-5.87 1.603-6.036 1.603-6.285V-6.405C1.603-6.654 1.465-6.819 1.152-6.819S.7-6.654 .7-6.405V-6.285C.7-6.036 .839-5.87 1.152-5.87ZM.783 0H1.521V-4.755H.783V0Z'/>
+<path id='operate-tree-selectors-g1-107' d='M.783 0H1.521V-1.696L2.23-2.424L3.806 0H4.7L2.765-2.875L4.525-4.755H3.631L2.285-3.308L1.557-2.497H1.521V-6.819H.783V0Z'/>
+<path id='operate-tree-selectors-g1-108' d='M2.221 0V-.645H1.521V-6.819H.783V-.765C.783-.323 1.06 0 1.567 0H2.221Z'/>
+<path id='operate-tree-selectors-g1-109' d='M1.521 0V-3.299C1.521-3.907 2.073-4.202 2.654-4.202C3.354-4.202 3.677-3.769 3.677-2.921V0H4.414V-3.299C4.414-3.907 4.949-4.202 5.529-4.202C6.248-4.202 6.571-3.76 6.571-2.921V0H7.308V-3.05C7.308-4.202 6.727-4.866 5.76-4.866C4.949-4.866 4.488-4.414 4.313-3.898H4.294C4.036-4.58 3.465-4.866 2.838-4.866C2.101-4.866 1.769-4.469 1.557-3.981H1.521V-4.755H.783V0H1.521Z'/>
+<path id='operate-tree-selectors-g1-110' d='M1.521 0V-3.299C1.521-3.907 2.092-4.202 2.682-4.202C3.391-4.202 3.76-3.769 3.76-2.921V0H4.497V-3.05C4.497-4.202 3.88-4.866 2.903-4.866C2.193-4.866 1.788-4.516 1.557-3.981H1.521V-4.755H.783V0H1.521Z'/>
+<path id='operate-tree-selectors-g1-111' d='M2.58 .111C3.852 .111 4.728-.866 4.728-2.378S3.852-4.866 2.58-4.866S.433-3.889 .433-2.378S1.309 .111 2.58 .111ZM2.58-.544C1.788-.544 1.226-1.032 1.226-2.037V-2.719C1.226-3.723 1.788-4.211 2.58-4.211S3.935-3.723 3.935-2.719V-2.037C3.935-1.032 3.373-.544 2.58-.544Z'/>
+<path id='operate-tree-selectors-g1-112' d='M.783 1.843H1.521V-.774H1.557C1.843-.184 2.295 .111 2.949 .111C4.138 .111 4.884-.857 4.884-2.378S4.138-4.866 2.949-4.866C2.295-4.866 1.806-4.58 1.557-3.981H1.521V-4.755H.783V1.843ZM2.746-.553C2.073-.553 1.521-.903 1.521-1.521V-3.29C1.521-3.815 2.073-4.202 2.746-4.202C3.576-4.202 4.092-3.631 4.092-2.783V-1.972C4.092-1.124 3.576-.553 2.746-.553Z'/>
+<path id='operate-tree-selectors-g1-113' d='M3.824 1.843H4.562V-4.755H3.824V-3.981H3.788C3.539-4.58 3.05-4.866 2.396-4.866C1.207-4.866 .461-3.898 .461-2.378S1.207 .111 2.396 .111C3.05 .111 3.502-.184 3.788-.774H3.824V1.843ZM2.599-.553C1.769-.553 1.253-1.124 1.253-1.972V-2.783C1.253-3.631 1.769-4.202 2.599-4.202C3.271-4.202 3.824-3.815 3.824-3.29V-1.521C3.824-.903 3.271-.553 2.599-.553Z'/>
+<path id='operate-tree-selectors-g1-114' d='M1.521 0V-3.225C1.521-3.677 2-4.018 2.792-4.018H3.225V-4.755H2.94C2.166-4.755 1.733-4.331 1.567-3.88H1.521V-4.755H.783V0H1.521Z'/>
+<path id='operate-tree-selectors-g1-115' d='M2.212 .111C3.299 .111 3.972-.452 3.972-1.373C3.972-2.092 3.566-2.553 2.516-2.709L2.147-2.765C1.557-2.857 1.235-3.041 1.235-3.502C1.235-3.953 1.557-4.239 2.166-4.239S3.179-3.953 3.391-3.659L3.88-4.101C3.493-4.58 2.986-4.866 2.221-4.866C1.253-4.866 .525-4.405 .525-3.465C.525-2.58 1.18-2.221 2.055-2.092L2.433-2.037C3.06-1.944 3.262-1.659 3.262-1.29C3.262-.802 2.894-.516 2.267-.516C1.668-.516 1.226-.783 .857-1.244L.332-.82C.756-.258 1.336 .111 2.212 .111Z'/>
+<path id='operate-tree-selectors-g1-116' d='M2.755 0V-.645H1.788V-4.11H2.829V-4.755H1.788V-6.073H1.124V-5.188C1.124-4.866 1.023-4.755 .71-4.755H.267V-4.11H1.051V-.783C1.051-.323 1.327 0 1.834 0H2.755Z'/>
+<path id='operate-tree-selectors-g1-117' d='M3.714 0H4.451V-4.755H3.714V-1.465C3.714-.839 3.142-.553 2.562-.553C1.852-.553 1.474-.986 1.474-1.834V-4.755H.737V-1.705C.737-.553 1.364 .111 2.341 .111C3.133 .111 3.493-.323 3.677-.774H3.714V0Z'/>
+<path id='operate-tree-selectors-g1-118' d='M2.691 0L4.368-4.755H3.659L2.811-2.396L2.295-.774H2.249L1.733-2.396L.903-4.755H.166L1.834 0H2.691Z'/>
+<path id='operate-tree-selectors-g1-119' d='M1.557 0H2.451L3.115-2.285L3.52-3.732H3.539L3.953-2.285L4.617 0H5.529L6.792-4.755H6.101L5.585-2.7L5.096-.617H5.078L4.488-2.7L3.87-4.755H3.216L2.617-2.7L2.037-.617H2.018L1.511-2.7L1.004-4.755H.286L1.557 0Z'/>
+<path id='operate-tree-selectors-g1-120' d='M.194 0H1.014L2.35-1.862H2.378L3.612 0H4.479L2.765-2.451L4.442-4.755H3.622L2.368-2.986H2.341L1.133-4.755H.267L1.954-2.396L.194 0Z'/>
+<path id='operate-tree-selectors-g1-121' d='M2.562-1.521L2.304-.746H2.258L2.037-1.521L.894-4.755H.157L1.935 .184L1.576 1.198H.829V1.843H1.207C1.908 1.843 2.101 1.677 2.313 1.106L4.442-4.755H3.714L2.562-1.521Z'/>
+</defs>
+<g id='operate-tree-selectors-page1'>
+<g stroke-miterlimit='10' transform='matrix(.996 0 0 -.996 -72 -72)' stroke-width='1.12921' class='fig-f-ink fig-s-ink'>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 79.798 -93.349)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g3-84'/>
+<use x='-66.335' y='-72' href='#operate-tree-selectors-g3-114'/>
+<use x='-62.443' y='-72' href='#operate-tree-selectors-g3-101'/>
+<use x='-56.542' y='-72' href='#operate-tree-selectors-g3-101'/>
+<use x='-48.103' y='-72' href='#operate-tree-selectors-g3-112'/>
+<use x='-41.868' y='-72' href='#operate-tree-selectors-g3-117'/>
+<use x='-35.762' y='-72' href='#operate-tree-selectors-g3-98'/>
+<use x='-29.527' y='-72' href='#operate-tree-selectors-g3-108'/>
+<use x='-26.603' y='-72' href='#operate-tree-selectors-g3-105'/>
+<use x='-23.915' y='-72' href='#operate-tree-selectors-g3-99'/>
+<use x='-18.508' y='-72' href='#operate-tree-selectors-g3-97'/>
+<use x='-12.768' y='-72' href='#operate-tree-selectors-g3-116'/>
+<use x='-8.994' y='-72' href='#operate-tree-selectors-g3-105'/>
+<use x='-6.307' y='-72' href='#operate-tree-selectors-g3-111'/>
+<use x='-.287' y='-72' href='#operate-tree-selectors-g3-110'/>
+<use x='5.819' y='-72' href='#operate-tree-selectors-g3-44'/>
+<use x='11.28' y='-72' href='#operate-tree-selectors-g3-105'/>
+<use x='13.968' y='-72' href='#operate-tree-selectors-g3-110'/>
+<use x='22.611' y='-72' href='#operate-tree-selectors-g3-115'/>
+<use x='27.846' y='-72' href='#operate-tree-selectors-g3-101'/>
+<use x='33.748' y='-72' href='#operate-tree-selectors-g3-113'/>
+<use x='39.983' y='-72' href='#operate-tree-selectors-g3-117'/>
+<use x='46.089' y='-72' href='#operate-tree-selectors-g3-101'/>
+<use x='51.99' y='-72' href='#operate-tree-selectors-g3-110'/>
+<use x='58.096' y='-72' href='#operate-tree-selectors-g3-99'/>
+<use x='63.439' y='-72' href='#operate-tree-selectors-g3-101'/>
+<use x='71.878' y='-72' href='#operate-tree-selectors-g3-111'/>
+<use x='77.898' y='-72' href='#operate-tree-selectors-g3-114'/>
+<use x='81.779' y='-72' href='#operate-tree-selectors-g3-100'/>
+<use x='88.014' y='-72' href='#operate-tree-selectors-g3-101'/>
+<use x='93.915' y='-72' href='#operate-tree-selectors-g3-114'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 426.09 -87.326)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g3-84'/>
+<use x='-66.604' y='-72' href='#operate-tree-selectors-g3-97'/>
+<use x='-60.863' y='-72' href='#operate-tree-selectors-g3-114'/>
+<use x='-57.165' y='-72' href='#operate-tree-selectors-g3-103'/>
+<use x='-51.554' y='-72' href='#operate-tree-selectors-g3-101'/>
+<use x='-45.652' y='-72' href='#operate-tree-selectors-g3-116'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 426.09 -99.371)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-68.652' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-63.573' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-61.057' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-55.979' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-51.04' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='-46.535' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-39.274' y='-72' href='#operate-tree-selectors-g1-55'/>
+<use x='-33.724' y='-72' href='#operate-tree-selectors-g1-46'/>
+<use x='-31.208' y='-72' href='#operate-tree-selectors-g1-52'/>
+<use x='-25.658' y='-72' href='#operate-tree-selectors-g1-46'/>
+<use x='-23.142' y='-72' href='#operate-tree-selectors-g1-48'/>
+<use x='-17.592' y='-72' href='#operate-tree-selectors-g1-44'/>
+<use x='-12.893' y='-72' href='#operate-tree-selectors-g1-120'/>
+<use x='-8.203' y='-72' href='#operate-tree-selectors-g1-56'/>
+<use x='-2.653' y='-72' href='#operate-tree-selectors-g1-54'/>
+<use x='2.897' y='-72' href='#operate-tree-selectors-g1-95'/>
+<use x='8.123' y='-72' href='#operate-tree-selectors-g1-54'/>
+<use x='13.673' y='-72' href='#operate-tree-selectors-g1-52'/>
+<use x='19.223' y='-72' href='#operate-tree-selectors-g1-44'/>
+<use x='23.922' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='26.438' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='31.378' y='-72' href='#operate-tree-selectors-g1-98'/>
+<use x='36.743' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='41.821' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='46.52' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='51.598' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='56.778' y='-72' href='#operate-tree-selectors-g1-118'/>
+<use x='61.329' y='-72' href='#operate-tree-selectors-g1-61'/>
+<use x='66.879' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='72.244' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='75.593' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='80.773' y='-72' href='#operate-tree-selectors-g1-100'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M7.528-36.135V-55.708C7.528-57.371 8.876-58.719 10.539-58.719H320.696C322.359-58.719 323.707-57.371 323.707-55.708V-36.135C323.707-34.472 322.359-33.124 320.696-33.124H10.539C8.876-33.124 7.528-34.472 7.528-36.135ZM323.707-58.719'/>
+</g>
+<g class='fig-f-line fig-s-line'>
+<path d='M353.82-36.135V-55.708C353.82-57.371 355.168-58.719 356.831-58.719H561.594C563.258-58.719 564.606-57.371 564.606-55.708V-36.135C564.606-34.472 563.258-33.124 561.594-33.124H356.831C355.168-33.124 353.82-34.472 353.82-36.135ZM564.606-58.719' fill='none'/>
+</g>
+<g class='fig-s-line'>
+<path d='M323.707-45.921H344.692' fill='none'/>
+<g transform='translate(344.409 -45.921)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 88.832 -121.203)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-49'/>
+<use x='-64.267' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-59.328' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-53.963' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-46.415' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='-41.235' y='-72' href='#operate-tree-selectors-g1-98'/>
+<use x='-35.87' y='-72' href='#operate-tree-selectors-g1-115'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 192.719 -121.203)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='-66.746' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='-59.383' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='-54.878' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-49.8' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-47.284' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-42.206' y='-72' href='#operate-tree-selectors-g1-99'/>
+<use x='-37.553' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='-34.343' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='-29.163' y='-72' href='#operate-tree-selectors-g1-114'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 435.123 -121.203)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-67.061' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='-61.696' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='-56.331' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-53.815' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='-51.502' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-46.424' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-41.059' y='-72' href='#operate-tree-selectors-g1-58'/>
+<use x='-36.175' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-33.659' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='-28.479' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-23.539' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-18.174' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-13.096' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-5.548' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-.609' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='4.645' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='12.193' y='-72' href='#operate-tree-selectors-g1-109'/>
+<use x='20.269' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='25.347' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='30.286' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='34.791' y='-72' href='#operate-tree-selectors-g1-117'/>
+<use x='40.045' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='43.394' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='48.472' y='-72' href='#operate-tree-selectors-g1-100'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M7.528-69.258V-88.831C7.528-90.494 8.876-91.843 10.539-91.843H320.696C322.359-91.843 323.707-90.494 323.707-88.831V-69.258C323.707-67.595 322.359-66.247 320.696-66.247H10.539C8.876-66.247 7.528-67.595 7.528-69.258ZM323.707-91.843'/>
+</g>
+<g class='fig-f-line fig-s-line'>
+<path d='M353.82-69.258V-88.831C353.82-90.494 355.168-91.843 356.831-91.843H561.594C563.258-91.843 564.606-90.494 564.606-88.831V-69.258C564.606-67.595 563.258-66.247 561.594-66.247H356.831C355.168-66.247 353.82-67.595 353.82-69.258ZM564.606-91.843' fill='none'/>
+</g>
+<g class='fig-s-line'>
+<path d='M323.707-79.045H344.692' fill='none'/>
+<g transform='translate(344.409 -79.045)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 88.832 -154.326)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-50'/>
+<use x='-64.267' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-59.328' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-53.963' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-46.415' y='-72' href='#operate-tree-selectors-g1-28'/>
+<use x='-41.17' y='-72' href='#operate-tree-selectors-g1-120'/>
+<use x='-36.804' y='-72' href='#operate-tree-selectors-g1-45'/>
+<use x='-33.113' y='-72' href='#operate-tree-selectors-g1-97'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 192.719 -154.326)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-107'/>
+<use x='-67.283' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-62.204' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-58.81' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='-53.556' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-48.477' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-45.961' y='-72' href='#operate-tree-selectors-g1-95'/>
+<use x='-40.735' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-37.387' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-32.308' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-29.792' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-24.714' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-19.775' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='-15.27' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-10.192' y='-72' href='#operate-tree-selectors-g1-95'/>
+<use x='-4.873' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='.492' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='3.841' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='8.919' y='-72' href='#operate-tree-selectors-g1-28'/>
+<use x='14.164' y='-72' href='#operate-tree-selectors-g1-120'/>
+<use x='21.036' y='-72' href='#operate-tree-selectors-g1-55'/>
+<use x='26.586' y='-72' href='#operate-tree-selectors-g1-46'/>
+<use x='29.102' y='-72' href='#operate-tree-selectors-g1-52'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 435.123 -154.326)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-67.061' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='-61.696' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='-56.331' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-53.815' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='-51.502' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-46.424' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-41.059' y='-72' href='#operate-tree-selectors-g1-58'/>
+<use x='-36.175' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-33.659' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='-28.479' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-23.539' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-18.174' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-13.096' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-5.548' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-.609' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='4.645' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='12.193' y='-72' href='#operate-tree-selectors-g1-109'/>
+<use x='20.269' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='25.347' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='30.286' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='34.791' y='-72' href='#operate-tree-selectors-g1-117'/>
+<use x='40.045' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='43.394' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='48.472' y='-72' href='#operate-tree-selectors-g1-100'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M7.528-102.382V-121.955C7.528-123.618 8.876-124.966 10.539-124.966H320.696C322.359-124.966 323.707-123.618 323.707-121.955V-102.382C323.707-100.719 322.359-99.371 320.696-99.371H10.539C8.876-99.371 7.528-100.719 7.528-102.382ZM323.707-124.966'/>
+</g>
+<g stroke-dasharray='3.01125,2.25842' stroke-dashoffset='0.0' class='fig-f-line fig-s-line'>
+<path d='M353.82-102.382V-121.955C353.82-123.618 355.168-124.966 356.831-124.966H561.594C563.258-124.966 564.606-123.618 564.606-121.955V-102.382C564.606-100.719 563.258-99.371 561.594-99.371H356.831C355.168-99.371 353.82-100.719 353.82-102.382ZM564.606-124.966' fill='none'/>
+</g>
+<g class='fig-s-line'>
+<path d='M323.707-112.168H344.692' fill='none'/>
+<g transform='translate(344.409 -112.168)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 88.832 -187.45)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-51'/>
+<use x='-64.267' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-59.328' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-53.963' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-46.415' y='-72' href='#operate-tree-selectors-g1-28'/>
+<use x='-41.17' y='-72' href='#operate-tree-selectors-g1-120'/>
+<use x='-36.804' y='-72' href='#operate-tree-selectors-g1-45'/>
+<use x='-33.113' y='-72' href='#operate-tree-selectors-g1-98'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 192.719 -187.45)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-67.061' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-63.712' y='-72' href='#operate-tree-selectors-g1-99'/>
+<use x='-59.059' y='-72' href='#operate-tree-selectors-g1-104'/>
+<use x='-53.805' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='-51.493' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='-48.283' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-43.205' y='-72' href='#operate-tree-selectors-g1-99'/>
+<use x='-38.552' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='-35.305' y='-72' href='#operate-tree-selectors-g1-117'/>
+<use x='-30.051' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-26.703' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-19.442' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-14.502' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-9.563' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-6.214' y='-72' href='#operate-tree-selectors-g1-99'/>
+<use x='-1.561' y='-72' href='#operate-tree-selectors-g1-104'/>
+<use x='3.693' y='-72' href='#operate-tree-selectors-g1-54'/>
+<use x='9.243' y='-72' href='#operate-tree-selectors-g1-52'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 435.123 -187.45)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='-67.495' y='-72' href='#operate-tree-selectors-g1-107'/>
+<use x='-62.621' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='-60.308' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='-54.943' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='-49.578' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-44.5' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-39.135' y='-72' href='#operate-tree-selectors-g1-58'/>
+<use x='-34.251' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-29.311' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-25.963' y='-72' href='#operate-tree-selectors-g1-99'/>
+<use x='-21.31' y='-72' href='#operate-tree-selectors-g1-104'/>
+<use x='-16.056' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='-13.744' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='-10.534' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-5.456' y='-72' href='#operate-tree-selectors-g1-99'/>
+<use x='-.803' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='2.444' y='-72' href='#operate-tree-selectors-g1-117'/>
+<use x='7.698' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='11.046' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='18.308' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='23.673' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='25.985' y='-72' href='#operate-tree-selectors-g1-102'/>
+<use x='28.982' y='-72' href='#operate-tree-selectors-g1-102'/>
+<use x='31.942' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='37.02' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='40.415' y='-72' href='#operate-tree-selectors-g1-115'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M7.528-135.505V-155.078C7.528-156.741 8.876-158.09 10.539-158.09H320.696C322.359-158.09 323.707-156.741 323.707-155.078V-135.505C323.707-133.842 322.359-132.494 320.696-132.494H10.539C8.876-132.494 7.528-133.842 7.528-135.505ZM323.707-158.09'/>
+</g>
+<g stroke-dasharray='3.01125,2.25842' stroke-dashoffset='0.0' class='fig-f-line fig-s-line'>
+<path d='M353.82-135.505V-155.078C353.82-156.741 355.168-158.09 356.831-158.09H561.594C563.258-158.09 564.606-156.741 564.606-155.078V-135.505C564.606-133.842 563.258-132.494 561.594-132.494H356.831C355.168-132.494 353.82-133.842 353.82-135.505ZM564.606-158.09' fill='none'/>
+</g>
+<g class='fig-s-line'>
+<path d='M323.707-145.292H344.692' fill='none'/>
+<g transform='translate(344.409 -145.292)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 88.832 -220.573)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-52'/>
+<use x='-64.267' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-59.328' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-53.963' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-46.415' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='-41.05' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-37.701' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='-32.521' y='-72' href='#operate-tree-selectors-g1-98'/>
+<use x='-27.156' y='-72' href='#operate-tree-selectors-g1-101'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 192.719 -220.573)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-69.484' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-64.545' y='-72' href='#operate-tree-selectors-g1-98'/>
+<use x='-59.18' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-54.101' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-51.585' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='-44.898' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-39.819' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='-34.639' y='-72' href='#operate-tree-selectors-g1-118'/>
+<use x='-30.088' y='-72' href='#operate-tree-selectors-g1-61'/>
+<use x='-24.538' y='-72' href='#operate-tree-selectors-g1-99'/>
+<use x='-19.886' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-14.946' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='-9.692' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-4.753' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-1.265' y='-72' href='#operate-tree-selectors-g1-121'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 435.123 -220.573)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='-67.495' y='-72' href='#operate-tree-selectors-g1-107'/>
+<use x='-62.621' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='-60.308' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='-54.943' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='-49.578' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-44.5' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-39.135' y='-72' href='#operate-tree-selectors-g1-58'/>
+<use x='-34.251' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-31.735' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-26.795' y='-72' href='#operate-tree-selectors-g1-98'/>
+<use x='-21.43' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-16.352' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-11.653' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-6.288' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='-3.976' y='-72' href='#operate-tree-selectors-g1-102'/>
+<use x='-.979' y='-72' href='#operate-tree-selectors-g1-102'/>
+<use x='1.981' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='7.06' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='10.454' y='-72' href='#operate-tree-selectors-g1-115'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M7.528-168.629V-188.202C7.528-189.865 8.876-191.213 10.539-191.213H320.696C322.359-191.213 323.707-189.865 323.707-188.202V-168.629C323.707-166.966 322.359-165.618 320.696-165.618H10.539C8.876-165.618 7.528-166.966 7.528-168.629ZM323.707-191.213'/>
+</g>
+<g class='fig-f-line fig-s-line'>
+<path d='M353.82-168.629V-188.202C353.82-189.865 355.168-191.213 356.831-191.213H561.594C563.258-191.213 564.606-189.865 564.606-188.202V-168.629C564.606-166.966 563.258-165.618 561.594-165.618H356.831C355.168-165.618 353.82-166.966 353.82-168.629ZM564.606-191.213' fill='none'/>
+</g>
+<g class='fig-s-line'>
+<path d='M323.707-178.415H344.692' fill='none'/>
+<g transform='translate(344.409 -178.415)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 88.832 -253.697)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-53'/>
+<use x='-64.267' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-58.902' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-53.824' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-51.308' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-46.23' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='-43.02' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-35.759' y='-72' href='#operate-tree-selectors-g1-28'/>
+<use x='-30.514' y='-72' href='#operate-tree-selectors-g1-120'/>
+<use x='-26.148' y='-72' href='#operate-tree-selectors-g1-45'/>
+<use x='-22.457' y='-72' href='#operate-tree-selectors-g1-97'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 192.719 -253.697)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-107'/>
+<use x='-67.283' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-62.204' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-58.81' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='-53.556' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-48.477' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-45.961' y='-72' href='#operate-tree-selectors-g1-95'/>
+<use x='-40.735' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-37.387' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-32.308' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-29.792' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-24.714' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-19.775' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='-15.27' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-10.192' y='-72' href='#operate-tree-selectors-g1-95'/>
+<use x='-4.873' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='.492' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='3.841' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='8.919' y='-72' href='#operate-tree-selectors-g1-28'/>
+<use x='14.164' y='-72' href='#operate-tree-selectors-g1-120'/>
+<use x='21.036' y='-72' href='#operate-tree-selectors-g1-55'/>
+<use x='26.586' y='-72' href='#operate-tree-selectors-g1-46'/>
+<use x='29.102' y='-72' href='#operate-tree-selectors-g1-52'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 435.123 -253.697)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-67.061' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='-61.696' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='-56.331' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-53.815' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='-51.502' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-46.424' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-41.059' y='-72' href='#operate-tree-selectors-g1-58'/>
+<use x='-36.175' y='-72' href='#operate-tree-selectors-g1-117'/>
+<use x='-30.921' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='-25.667' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-23.151' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='-17.971' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-13.031' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='-7.666' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-2.588' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='4.96' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='9.899' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='15.153' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='22.701' y='-72' href='#operate-tree-selectors-g1-109'/>
+<use x='30.777' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='35.855' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='40.794' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='45.299' y='-72' href='#operate-tree-selectors-g1-117'/>
+<use x='50.553' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='53.902' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='58.98' y='-72' href='#operate-tree-selectors-g1-100'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 79.798 -290.584)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-84'/>
+<use x='-66.709' y='-72' href='#operate-tree-selectors-g1-104'/>
+<use x='-61.455' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-54.194' y='-72' href='#operate-tree-selectors-g1-99'/>
+<use x='-49.541' y='-72' href='#operate-tree-selectors-g1-117'/>
+<use x='-44.287' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-40.892' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='-36.388' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='-31.208' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-25.63' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-23.114' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-18.174' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='-13.734' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='-10.488' y='-72' href='#operate-tree-selectors-g1-95'/>
+<use x='-5.585' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='-1.08' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='3.998' y='-72' href='#operate-tree-selectors-g1-113'/>
+<use x='11.546' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='16.624' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='21.878' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='27.243' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='33.931' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='38.87' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='44.3' y='-72' href='#operate-tree-selectors-g1-53'/>
+<use x='49.85' y='-72' href='#operate-tree-selectors-g1-46'/>
+<use x='54.549' y='-72' href='#operate-tree-selectors-g1-79'/>
+<use x='61.098' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='66.463' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='71.541' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='74.899' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='79.839' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='83.085' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='85.398' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='90.578' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='95.832' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='102.52' y='-72' href='#operate-tree-selectors-g1-51'/>
+<use x='110.253' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='115.192' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='120.446' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='127.994' y='-72' href='#operate-tree-selectors-g1-52'/>
+<use x='135.727' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='140.167' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='143.414' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='148.307' y='-72' href='#operate-tree-selectors-g1-121'/>
+<use x='155.106' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='159.611' y='-72' href='#operate-tree-selectors-g1-107'/>
+<use x='164.485' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='166.798' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='172.163' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='177.528' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='182.606' y='-72' href='#operate-tree-selectors-g1-100'/>
+<use x='187.971' y='-72' href='#operate-tree-selectors-g1-44'/>
+<use x='192.67' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='197.674' y='-72' href='#operate-tree-selectors-g1-118'/>
+<use x='202.151' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='207.229' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='214.666' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='216.979' y='-72' href='#operate-tree-selectors-g1-102'/>
+<use x='222.159' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='225.406' y='-72' href='#operate-tree-selectors-g1-104'/>
+<use x='230.66' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='237.921' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='241.168' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='246.107' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='249.289' y='-72' href='#operate-tree-selectors-g1-103'/>
+<use x='254.118' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='259.196' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='262.628' y='-72' href='#operate-tree-selectors-g1-39'/>
+<use x='264.69' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='271.378' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='273.894' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='278.834' y='-72' href='#operate-tree-selectors-g1-98'/>
+<use x='284.199' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='289.277' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='291.793' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='298.481' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='303.661' y='-72' href='#operate-tree-selectors-g1-114'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 79.798 -304.135)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#operate-tree-selectors-g1-107'/>
+<use x='-67.283' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-62.204' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='-58.81' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='-53.556' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-48.477' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-43.778' y='-72' href='#operate-tree-selectors-g1-99'/>
+<use x='-39.126' y='-72' href='#operate-tree-selectors-g1-104'/>
+<use x='-33.872' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-28.932' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='-23.678' y='-72' href='#operate-tree-selectors-g1-103'/>
+<use x='-18.85' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='-11.588' y='-72' href='#operate-tree-selectors-g1-108'/>
+<use x='-9.072' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='-4.133' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='-.923' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='4.155' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='7.55' y='-72' href='#operate-tree-selectors-g1-59'/>
+<use x='12.434' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='19.556' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='24.81' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='29.842' y='-72' href='#operate-tree-selectors-g1-119'/>
+<use x='39.129' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='44.309' y='-72' href='#operate-tree-selectors-g1-112'/>
+<use x='49.674' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='54.753' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='58.11' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='63.05' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='66.297' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='68.609' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='73.789' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='81.226' y='-72' href='#operate-tree-selectors-g1-119'/>
+<use x='88.33' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='90.643' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='93.889' y='-72' href='#operate-tree-selectors-g1-104'/>
+<use x='101.326' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='103.639' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='106.886' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='113.573' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='118.707' y='-72' href='#operate-tree-selectors-g1-119'/>
+<use x='125.811' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='133.248' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='137.753' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='142.831' y='-72' href='#operate-tree-selectors-g1-113'/>
+<use x='148.196' y='-72' href='#operate-tree-selectors-g1-117'/>
+<use x='153.45' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='158.528' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='163.782' y='-72' href='#operate-tree-selectors-g1-99'/>
+<use x='168.38' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='175.641' y='-72' href='#operate-tree-selectors-g1-110'/>
+<use x='180.895' y='-72' href='#operate-tree-selectors-g1-117'/>
+<use x='186.149' y='-72' href='#operate-tree-selectors-g1-109'/>
+<use x='194.224' y='-72' href='#operate-tree-selectors-g1-98'/>
+<use x='199.589' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='204.667' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='210.245' y='-72' href='#operate-tree-selectors-g1-105'/>
+<use x='212.557' y='-72' href='#operate-tree-selectors-g1-115'/>
+<use x='219.245' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='222.492' y='-72' href='#operate-tree-selectors-g1-104'/>
+<use x='227.746' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='235.007' y='-72' href='#operate-tree-selectors-g1-119'/>
+<use x='242.028' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='246.921' y='-72' href='#operate-tree-selectors-g1-121'/>
+<use x='253.72' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='256.93' y='-72' href='#operate-tree-selectors-g1-111'/>
+<use x='264.293' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='267.641' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='272.719' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='277.659' y='-72' href='#operate-tree-selectors-g1-99'/>
+<use x='282.312' y='-72' href='#operate-tree-selectors-g1-104'/>
+<use x='289.749' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='292.995' y='-72' href='#operate-tree-selectors-g1-104'/>
+<use x='298.249' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='305.511' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='308.757' y='-72' href='#operate-tree-selectors-g1-97'/>
+<use x='313.697' y='-72' href='#operate-tree-selectors-g1-114'/>
+<use x='316.879' y='-72' href='#operate-tree-selectors-g1-103'/>
+<use x='321.707' y='-72' href='#operate-tree-selectors-g1-101'/>
+<use x='326.786' y='-72' href='#operate-tree-selectors-g1-116'/>
+<use x='330.032' y='-72' href='#operate-tree-selectors-g1-46'/>
+</g>
+</g>
+</g>
+</svg>

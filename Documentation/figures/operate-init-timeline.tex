@@ -1,0 +1,87 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The order of init's steps in the initrd and on the root file system,
+% and the three bands a failure of the initrd run falls in, divided where
+% the LSM programs attach and where the config BOOT event begins
+% (operate/deploy/initialize.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    stepbox/.style={box, rounded corners=3bp},
+    rule/.style={draw=fig-accent},
+    num/.style={anchor=base west, small, font=\figsmall\bfseries},
+    lbl/.style={anchor=base west, small}]
+  \useasboundingbox (0,0) rectangle (840,272);
+
+  \fill[fig-s2, opacity=0.10] (0,30) rectangle (216,244);
+  \fill[fig-s4, opacity=0.14] (224,30) rectangle (416,244);
+  \fill[fig-s1, opacity=0.10] (424,30) rectangle (628,244);
+
+  \draw[link, thin] (0,22) -- (628,22);
+  \draw[link, thin] (650,22) -- (840,22);
+
+  % initrd, before the LSM attaches
+  \foreach \i/\t in {1/{pre-flight, bind the state},
+      2/mount the private bpffs,
+      3/{verify runtime, seal .dm-verity},
+      4/select and verify the config,
+      5/enroll and seal .bpf,
+      6/{label state, adopt eventlog},
+      7/attach the LSM programs} {
+    \draw[stepbox] (4,{36+(\i-1)*24}) rectangle ++(206,20);
+    \node[num] at (11,{50+(\i-1)*24}) {\i};
+    \node[lbl] at (31,{50+(\i-1)*24}) {\t};
+  }
+  % after the attach, before the BOOT event
+  \foreach \i/\t in {8/mount the runtime image,
+      9/verify the config again} {
+    \draw[stepbox] (230,{36+(\i-8)*24}) rectangle ++(180,20);
+    \node[num] at (237,{50+(\i-8)*24}) {\i};
+    \node[lbl] at (257,{50+(\i-8)*24}) {\t};
+  }
+  % from the BOOT event on
+  \foreach \i/\t in {10/{BOOT event, config PCR},
+      11/{revocations, mount config},
+      12/restore archived upatches,
+      13/{bind register, extend PCR 9},
+      14/complete the activation} {
+    \draw[stepbox] (430,{36+(\i-10)*24}) rectangle ++(192,20);
+    \node[num] at (437,{50+(\i-10)*24}) {\i};
+    \node[lbl] at (459,{50+(\i-10)*24}) {\t};
+  }
+  % the root run
+  \foreach \j/\t in {0/check keyring and runtime,
+      1/append the init record,
+      2/check LSM and config,
+      3/check the register} {
+    \draw[stepbox] (656,{36+\j*24}) rectangle ++(180,20);
+    \node[lbl] at (665,{50+\j*24}) {\t};
+  }
+
+  \draw[rule] (220,28) -- (220,250);
+  \draw[rule] (420,28) -- (420,250);
+  \draw[link, thin, dash pattern=on 4.5bp off 3bp] (639,6) -- (639,250);
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node[note] at (314,14) {initrd run, \texttt{shirudo-initrd.service}};
+    \node[note] at (745,14) {root run, \texttt{shirudo.service}};
+
+    \node[small, text=fig-accent] at (220,264) {LSM attached};
+    \node[small, text=fig-accent] at (420,264) {config BOOT event};
+    \node[small, note] at (639,264) {switch-root};
+  \end{scope}
+
+  \begin{scope}[every node/.append style={anchor=base west, small}]
+    \node at (11,218) {stops here: \texttt{lsm-off}};
+    \node[note] at (11,234) {enforcement off};
+    \node at (237,218) {stops here: image state errors};
+    \node[note] at (237,234) {enforcement on};
+    \node at (437,218) {stops here: \texttt{reboot-pending}};
+    \node[note] at (437,234) {enforcement on};
+    \node[note] at (665,218) {adds no register event};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

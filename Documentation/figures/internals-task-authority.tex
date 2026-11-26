@@ -1,0 +1,67 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% A task's runtime authority as states: no mark, the bootstrap mark init
+% seeds in the initrd, an exec mark, and a mark whose authority a core
+% dump or a uprobe revoked, with the execs and checks that move a task
+% between them (internals/seal.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (840,390);
+
+  \begin{scope}[box/.append style={rounded corners=8bp}]
+    \draw[box] (330,30) rectangle (530,92);
+    \draw[box] (20,170) rectangle (200,232);
+    \draw[box] (330,170) rectangle (530,232);
+    \draw[box] (640,170) rectangle (820,232);
+  \end{scope}
+
+  \draw[flow] (20,46) -- (328,46);
+  \draw[flow] (200,186) -- (328,186);
+  \draw[flow] (330,216) -- (202,216);
+  \draw[flow] (530,186) -- (638,186);
+  \draw[flow] (640,216) -- (532,216);
+  \draw[flow] (730,232) -- (730,276) -- (110,276) -- (110,234);
+  \draw[flow] (430,92) -- (430,168);
+  \draw[flow] (330,78) -- (110,78) -- (110,168);
+  \draw[flow] (530,78) -- (730,78) -- (730,168);
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node[title] at (430,54) {bootstrap mark};
+    \node[small, note] at (430,72) {authority, no mmap checks};
+    \node[title] at (110,194) {no mark};
+    \node[small, note] at (110,212) {no authority};
+    \node[title] at (430,194) {exec mark};
+    \node[small, note] at (430,212) {authority};
+    \node[title] at (730,194) {revoked};
+    \node[small, note] at (730,212) {mark kept, no authority};
+  \end{scope}
+
+  \begin{scope}[every node/.append style={note, small, anchor=base}]
+    \node at (174,38) {init in the initrd, through a pidfd};
+    \node at (220,70) {other exec};
+    \node at (630,70) {dump or uprobe};
+    \node[anchor=base west] at (440,136) {runtime exec};
+    \node at (265,178) {runtime exec};
+    \node at (265,232) {other exec};
+    \node at (585,178) {dump or uprobe};
+    \node at (585,232) {runtime exec};
+    \node at (420,270) {other exec};
+  \end{scope}
+
+  \begin{scope}[every node/.append style={note, small, anchor=base west}]
+    \node at (20,318) {runtime exec: a successful exec of a file directly on the
+      recorded runtime device, committed by bprm\_committed\_creds};
+    \node at (20,336) {dump or uprobe: the first authority check that finds
+      PF\_DUMPCORE or MMF\_HAS\_UPROBES (SealCoreDump, SealUprobe)};
+    \node at (20,354) {In every state a failed exec keeps the state, and so
+      does a runtime exec refused as traced, shared or under seccomp.};
+    \node at (20,372) {task\_alloc gives a child its parent's state,
+      revocation included. The three marked states are protected from
+      other tasks.};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

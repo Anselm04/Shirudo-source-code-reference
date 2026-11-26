@@ -1,0 +1,15 @@
+[package]
+name = "xfs-fix"
+description = "The upatch of the full-chain end-to-end test, linked to EXAMPLE-0101"
+license = "GPL-2.0 OR BSD-2-Clause"
+authors = ["Authors of shirudo"]
+
+[[upatches]]
+source = "xfs-fix.bpf.c"
+
+[upatches.tree]
+id = "xfs-fix"
+fixes = ["EXAMPLE-0101"]
+
+[upatches.tree.selector.labels]
+role = ["edge"]

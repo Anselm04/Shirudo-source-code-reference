@@ -1,0 +1,68 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% Where init takes the certificates of the sealed .bpf and .dm-verity
+% keyrings from, the runtime image and the config image, and what tree
+% publications and package indexes verify against
+% (operate/maintain/keys.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (760,350);
+
+  \draw[box] (10,40) rectangle ++(220,170);
+  \foreach \y in {94, 152}
+    \draw[link, rounded corners=3bp] (22,\y) rectangle ++(196,46);
+
+  \draw[box] (270,40) rectangle ++(220,228);
+  \foreach \y in {94, 152, 210}
+    \draw[link, rounded corners=3bp] (282,\y) rectangle ++(196,46);
+
+  \draw[frame] (530,40) rectangle ++(220,228);
+  \draw[box, rounded corners=3bp] (542,80) rectangle ++(196,104);
+  \draw[box, rounded corners=3bp] (542,196) rectangle ++(196,62);
+
+  \draw[flow] (218,104) -- (250,104) -- (250,24) -- (510,24) -- (510,96)
+    -- (540,96);
+  \draw[flow] (478,117) -- (540,117);
+  \draw[flow] (478,175) -- (540,160);
+  \draw[flow] (218,175) -- (250,175) -- (250,290) -- (640,290) -- (640,260);
+
+  \begin{scope}[note, small]
+    \node[anchor=base, large] at (120,64) {Runtime image};
+    \node[anchor=base] at (120,80) {dm-verity, root hash in the UKI};
+    \node[anchor=base] at (120,114) {keys/cert.der};
+    \node[anchor=base] at (120,130) {runtime primary BPF certificate};
+    \node[anchor=base] at (120,172) {etc/shirudo/config-cert.der};
+    \node[anchor=base] at (120,188) {config verification certificates};
+
+    \node[anchor=base, large] at (380,64) {Config image};
+    \node[anchor=base] at (380,80) {signed, checked against .dm-verity};
+    \node[anchor=base] at (380,114) {keys/trusted/<name>.der, .vouch};
+    \node[anchor=base] at (380,130) {vouched BPF certificates};
+    \node[anchor=base] at (380,172) {keys/revoked/<fingerprint>.der};
+    \node[anchor=base] at (380,188) {revocation records};
+    \node[anchor=base] at (380,230) {etc/shirudo/bpm/keys/};
+    \node[anchor=base] at (380,246) {repository index certificates};
+
+    \node[anchor=base, large] at (640,64) {Kernel keyrings, sealed by init};
+    \node[anchor=base, large] at (640,101) {.bpf};
+    \node[anchor=base] at (640,119) {the primary, each certificate};
+    \node[anchor=base] at (640,135) {vouched by one already in the set,};
+    \node[anchor=base] at (640,151) {minus revoked, at most 16};
+    \node[anchor=base] at (640,173) {checks signed loaders};
+    \node[anchor=base, large] at (640,217) {.dm-verity};
+    \node[anchor=base] at (640,235) {the config certificates};
+    \node[anchor=base] at (640,251) {checks config images};
+
+    \node[anchor=base] at (509,190) {removes};
+
+    \node[anchor=base west] at (10,320) {Tree publications verify against
+      the active BPF signer set, excluding revoked certificates.};
+    \node[anchor=base west] at (10,338) {Package indexes verify against the
+      certificate their repository definition names.};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

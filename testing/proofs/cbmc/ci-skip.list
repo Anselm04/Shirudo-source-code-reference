@@ -1,0 +1,5 @@
+# The proofs of proofs.list the Proofs workflow leaves out, each with
+# why: CI gives a proof the 6 GB and 60 minutes .github/scripts/proofs.sh
+# caps it at, and these need more on a 16-core host. Run each by hand
+# after a change to what it reads, make proofs-cbmc PROOFS=<proof> under
+# the memory cap of the proofs skill, and take it off once it fits.

@@ -1,0 +1,60 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% BPF time per operation of the base platform's guards and of kernel-obs,
+% from fork() and execve() at 3.2 + 4.1 µs down to mmap() at 0.04 + 0.08
+% µs (operate/plan/overhead.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+% A bar from #2 to #3 whose right end is rounded, at the top #4.
+\newcommand\barend[4]{%
+  \fill[#1] (#2,#4) -- ({#3-4},#4) arc[start angle=-90, end angle=0, radius=4]
+    -- (#3,#4+12) arc[start angle=0, end angle=90, radius=4]
+    -- (#2,#4+16) -- cycle;}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (720,256);
+
+  \fill[fig-s1, rounded corners=1.5bp] (0,5) rectangle ++(10,10);
+  \node[anchor=base west, note] at (16,14) {kernel with shirudo base platform};
+  \fill[fig-s2, rounded corners=1.5bp] (257.8,5) rectangle ++(10,10);
+  \node[anchor=base west, note] at (273.8,14) {kernel-obs, one upatch};
+
+  % One pixel is 20 ns.
+  \foreach \x/\t in {210/0, 310/2 µs, 410/4 µs, 510/6 µs, 610/8 µs} {
+    \draw[grid] (\x,30) -- (\x,232);
+    \node[anchor=base, note, small] at (\x,248) {\t};
+  }
+
+  \foreach \y/\t in {56/fork() and execve(), 88/{Create, write, rename, unlink},
+      120/{Open, read, close}, 152/ioctl(), 184/mprotect(), 216/mmap()}
+    \node[anchor=base east] at (198,\y) {\t};
+
+  \fill[fig-s1] (210,44) rectangle ++(160,16);
+  \barend{fig-s2}{372}{577}{44}
+  \node[anchor=base west, note] at (585,56) {3.2 + 4.1 µs};
+
+  \fill[fig-s1] (210,76) rectangle ++(32.5,16);
+  \barend{fig-s2}{244.5}{251.5}{76}
+  \node[anchor=base west, note] at (259.5,88) {0.65 + 0.14 µs};
+
+  \fill[fig-s1] (210,108) rectangle ++(7.5,16);
+  \barend{fig-s2}{219.5}{226.5}{108}
+  \node[anchor=base west, note] at (234.5,120) {0.15 + 0.14 µs};
+
+  \barend{fig-s1}{210}{224}{140}
+  \node[anchor=base west, note] at (232,152) {0.28 µs};
+
+  \fill[fig-s1] (210,172) rectangle ++(7.5,16);
+  \barend{fig-s2}{219.5}{225.5}{172}
+  \node[anchor=base west, note] at (233.5,184) {0.15 + 0.12 µs};
+
+  \fill[fig-s1] (210,204) rectangle ++(1.8,16);
+  \barend{fig-s2}{213.8}{218}{204}
+  \node[anchor=base west, note] at (226,216) {0.04 + 0.08 µs};
+
+  \draw[axis] (210,30) -- (210,232);
+\end{tikzpicture}
+\end{document}

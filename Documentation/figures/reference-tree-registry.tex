@@ -1,0 +1,127 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% One registry namespace as bpm push and bpm tree append leave it: the
+% signed index pins the packages, each tree segment names the sealed one
+% before it, and a node behind walks back by digest before it applies
+% (reference/formats/upatch-tree.rst, upatches/publish/publishing.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    signed/.style={draw=fig-s1, fill=fig-s1, fill opacity=0.12,
+      text opacity=1, rounded corners=3bp},
+    pinned/.style={box, rounded corners=3bp},
+    loose/.style={link, rounded corners=3bp},
+    gone/.style={draw=fig-line, dash pattern=on 3bp off 3bp,
+      rounded corners=3bp},
+    walk/.style={draw=fig-accent, ->}]
+  \useasboundingbox (0,0) rectangle (840,500);
+
+  \draw[frame] (2,32) rectangle (838,462);
+  \node[anchor=base west, note] at (14,24)
+    {one namespace of a registry, oci://<registry>/<namespace>};
+
+  % The package index and one package.
+  \draw[box] (16,46) rectangle (256,196);
+  \draw[loose] (28,94) rectangle (244,184);
+  \draw[signed] (36,122) rectangle (146,174);
+  \draw[signed] (154,122) rectangle (236,174);
+  \draw[box] (16,220) rectangle (256,446);
+  \draw[pinned] (28,268) rectangle (244,322);
+  \draw[loose] (28,352) rectangle (244,434);
+  \draw[flow] (60,174) -- (60,266);
+  \draw[flow] (200,352) -- (200,324);
+
+  \begin{scope}[every node/.append style={anchor=base west}]
+    \node[code] at (28,68) {<namespace>/bpm-index};
+    \node[mono, note] at (28,86) {:stable};
+    \node at (36,112) {index manifest};
+    \node[code] at (76,242) {<namespace>/<name>};
+    \node[mono, note] at (76,260) {:<version>};
+    \node at (36,288) {package manifest};
+    \node at (36,372) {certificate referrer};
+  \end{scope}
+  \begin{scope}[every node/.append style={anchor=base, note, small}]
+    \node[font=\figbody, color=fig-ink] at (91,142) {document};
+    \node at (91,160) {the package list};
+    \node[font=\figbody, color=fig-ink] at (195,142) {signature};
+    \node at (195,160) {detached CMS};
+  \end{scope}
+  \begin{scope}[every node/.append style={anchor=base west, note, small}]
+    \node at (68,212) {manifest\_digest, package\_digest};
+    \node at (36,308) {one layer, the .bee archive};
+    \node at (36,390) {one layer, cert.der};
+    \node at (36,406) {subject: the package manifest};
+    \node at (36,424) {not read by shirudo};
+  \end{scope}
+
+  % The tree: segments, artifacts and a node behind.
+  \draw[box] (276,46) rectangle (826,446);
+  \foreach \x/\s in {290/pinned, 474/pinned, 658/loose} {
+    \draw[\s] (\x,92) rectangle ++(150,128);
+    \draw[signed] (\x+8,154) rectangle ++(66,28);
+    \draw[signed] (\x+80,154) rectangle ++(62,28);
+  }
+  \draw[flow] (473,124) -- (442,124);
+  \draw[walk] (657,124) -- (626,124);
+  \foreach \x in {365, 549, 733}
+    \draw[flow] (\x,220) -- (\x,238);
+  \draw[pinned] (290,240) rectangle (808,290);
+  \draw[gone] (290,304) rectangle (808,336);
+  \draw[box] (290,352) rectangle (808,432);
+
+  \node[anchor=base west, code] at (290,68) {<namespace>/<tree>};
+  \node[anchor=base west, note, small] at (290,84)
+    {each segment names the sealed one before it by
+     base.segment\_manifest\_digest};
+  \begin{scope}[every node/.append style={anchor=base west}]
+    \foreach \x/\t/\s/\b in {290/:segment-1/1\textendash 64/0,
+        474/:segment-2/65\textendash 128/64,
+        658/:stable/129\textendash 150/128} {
+      \node[code] at (\x+10,112) {\t};
+      \node at (\x+10,130) {seq \s};
+      \node[note, small] at (\x+10,146) {base.seq \b};
+    }
+    \node[small, color=fig-accent] at (484,206) {1: applies 71\textendash 128};
+    \node[small, color=fig-accent] at (668,206) {2: applies 129\textendash 150};
+    \node at (300,260)
+      {artifact manifests and their .upatch layers, one per operation,};
+    \node at (300,279) {pinned by its artifact.manifest\_digest, tagged};
+    \node[mono] at (577,279) {upatch-<id>-<payload16>};
+    \node[note, small] at (300,325)
+      {superseded generations: untagged, never fetched by a target,
+       may be collected};
+    \node[font=\figbody\bfseries] at (300,374) {A node at seq 70};
+    \node[small] at (300,394)
+      {walks back by digest from stable to segment-2, where seq 70
+       lies,};
+    \node[small] at (300,412)
+      {then applies oldest first, 1 and then 2. It never reads a
+       segment-<k> tag.};
+  \end{scope}
+  \begin{scope}[every node/.append style={anchor=base, note, small}]
+    \node at (457,116) {base};
+    \node[color=fig-accent] at (641,116) {base};
+    \foreach \x in {290, 474, 658} {
+      \node[color=fig-ink] at (\x+41,172) {document};
+      \node[color=fig-ink] at (\x+111,172) {signature};
+    }
+  \end{scope}
+
+  % Legend.
+  \draw[signed] (16,476) rectangle ++(18,14);
+  \draw[pinned] (176,476) rectangle ++(18,14);
+  \draw[loose] (500,476) rectangle ++(18,14);
+  \draw[gone] (604,476) rectangle ++(18,14);
+  \draw[walk] (752,483) -- (780,483);
+  \begin{scope}[every node/.append style={anchor=base west, note, small}]
+    \node at (42,488) {signed, detached CMS};
+    \node at (202,488) {not signed, pinned by a digest in a signed one};
+    \node at (526,488) {neither};
+    \node at (630,488) {may be collected};
+    \node at (788,488) {walk};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

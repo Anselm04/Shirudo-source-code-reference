@@ -1,0 +1,751 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='840.0' height='440.0' viewBox='-72 -72 629.996 329.998' class='fig fig-f-ink' role='img'><!-- Documentation/figures/concepts-register-write.tex, sha256 573d10176d8c31aa92fa96d5c4ddff1beb1b4290970522a0b300c0bfa247ee21 --><style>.fig-f-ink{fill:var(--fig-ink,#171b22)}.fig-s-ink{stroke:var(--fig-ink,#171b22)}.fig-f-muted{fill:var(--fig-muted,#5d6675)}.fig-s-muted{stroke:var(--fig-muted,#5d6675)}.fig-f-line{fill:var(--fig-line,#8a93a0)}.fig-s-line{stroke:var(--fig-line,#8a93a0)}.fig-f-grid{fill:var(--fig-grid,#e2e6eb)}.fig-s-grid{stroke:var(--fig-grid,#e2e6eb)}.fig-f-axis{fill:var(--fig-axis,#c3c9d1)}.fig-s-axis{stroke:var(--fig-axis,#c3c9d1)}.fig-f-accent{fill:var(--fig-accent,#8b1e3f)}.fig-s-accent{stroke:var(--fig-accent,#8b1e3f)}.fig-f-s1{fill:var(--fig-s1,#2a78d6)}.fig-s-s1{stroke:var(--fig-s1,#2a78d6)}.fig-f-s2{fill:var(--fig-s2,#eb6834)}.fig-s-s2{stroke:var(--fig-s2,#eb6834)}.fig-f-s3{fill:var(--fig-s3,#1baf7a)}.fig-s-s3{stroke:var(--fig-s3,#1baf7a)}.fig-f-s4{fill:var(--fig-s4,#eda100)}.fig-s-s4{stroke:var(--fig-s4,#eda100)}.fig-f-free{fill:var(--fig-free,#dde2e8)}.fig-s-free{stroke:var(--fig-free,#dde2e8)}.fig-f-on{fill:var(--fig-on,#ffffff)}.fig-s-on{stroke:var(--fig-on,#ffffff)}@media (prefers-color-scheme:dark){.fig-f-ink{fill:var(--fig-ink,#e4e8ee)}.fig-s-ink{stroke:var(--fig-ink,#e4e8ee)}.fig-f-muted{fill:var(--fig-muted,#9ba5b3)}.fig-s-muted{stroke:var(--fig-muted,#9ba5b3)}.fig-f-line{fill:var(--fig-line,#8a93a0)}.fig-s-line{stroke:var(--fig-line,#8a93a0)}.fig-f-grid{fill:var(--fig-grid,#262d37)}.fig-s-grid{stroke:var(--fig-grid,#262d37)}.fig-f-axis{fill:var(--fig-axis,#39414c)}.fig-s-axis{stroke:var(--fig-axis,#39414c)}.fig-f-accent{fill:var(--fig-accent,#e8899f)}.fig-s-accent{stroke:var(--fig-accent,#e8899f)}.fig-f-s1{fill:var(--fig-s1,#3987e5)}.fig-s-s1{stroke:var(--fig-s1,#3987e5)}.fig-f-s2{fill:var(--fig-s2,#d95926)}.fig-s-s2{stroke:var(--fig-s2,#d95926)}.fig-f-s3{fill:var(--fig-s3,#199e70)}.fig-s-s3{stroke:var(--fig-s3,#199e70)}.fig-f-s4{fill:var(--fig-s4,#c98500)}.fig-s-s4{stroke:var(--fig-s4,#c98500)}.fig-f-free{fill:var(--fig-free,#2f3640)}.fig-s-free{stroke:var(--fig-free,#2f3640)}.fig-f-on{fill:var(--fig-on,#ffffff)}.fig-s-on{stroke:var(--fig-on,#ffffff)}}</style>
+<defs>
+<use id='concepts-register-write-g5-40' href='#concepts-register-write-g1-40' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-41' href='#concepts-register-write-g1-41' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-47' href='#concepts-register-write-g1-47' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-69' href='#concepts-register-write-g1-69' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-78' href='#concepts-register-write-g1-78' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-86' href='#concepts-register-write-g1-86' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-95' href='#concepts-register-write-g1-95' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-97' href='#concepts-register-write-g1-97' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-99' href='#concepts-register-write-g1-99' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-100' href='#concepts-register-write-g1-100' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-101' href='#concepts-register-write-g1-101' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-108' href='#concepts-register-write-g1-108' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-109' href='#concepts-register-write-g1-109' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-110' href='#concepts-register-write-g1-110' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-111' href='#concepts-register-write-g1-111' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-112' href='#concepts-register-write-g1-112' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-115' href='#concepts-register-write-g1-115' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-116' href='#concepts-register-write-g1-116' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-118' href='#concepts-register-write-g1-118' transform='scale(.925)'/>
+<use id='concepts-register-write-g5-120' href='#concepts-register-write-g1-120' transform='scale(.925)'/>
+<path id='concepts-register-write-g1-40' d='M2.042-3.098C2.042-1.156 2.989 .538 4.115 1.375H4.922C3.766 .508 2.79-.966 2.79-2.67V-3.527C2.79-5.23 3.766-6.705 4.922-7.572H4.115C2.989-6.735 2.042-5.041 2.042-3.098Z'/>
+<path id='concepts-register-write-g1-41' d='M3.935-3.098C3.935-5.041 2.989-6.735 1.863-7.572H1.056C2.212-6.705 3.188-5.23 3.188-3.527V-2.67C3.188-.966 2.212 .508 1.056 1.375H1.863C2.989 .538 3.935-1.156 3.935-3.098Z'/>
+<path id='concepts-register-write-g1-47' d='M1.614 1.375L5.081-7.572H4.364L.897 1.375H1.614Z'/>
+<path id='concepts-register-write-g1-69' d='M5.181 0V-.727H1.733V-3.158H5.061V-3.885H1.733V-6.227H5.181V-6.954H.897V0H5.181Z'/>
+<path id='concepts-register-write-g1-78' d='M3.995 0H5.181V-6.954H4.423V-1.096H4.354L1.983-6.954H.797V0H1.554V-5.858H1.624L3.995 0Z'/>
+<path id='concepts-register-write-g1-86' d='M3.557 0L5.619-6.954H4.762L3.776-3.477L3.029-.847H2.979L2.232-3.477L1.245-6.954H.359L2.421 0H3.557Z'/>
+<path id='concepts-register-write-g1-95' d='M5.38 1.684V.946H.598V1.684H5.38Z'/>
+<path id='concepts-register-write-g1-97' d='M5.479 0V-.697H4.762V-3.527C4.762-4.613 3.995-5.26 2.79-5.26C1.743-5.26 1.086-4.762 .827-4.224L1.365-3.826C1.634-4.294 2.052-4.583 2.74-4.583C3.517-4.583 3.965-4.194 3.965-3.447V-2.939H2.869C1.325-2.939 .658-2.391 .658-1.445C.658-.478 1.345 .12 2.421 .12C3.258 .12 3.746-.249 3.965-.837H4.015C4.075-.359 4.314 0 4.932 0H5.479ZM2.56-.548C1.903-.548 1.494-.827 1.494-1.355V-1.564C1.494-2.062 1.923-2.341 2.869-2.341H3.965V-1.494C3.965-.966 3.377-.548 2.56-.548Z'/>
+<path id='concepts-register-write-g1-99' d='M3.168 .12C4.194 .12 4.842-.389 5.141-1.076L4.573-1.465C4.314-.907 3.866-.568 3.178-.568C2.212-.568 1.694-1.225 1.694-2.132V-3.009C1.694-3.915 2.222-4.573 3.158-4.573C3.796-4.573 4.234-4.264 4.423-3.736L5.061-4.075C4.772-4.772 4.154-5.26 3.158-5.26C1.704-5.26 .837-4.204 .837-2.57C.837-.946 1.694 .12 3.168 .12Z'/>
+<path id='concepts-register-write-g1-100' d='M4.234 0H5.031V-7.372H4.234V-4.304H4.194C3.866-4.932 3.328-5.26 2.61-5.26C1.355-5.26 .598-4.254 .598-2.57S1.355 .12 2.61 .12C3.328 .12 3.866-.209 4.194-.837H4.234V0ZM2.919-.588C1.993-.588 1.455-1.205 1.455-2.132V-3.009C1.455-3.935 1.993-4.553 2.919-4.553C3.626-4.553 4.234-4.184 4.234-3.497V-1.644C4.234-.956 3.626-.588 2.919-.588Z'/>
+<path id='concepts-register-write-g1-101' d='M3.078 .12C4.095 .12 4.832-.379 5.141-1.066L4.553-1.465C4.284-.907 3.766-.568 3.078-.568C2.112-.568 1.504-1.225 1.504-2.132V-2.371H5.31V-2.75C5.31-4.204 4.413-5.26 3.029-5.26C1.634-5.26 .667-4.204 .667-2.56C.667-.936 1.604 .12 3.078 .12ZM3.029-4.603C3.875-4.603 4.453-3.985 4.453-3.078V-2.969H1.504V-3.039C1.504-3.935 2.152-4.603 3.029-4.603Z'/>
+<path id='concepts-register-write-g1-104' d='M.976 0H1.773V-3.567C1.773-4.244 2.411-4.553 3.049-4.553C3.836-4.553 4.264-4.095 4.264-3.158V0H5.061V-3.298C5.061-4.543 4.354-5.26 3.278-5.26C2.431-5.26 2.032-4.812 1.813-4.304H1.773V-7.372H.976V0Z'/>
+<path id='concepts-register-write-g1-108' d='M.797 0H5.181V-.677H3.387V-7.372H.797V-6.695H2.59V-.677H.797V0Z'/>
+<path id='concepts-register-write-g1-109' d='M1.275 0V-3.776C1.275-4.324 1.574-4.603 2.002-4.603C2.471-4.603 2.62-4.314 2.62-3.437V0H3.357V-3.776C3.357-4.324 3.656-4.603 4.075-4.603C4.553-4.603 4.702-4.314 4.702-3.437V0H5.44V-3.567C5.44-4.653 5.22-5.26 4.384-5.26C3.776-5.26 3.457-4.922 3.268-4.453H3.238C3.178-4.932 2.889-5.26 2.301-5.26C1.733-5.26 1.474-4.941 1.315-4.543H1.275V-5.141H.538V0H1.275Z'/>
+<path id='concepts-register-write-g1-110' d='M1.773 0V-3.567C1.773-4.244 2.411-4.553 3.049-4.553C3.836-4.553 4.264-4.095 4.264-3.158V0H5.061V-3.298C5.061-4.543 4.354-5.26 3.278-5.26C2.431-5.26 2.032-4.812 1.813-4.304H1.773V-5.141H.976V0H1.773Z'/>
+<path id='concepts-register-write-g1-111' d='M2.989 .12C4.433 .12 5.32-.936 5.32-2.57S4.433-5.26 2.989-5.26S.658-4.204 .658-2.57S1.544 .12 2.989 .12ZM2.989-.568C2.102-.568 1.504-1.096 1.504-2.202V-2.939C1.504-4.045 2.102-4.573 2.989-4.573S4.473-4.045 4.473-2.939V-2.202C4.473-1.096 3.875-.568 2.989-.568Z'/>
+<path id='concepts-register-write-g1-112' d='M.946 1.993H1.743V-.837H1.783C2.112-.209 2.65 .12 3.367 .12C4.623 .12 5.38-.887 5.38-2.57S4.623-5.26 3.367-5.26C2.65-5.26 2.112-4.932 1.783-4.304H1.743V-5.141H.946V1.993ZM3.059-.588C2.351-.588 1.743-.956 1.743-1.644V-3.497C1.743-4.184 2.351-4.553 3.059-4.553C3.985-4.553 4.523-3.935 4.523-3.009V-2.132C4.523-1.205 3.985-.588 3.059-.588Z'/>
+<path id='concepts-register-write-g1-114' d='M.767 0H4.672V-.677H3.068V-2.899C3.068-3.696 3.597-4.344 4.603-4.344H5.569V-5.141H4.852C3.776-5.141 3.318-4.523 3.118-3.846H3.068V-5.141H.767V-4.463H2.271V-.677H.767V0Z'/>
+<path id='concepts-register-write-g1-115' d='M3.049 .12C4.364 .12 5.22-.468 5.22-1.484C5.22-2.6 4.194-2.799 3.457-2.909L2.65-3.029C2.192-3.098 1.743-3.238 1.743-3.776C1.743-4.304 2.192-4.593 2.999-4.593C3.905-4.593 4.364-4.234 4.603-3.945L5.121-4.433C4.633-4.951 3.955-5.26 3.029-5.26C1.833-5.26 .956-4.752 .956-3.726C.956-2.61 1.993-2.411 2.72-2.301L3.527-2.182C3.995-2.112 4.433-1.973 4.433-1.435C4.433-.827 3.866-.548 3.068-.548C2.252-.548 1.694-.837 1.205-1.355L.667-.887C1.205-.279 1.973 .12 3.049 .12Z'/>
+<path id='concepts-register-write-g1-116' d='M5.24 0V-.677H2.899V-4.463H5.24V-5.141H2.899V-6.954H2.132V-5.609C2.132-5.26 2.002-5.141 1.664-5.141H.389V-4.463H2.102V-1.176C2.102-.488 2.461 0 3.238 0H5.24Z'/>
+<path id='concepts-register-write-g1-117' d='M4.204 0H5.001V-5.141H4.204V-1.574C4.204-.897 3.567-.588 2.929-.588C2.142-.588 1.714-1.046 1.714-1.983V-5.141H.917V-1.843C.917-.598 1.624 .12 2.7 .12C3.547 .12 3.945-.329 4.164-.837H4.204V0Z'/>
+<path id='concepts-register-write-g1-118' d='M3.497 0L5.34-5.141H4.553L3.816-2.989L3.019-.667H2.979L2.182-2.989L1.445-5.141H.638L2.481 0H3.497Z'/>
+<path id='concepts-register-write-g1-120' d='M1.524 0L2.361-1.205L2.929-2.022H2.969L3.557-1.205L4.423 0H5.38L3.447-2.62L5.33-5.141H4.413L3.646-4.055L3.049-3.198H3.009L2.391-4.055L1.614-5.141H.658L2.521-2.61L.608 0H1.524Z'/>
+<use id='concepts-register-write-g7-40' href='#concepts-register-write-g3-40' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-41' href='#concepts-register-write-g3-41' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-44' href='#concepts-register-write-g3-44' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-45' href='#concepts-register-write-g3-45' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-48' href='#concepts-register-write-g3-48' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-49' href='#concepts-register-write-g3-49' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-50' href='#concepts-register-write-g3-50' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-53' href='#concepts-register-write-g3-53' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-54' href='#concepts-register-write-g3-54' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-56' href='#concepts-register-write-g3-56' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-57' href='#concepts-register-write-g3-57' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-58' href='#concepts-register-write-g3-58' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-61' href='#concepts-register-write-g3-61' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-65' href='#concepts-register-write-g3-65' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-67' href='#concepts-register-write-g3-67' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-69' href='#concepts-register-write-g3-69' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-72' href='#concepts-register-write-g3-72' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-78' href='#concepts-register-write-g3-78' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-80' href='#concepts-register-write-g3-80' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-82' href='#concepts-register-write-g3-82' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-83' href='#concepts-register-write-g3-83' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-84' href='#concepts-register-write-g3-84' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-86' href='#concepts-register-write-g3-86' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-95' href='#concepts-register-write-g3-95' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-97' href='#concepts-register-write-g3-97' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-98' href='#concepts-register-write-g3-98' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-99' href='#concepts-register-write-g3-99' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-100' href='#concepts-register-write-g3-100' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-101' href='#concepts-register-write-g3-101' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-102' href='#concepts-register-write-g3-102' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-103' href='#concepts-register-write-g3-103' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-104' href='#concepts-register-write-g3-104' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-105' href='#concepts-register-write-g3-105' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-107' href='#concepts-register-write-g3-107' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-108' href='#concepts-register-write-g3-108' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-109' href='#concepts-register-write-g3-109' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-110' href='#concepts-register-write-g3-110' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-111' href='#concepts-register-write-g3-111' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-112' href='#concepts-register-write-g3-112' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-114' href='#concepts-register-write-g3-114' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-115' href='#concepts-register-write-g3-115' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-116' href='#concepts-register-write-g3-116' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-117' href='#concepts-register-write-g3-117' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-118' href='#concepts-register-write-g3-118' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-119' href='#concepts-register-write-g3-119' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-120' href='#concepts-register-write-g3-120' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-121' href='#concepts-register-write-g3-121' transform='scale(.925)'/>
+<use id='concepts-register-write-g7-124' href='#concepts-register-write-g3-124' transform='scale(.925)'/>
+<path id='concepts-register-write-g3-40' d='M.827-3.108C.827-1.166 1.644 .528 2.63 1.365H3.387C2.311 .408 1.574-1.275 1.574-2.67V-3.527C1.574-4.922 2.281-6.575 3.387-7.572H2.63C1.614-6.705 .827-5.031 .827-3.108Z'/>
+<path id='concepts-register-write-g3-41' d='M2.511-3.108C2.511-5.031 1.724-6.705 .707-7.572H-.05C1.056-6.575 1.763-4.922 1.763-3.527V-2.67C1.763-1.275 1.026 .408-.05 1.365H.707C1.694 .528 2.511-1.166 2.511-3.108Z'/>
+<path id='concepts-register-write-g3-44' d='M1.355-1.166C.936-1.166 .747-.927 .747-.578V-.438C.747-.169 .867 .03 1.136 .09C1.026 .558 .787 .907 .389 1.325H1.056C1.624 .837 1.963 .1 1.963-.438V-.578C1.963-.927 1.773-1.166 1.355-1.166Z'/>
+<path id='concepts-register-write-g3-45' d='M3.288-2.6V-3.457H.687V-2.6H3.288Z'/>
+<path id='concepts-register-write-g3-48' d='M2.989 .12C4.653 .12 5.38-1.205 5.38-3.477S4.653-7.073 2.989-7.073S.598-5.748 .598-3.477S1.325 .12 2.989 .12ZM2.989-.608C1.903-.608 1.474-1.564 1.474-2.909V-4.045C1.474-5.39 1.903-6.346 2.989-6.346S4.503-5.39 4.503-4.045V-2.909C4.503-1.564 4.075-.608 2.989-.608Z'/>
+<path id='concepts-register-write-g3-49' d='M5.45 0V-.737H3.656V-6.954H2.351L.508-5.23L.996-4.702L2.75-6.336H2.819V-.737H.877V0H5.45Z'/>
+<path id='concepts-register-write-g3-50' d='M5.31-.737H1.654L3.527-2.421C4.413-3.218 5.051-3.975 5.051-5.051C5.051-6.237 4.274-7.073 2.919-7.073C1.574-7.073 .956-6.257 .687-5.44L1.435-5.151C1.624-5.808 2.022-6.326 2.879-6.326S4.164-5.798 4.164-5.031V-4.912C4.164-4.244 3.666-3.547 3.019-2.949L.747-.857V0H5.31V-.737Z'/>
+<path id='concepts-register-write-g3-53' d='M4.961-6.954H1.235L.986-3.128L1.694-3.029C1.983-3.347 2.301-3.616 2.939-3.616C3.885-3.616 4.394-3.088 4.394-2.172V-2.072C4.394-1.156 3.885-.628 2.939-.628C2.102-.628 1.753-.996 1.395-1.544L.767-1.066C1.186-.468 1.783 .12 2.939 .12C4.403 .12 5.28-.827 5.28-2.182C5.28-3.527 4.403-4.334 3.208-4.334C2.481-4.334 2.112-4.035 1.783-3.567H1.714L1.913-6.217H4.961V-6.954Z'/>
+<path id='concepts-register-write-g3-54' d='M2.999 .12C4.394 .12 5.31-.817 5.31-2.182C5.31-3.497 4.453-4.324 3.258-4.324C2.411-4.324 1.913-3.895 1.584-3.328L1.534-3.347C1.913-4.961 2.74-5.868 4.224-6.954H3.148C2.032-6.227 .667-4.613 .667-2.55C.667-.897 1.554 .12 2.999 .12ZM2.989-.608C2.072-.608 1.534-1.136 1.534-2.072V-2.152C1.534-3.088 2.072-3.616 2.989-3.616S4.443-3.088 4.443-2.152V-2.072C4.443-1.136 3.905-.608 2.989-.608Z'/>
+<path id='concepts-register-write-g3-56' d='M2.989 .12C4.573 .12 5.4-.747 5.4-1.893C5.4-2.839 4.832-3.387 3.995-3.616V-3.696C4.722-3.945 5.191-4.533 5.191-5.33C5.191-6.386 4.374-7.073 2.989-7.073S.787-6.386 .787-5.33C.787-4.533 1.255-3.945 1.983-3.696V-3.616C1.146-3.387 .578-2.839 .578-1.893C.578-.747 1.405 .12 2.989 .12ZM2.989-.608C2.022-.608 1.465-1.066 1.465-1.853V-2.062C1.465-2.849 2.022-3.308 2.989-3.308S4.513-2.849 4.513-2.062V-1.853C4.513-1.066 3.955-.608 2.989-.608ZM2.989-4.005C2.122-4.005 1.654-4.394 1.654-5.101V-5.25C1.654-5.958 2.122-6.346 2.989-6.346S4.324-5.958 4.324-5.25V-5.101C4.324-4.394 3.856-4.005 2.989-4.005Z'/>
+<path id='concepts-register-write-g3-57' d='M5.31-4.403C5.31-6.057 4.423-7.073 2.979-7.073C1.584-7.073 .667-6.137 .667-4.772C.667-3.457 1.524-2.63 2.72-2.63C3.567-2.63 4.065-3.059 4.394-3.626L4.443-3.606C4.065-1.993 3.238-1.086 1.753 0H2.829C3.945-.727 5.31-2.341 5.31-4.403ZM2.989-3.337C2.072-3.337 1.534-3.866 1.534-4.802V-4.882C1.534-5.818 2.072-6.346 2.989-6.346S4.443-5.818 4.443-4.882V-4.802C4.443-3.866 3.905-3.337 2.989-3.337Z'/>
+<path id='concepts-register-write-g3-58' d='M1.455 .12C1.873 .12 2.062-.12 2.062-.458V-.588C2.062-.927 1.873-1.166 1.455-1.166S.847-.927 .847-.588V-.458C.847-.12 1.036 .12 1.455 .12ZM1.455-3.975C1.873-3.975 2.062-4.214 2.062-4.553V-4.682C2.062-5.021 1.873-5.26 1.455-5.26S.847-5.021 .847-4.682V-4.553C.847-4.214 1.036-3.975 1.455-3.975Z'/>
+<path id='concepts-register-write-g3-61' d='M5.31-3.706V-4.384H.667V-3.706H5.31ZM5.31-1.714V-2.391H.667V-1.714H5.31Z'/>
+<path id='concepts-register-write-g3-65' d='M6.157 0L3.726-6.954H2.66L.229 0H1.076L1.773-2.052H4.583L5.28 0H6.157ZM4.374-2.79H1.973L3.148-6.177H3.198L4.374-2.79Z'/>
+<path id='concepts-register-write-g3-67' d='M3.377 .12C4.533 .12 5.38-.488 5.818-1.465L5.151-1.883C4.872-1.126 4.264-.628 3.377-.628C2.182-.628 1.474-1.494 1.474-2.919V-3.955C1.474-5.38 2.182-6.326 3.377-6.326C4.234-6.326 4.812-5.858 5.091-5.141L5.768-5.549C5.33-6.516 4.533-7.073 3.377-7.073C1.624-7.073 .578-5.758 .578-3.437S1.624 .12 3.377 .12Z'/>
+<path id='concepts-register-write-g3-69' d='M5.171 0V-.737H1.763V-3.148H4.971V-3.885H1.763V-6.217H5.171V-6.954H.927V0H5.171Z'/>
+<path id='concepts-register-write-g3-72' d='M5.28 0H6.117V-6.954H5.28V-3.885H1.763V-6.954H.927V0H1.763V-3.148H5.28V0Z'/>
+<path id='concepts-register-write-g3-78' d='M5.151 0H6.117V-6.954H5.3V-1.166H5.27L4.433-2.71L1.893-6.954H.927V0H1.743V-5.788H1.773L2.61-4.244L5.151 0Z'/>
+<path id='concepts-register-write-g3-80' d='M1.763 0V-2.969H3.696C4.941-2.969 5.639-3.736 5.639-4.961S4.941-6.954 3.696-6.954H.927V0H1.763ZM1.763-6.217H3.696C4.354-6.217 4.742-5.858 4.742-5.22V-4.702C4.742-4.065 4.354-3.706 3.696-3.706H1.763V-6.217Z'/>
+<path id='concepts-register-write-g3-82' d='M1.763-2.989H3.387L4.892 0H5.838L4.244-3.068C5.151-3.278 5.639-3.965 5.639-4.981C5.639-6.247 4.912-6.954 3.696-6.954H.927V0H1.763V-2.989ZM1.763-3.706V-6.217H3.696C4.354-6.217 4.742-5.858 4.742-5.22V-4.702C4.742-4.065 4.354-3.706 3.696-3.706H1.763Z'/>
+<path id='concepts-register-write-g3-83' d='M2.879 .12C4.374 .12 5.27-.697 5.27-1.973C5.27-3.009 4.682-3.606 3.328-3.915L2.76-4.045C1.883-4.244 1.455-4.543 1.455-5.2C1.455-5.948 2.002-6.336 2.889-6.336C3.696-6.336 4.224-6.007 4.603-5.479L5.23-5.938C4.712-6.675 3.975-7.073 2.929-7.073C1.564-7.073 .628-6.406 .628-5.171C.628-4.105 1.325-3.547 2.59-3.258L3.158-3.128C4.075-2.919 4.443-2.59 4.443-1.933C4.443-1.136 3.905-.618 2.909-.618C2.102-.618 1.524-.966 1.036-1.614L.418-1.096C.976-.339 1.763 .12 2.879 .12Z'/>
+<path id='concepts-register-write-g3-84' d='M5.479-6.217V-6.954H.219V-6.217H2.431V0H3.268V-6.217H5.479Z'/>
+<path id='concepts-register-write-g3-86' d='M3.527 0L5.868-6.954H5.001L3.846-3.447L3.059-.837H3.009L2.242-3.447L1.096-6.954H.199L2.511 0H3.527Z'/>
+<path id='concepts-register-write-g3-95' d='M5.33 1.644V.946H.299V1.644H5.33Z'/>
+<path id='concepts-register-write-g3-97' d='M5.031 0V-.697H4.443V-3.527C4.443-4.613 3.706-5.26 2.471-5.26C1.544-5.26 .927-4.802 .648-4.254L1.126-3.806C1.405-4.274 1.813-4.573 2.431-4.573C3.248-4.573 3.646-4.174 3.646-3.447V-2.939H2.63C1.136-2.939 .438-2.401 .438-1.435C.438-.478 1.076 .12 2.162 .12C2.879 .12 3.427-.209 3.646-.837H3.696C3.756-.359 3.995 0 4.583 0H5.031ZM2.291-.558C1.674-.558 1.275-.847 1.275-1.355V-1.564C1.275-2.062 1.684-2.341 2.59-2.341H3.646V-1.494C3.646-.966 3.078-.558 2.291-.558Z'/>
+<path id='concepts-register-write-g3-98' d='M.847 0H1.644V-.837H1.684C1.993-.199 2.481 .12 3.188 .12C4.473 .12 5.28-.927 5.28-2.57S4.473-5.26 3.188-5.26C2.481-5.26 1.953-4.951 1.684-4.304H1.644V-7.372H.847V0ZM2.969-.598C2.242-.598 1.644-.976 1.644-1.644V-3.557C1.644-4.125 2.242-4.543 2.969-4.543C3.866-4.543 4.423-3.925 4.423-3.009V-2.132C4.423-1.215 3.866-.598 2.969-.598Z'/>
+<path id='concepts-register-write-g3-99' d='M2.76 .12C3.736 .12 4.403-.359 4.732-1.096L4.154-1.484C3.875-.897 3.407-.588 2.76-.588C1.813-.588 1.325-1.235 1.325-2.132V-3.009C1.325-3.905 1.813-4.553 2.76-4.553C3.387-4.553 3.826-4.244 4.015-3.716L4.682-4.055C4.384-4.762 3.776-5.26 2.76-5.26C1.315-5.26 .468-4.214 .468-2.57S1.315 .12 2.76 .12Z'/>
+<path id='concepts-register-write-g3-100' d='M4.134 0H4.932V-7.372H4.134V-4.304H4.095C3.826-4.951 3.298-5.26 2.59-5.26C1.305-5.26 .498-4.214 .498-2.57S1.305 .12 2.59 .12C3.298 .12 3.786-.199 4.095-.837H4.134V0ZM2.809-.598C1.913-.598 1.355-1.215 1.355-2.132V-3.009C1.355-3.925 1.913-4.543 2.809-4.543C3.537-4.543 4.134-4.125 4.134-3.557V-1.644C4.134-.976 3.537-.598 2.809-.598Z'/>
+<path id='concepts-register-write-g3-101' d='M2.78 .12C3.746 .12 4.483-.359 4.812-1.056L4.244-1.465C3.975-.897 3.477-.578 2.829-.578C1.873-.578 1.305-1.245 1.305-2.132V-2.371H5.001V-2.75C5.001-4.204 4.154-5.26 2.78-5.26C1.385-5.26 .468-4.204 .468-2.57S1.385 .12 2.78 .12ZM2.78-4.593C3.597-4.593 4.144-3.985 4.144-3.078V-2.969H1.305V-3.039C1.305-3.935 1.913-4.593 2.78-4.593Z'/>
+<path id='concepts-register-write-g3-102' d='M1.126 0H1.923V-4.443H3.029V-5.141H1.923V-6.675H3.029V-7.372H2.252C1.494-7.372 1.126-6.884 1.126-6.177V-5.141H.289V-4.443H1.126V0Z'/>
+<path id='concepts-register-write-g3-103' d='M5.181 .568C5.181-.279 4.633-.797 3.357-.797H2.262C1.793-.797 1.474-.877 1.474-1.186C1.474-1.504 1.813-1.674 2.152-1.763C2.301-1.733 2.481-1.714 2.65-1.714C3.826-1.714 4.593-2.441 4.593-3.487C4.593-4.035 4.374-4.493 4.005-4.812V-5.141H4.981V-5.838H4.214C3.786-5.838 3.616-5.549 3.616-5.151V-5.061C3.337-5.191 3.009-5.26 2.64-5.26C1.474-5.26 .707-4.533 .707-3.487C.707-2.77 1.066-2.202 1.674-1.913V-1.873C1.156-1.743 .787-1.494 .787-.976C.787-.628 .956-.399 1.245-.259V-.149C.737-.01 .428 .289 .428 .847C.428 1.654 1.086 2.112 2.69 2.112C4.344 2.112 5.181 1.624 5.181 .568ZM4.433 .628C4.433 1.186 3.915 1.465 3.029 1.465H2.291C1.484 1.465 1.176 1.096 1.176 .648C1.176 .329 1.325 .1 1.654-.05H3.367C4.164-.05 4.433 .219 4.433 .628ZM2.65-2.351C1.973-2.351 1.544-2.67 1.544-3.347V-3.626C1.544-4.304 1.973-4.623 2.65-4.623S3.756-4.304 3.756-3.626V-3.347C3.756-2.67 3.328-2.351 2.65-2.351Z'/>
+<path id='concepts-register-write-g3-104' d='M.847 0H1.644V-3.567C1.644-4.224 2.262-4.543 2.899-4.543C3.666-4.543 4.065-4.075 4.065-3.158V0H4.862V-3.298C4.862-4.543 4.194-5.26 3.138-5.26C2.371-5.26 1.933-4.882 1.684-4.304H1.644V-7.372H.847V0Z'/>
+<path id='concepts-register-write-g3-105' d='M1.245-6.346C1.584-6.346 1.733-6.526 1.733-6.795V-6.924C1.733-7.193 1.584-7.372 1.245-7.372S.757-7.193 .757-6.924V-6.795C.757-6.526 .907-6.346 1.245-6.346ZM.847 0H1.644V-5.141H.847V0Z'/>
+<path id='concepts-register-write-g3-107' d='M.847 0H1.644V-1.833L2.411-2.62L4.115 0H5.081L2.989-3.108L4.892-5.141H3.925L2.471-3.577L1.684-2.7H1.644V-7.372H.847V0Z'/>
+<path id='concepts-register-write-g3-108' d='M2.401 0V-.697H1.644V-7.372H.847V-.827C.847-.349 1.146 0 1.694 0H2.401Z'/>
+<path id='concepts-register-write-g3-109' d='M1.644 0V-3.567C1.644-4.224 2.242-4.543 2.869-4.543C3.626-4.543 3.975-4.075 3.975-3.158V0H4.772V-3.567C4.772-4.224 5.35-4.543 5.978-4.543C6.755-4.543 7.103-4.065 7.103-3.158V0H7.9V-3.298C7.9-4.543 7.273-5.26 6.227-5.26C5.35-5.26 4.852-4.772 4.663-4.214H4.643C4.364-4.951 3.746-5.26 3.068-5.26C2.271-5.26 1.913-4.832 1.684-4.304H1.644V-5.141H.847V0H1.644Z'/>
+<path id='concepts-register-write-g3-110' d='M1.644 0V-3.567C1.644-4.224 2.262-4.543 2.899-4.543C3.666-4.543 4.065-4.075 4.065-3.158V0H4.862V-3.298C4.862-4.543 4.194-5.26 3.138-5.26C2.371-5.26 1.933-4.882 1.684-4.304H1.644V-5.141H.847V0H1.644Z'/>
+<path id='concepts-register-write-g3-111' d='M2.79 .12C4.164 .12 5.111-.936 5.111-2.57S4.164-5.26 2.79-5.26S.468-4.204 .468-2.57S1.415 .12 2.79 .12ZM2.79-.588C1.933-.588 1.325-1.116 1.325-2.202V-2.939C1.325-4.025 1.933-4.553 2.79-4.553S4.254-4.025 4.254-2.939V-2.202C4.254-1.116 3.646-.588 2.79-.588Z'/>
+<path id='concepts-register-write-g3-112' d='M.847 1.993H1.644V-.837H1.684C1.993-.199 2.481 .12 3.188 .12C4.473 .12 5.28-.927 5.28-2.57S4.473-5.26 3.188-5.26C2.481-5.26 1.953-4.951 1.684-4.304H1.644V-5.141H.847V1.993ZM2.969-.598C2.242-.598 1.644-.976 1.644-1.644V-3.557C1.644-4.125 2.242-4.543 2.969-4.543C3.866-4.543 4.423-3.925 4.423-3.009V-2.132C4.423-1.215 3.866-.598 2.969-.598Z'/>
+<path id='concepts-register-write-g3-114' d='M1.644 0V-3.487C1.644-3.975 2.162-4.344 3.019-4.344H3.487V-5.141H3.178C2.341-5.141 1.873-4.682 1.694-4.194H1.644V-5.141H.847V0H1.644Z'/>
+<path id='concepts-register-write-g3-115' d='M2.391 .12C3.567 .12 4.294-.488 4.294-1.484C4.294-2.262 3.856-2.76 2.72-2.929L2.321-2.989C1.684-3.088 1.335-3.288 1.335-3.786C1.335-4.274 1.684-4.583 2.341-4.583S3.437-4.274 3.666-3.955L4.194-4.433C3.776-4.951 3.228-5.26 2.401-5.26C1.355-5.26 .568-4.762 .568-3.746C.568-2.79 1.275-2.401 2.222-2.262L2.63-2.202C3.308-2.102 3.527-1.793 3.527-1.395C3.527-.867 3.128-.558 2.451-.558C1.803-.558 1.325-.847 .927-1.345L.359-.887C.817-.279 1.445 .12 2.391 .12Z'/>
+<path id='concepts-register-write-g3-116' d='M2.979 0V-.697H1.933V-4.443H3.059V-5.141H1.933V-6.565H1.215V-5.609C1.215-5.26 1.106-5.141 .767-5.141H.289V-4.443H1.136V-.847C1.136-.349 1.435 0 1.983 0H2.979Z'/>
+<path id='concepts-register-write-g3-117' d='M4.015 0H4.812V-5.141H4.015V-1.584C4.015-.907 3.397-.598 2.77-.598C2.002-.598 1.594-1.066 1.594-1.983V-5.141H.797V-1.843C.797-.598 1.474 .12 2.531 .12C3.387 .12 3.776-.349 3.975-.837H4.015V0Z'/>
+<path id='concepts-register-write-g3-118' d='M2.909 0L4.722-5.141H3.955L3.039-2.59L2.481-.837H2.431L1.873-2.59L.976-5.141H.179L1.983 0H2.909Z'/>
+<path id='concepts-register-write-g3-119' d='M1.684 0H2.65L3.367-2.471L3.806-4.035H3.826L4.274-2.471L4.991 0H5.978L7.342-5.141H6.595L6.037-2.919L5.509-.667H5.489L4.852-2.919L4.184-5.141H3.477L2.829-2.919L2.202-.667H2.182L1.634-2.919L1.086-5.141H.309L1.684 0Z'/>
+<path id='concepts-register-write-g3-120' d='M.209 0H1.096L2.54-2.012H2.57L3.905 0H4.842L2.989-2.65L4.802-5.141H3.915L2.56-3.228H2.531L1.225-5.141H.289L2.112-2.59L.209 0Z'/>
+<path id='concepts-register-write-g3-121' d='M2.77-1.644L2.491-.807H2.441L2.202-1.644L.966-5.141H.169L2.092 .199L1.704 1.295H.897V1.993H1.305C2.062 1.993 2.271 1.813 2.501 1.196L4.802-5.141H4.015L2.77-1.644Z'/>
+<path id='concepts-register-write-g3-124' d='M1.903 1.375V-7.572H1.225V1.375H1.903Z'/>
+<path id='concepts-register-write-g9-75' d='M5.419 0H7.101L4.284-4.359L6.886-7.475H5.259L3.406-5.194L2.345-3.791H2.292V-7.475H.878V0H2.292V-2.206L3.288-3.384L5.419 0Z'/>
+<path id='concepts-register-write-g9-77' d='M.878 0H2.217V-5.366H2.26L2.838-4.177L4.37-1.349L5.901-4.177L6.479-5.366H6.522V0H7.861V-7.475H6.33L4.434-3.823H4.391L2.474-7.475H.878V0Z'/>
+<path id='concepts-register-write-g9-80' d='M2.292 0V-2.849H4.241C5.623-2.849 6.458-3.77 6.458-5.162C6.458-6.544 5.623-7.475 4.241-7.475H.878V0H2.292ZM2.292-6.244H4.113C4.659-6.244 4.991-5.955 4.991-5.408V-4.916C4.991-4.37 4.659-4.07 4.113-4.07H2.292V-6.244Z'/>
+<path id='concepts-register-write-g9-84' d='M5.933-6.222V-7.475H.278V-6.222H2.399V0H3.813V-6.222H5.933Z'/>
+<path id='concepts-register-write-g9-97' d='M2.174 .129C3.009 .129 3.62-.246 3.802-.964H3.866C3.952-.386 4.316 0 4.905 0H5.665V-1.092H5.109V-3.727C5.109-5.001 4.305-5.719 2.795-5.719C1.671-5.719 1.017-5.291 .61-4.648L1.424-3.92C1.692-4.305 2.056-4.627 2.699-4.627C3.427-4.627 3.738-4.263 3.738-3.641V-3.234H2.785C1.264-3.234 .396-2.667 .396-1.521C.396-.525 1.039 .129 2.174 .129ZM2.635-.867C2.099-.867 1.789-1.092 1.789-1.542V-1.724C1.789-2.163 2.142-2.41 2.86-2.41H3.738V-1.671C3.738-1.146 3.245-.867 2.635-.867Z'/>
+<path id='concepts-register-write-g9-101' d='M3.052 .129C4.091 .129 4.905-.268 5.366-.9L4.627-1.724C4.284-1.285 3.877-.964 3.202-.964C2.303-.964 1.842-1.51 1.842-2.313V-2.453H5.558V-2.902C5.558-4.434 4.755-5.719 3.009-5.719C1.371-5.719 .418-4.573 .418-2.806C.418-1.017 1.403 .129 3.052 .129ZM3.031-4.691C3.738-4.691 4.134-4.166 4.134-3.395V-3.299H1.842V-3.384C1.842-4.155 2.313-4.691 3.031-4.691Z'/>
+<path id='concepts-register-write-g9-107' d='M.793 0H2.163V-1.703L2.902-2.506L4.337 0H5.965L3.834-3.427L5.762-5.591H4.209L2.956-4.155L2.217-3.149H2.163V-7.925H.793V0Z'/>
+<path id='concepts-register-write-g9-108' d='M2.902 0V-1.092H2.163V-7.925H.793V-1.349C.793-.493 1.232 0 2.163 0H2.902Z'/>
+<path id='concepts-register-write-g9-110' d='M2.163 0V-3.695C2.163-4.295 2.71-4.595 3.277-4.595C3.931-4.595 4.198-4.188 4.198-3.395V0H5.569V-3.534C5.569-4.927 4.927-5.719 3.781-5.719C2.913-5.719 2.442-5.259 2.217-4.659H2.163V-5.591H.793V0H2.163Z'/>
+<path id='concepts-register-write-g9-114' d='M2.163 0V-3.427C2.163-4.038 2.645-4.295 3.566-4.295H3.995V-5.591H3.695C2.806-5.591 2.356-5.023 2.217-4.434H2.163V-5.591H.793V0H2.163Z'/>
+<path id='concepts-register-write-g9-115' d='M2.624 .129C4.016 .129 4.927-.621 4.927-1.703C4.927-2.635 4.337-3.181 3.117-3.352L2.549-3.427C2.024-3.513 1.821-3.684 1.821-4.059C1.821-4.402 2.078-4.637 2.667-4.637C3.213-4.637 3.684-4.38 4.005-4.038L4.809-4.841C4.273-5.398 3.716-5.719 2.624-5.719C1.349-5.719 .503-5.034 .503-3.952C.503-2.934 1.167-2.41 2.367-2.26L2.924-2.185C3.416-2.121 3.609-1.917 3.609-1.596C3.609-1.2 3.331-.953 2.677-.953C2.046-.953 1.553-1.242 1.146-1.714L.311-.9C.867-.257 1.564 .129 2.624 .129Z'/>
+</defs>
+<g id='concepts-register-write-page1'>
+<g stroke-miterlimit='10' transform='matrix(.996 0 0 -.996 -72 -72)' stroke-width='1.12921' class='fig-f-ink fig-s-ink'>
+<g stroke-width='0.7528' stroke-dasharray='2.25842,3.01125' stroke-dashoffset='0.0' class='fig-s-line'>
+<path d='M82.809-40.652V-52.697' fill='none'/>
+<path d='M82.809-79.798V-237.887' fill='none'/>
+<path d='M82.809-264.988V-323.707' fill='none'/>
+<path d='M316.179-40.652V-88.831' fill='none'/>
+<path d='M316.179-121.202V-132.494' fill='none'/>
+<path d='M316.179-146.045V-166.37' fill='none'/>
+<path d='M316.179-180.674V-186.696' fill='none'/>
+<path d='M316.179-219.82V-267.247' fill='none'/>
+<path d='M316.179-281.55V-298.112' fill='none'/>
+<path d='M549.55-40.652V-197.236' fill='none'/>
+<path d='M549.55-230.359V-323.707' fill='none'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M22.584-12.045V-36.135C22.584-38.629 24.606-40.652 27.101-40.652H138.517C141.011-40.652 143.033-38.629 143.033-36.135V-12.045C143.033-9.55 141.011-7.528 138.517-7.528H27.101C24.606-7.528 22.584-9.55 22.584-12.045ZM143.033-40.652'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M255.955-12.045V-36.135C255.955-38.629 257.977-40.652 260.471-40.652H371.887C374.382-40.652 376.404-38.629 376.404-36.135V-12.045C376.404-9.55 374.382-7.528 371.887-7.528H260.471C257.977-7.528 255.955-9.55 255.955-12.045ZM376.404-40.652'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M489.325-12.045V-36.135C489.325-38.629 491.347-40.652 493.842-40.652H605.257C607.752-40.652 609.774-38.629 609.774-36.135V-12.045C609.774-9.55 607.752-7.528 605.257-7.528H493.842C491.347-7.528 489.325-9.55 489.325-12.045ZM609.774-40.652'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M22.584-57.213V-75.281C22.584-77.775 24.606-79.798 27.101-79.798H138.517C141.011-79.798 143.033-77.775 143.033-75.281V-57.213C143.033-54.719 141.011-52.697 138.517-52.697H27.101C24.606-52.697 22.584-54.719 22.584-57.213ZM143.033-79.798'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M22.584-242.404V-260.471C22.584-262.966 24.606-264.988 27.101-264.988H138.517C141.011-264.988 143.033-262.966 143.033-260.471V-242.404C143.033-239.909 141.011-237.887 138.517-237.887H27.101C24.606-237.887 22.584-239.909 22.584-242.404ZM143.033-264.988'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M248.427-191.213V-215.303C248.427-217.798 250.449-219.82 252.943-219.82H379.415C381.91-219.82 383.932-217.798 383.932-215.303V-191.213C383.932-188.719 381.91-186.696 379.415-186.696H252.943C250.449-186.696 248.427-188.719 248.427-191.213ZM383.932-219.82'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M466.741-201.752V-225.842C466.741-228.337 468.763-230.359 471.258-230.359H624.83C627.325-230.359 629.347-228.337 629.347-225.842V-201.752C629.347-199.258 627.325-197.236 624.83-197.236H471.258C468.763-197.236 466.741-199.258 466.741-201.752ZM629.347-230.359'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-accent fig-f-accent'>
+<path d='M248.427-301.123V-322.202C248.427-323.865 249.775-325.213 251.438-325.213H380.921C382.584-325.213 383.932-323.865 383.932-322.202V-301.123C383.932-299.46 382.584-298.112 380.921-298.112H251.438C249.775-298.112 248.427-299.46 248.427-301.123ZM383.932-325.213'/>
+</g>
+<g class='fig-s-line'>
+<path d='M82.809-105.393H540.422' fill='none'/>
+<g transform='translate(540.139 -105.393)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g class='fig-s-line'>
+<path d='M82.809-147.55H540.422' fill='none'/>
+<g transform='translate(540.139 -147.55)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g stroke-dasharray='3.76405,3.01125' stroke-dashoffset='0.0' class='fig-s-line'>
+<path d='M549.55-164.112H91.937' fill='none'/>
+<g transform='matrix(-1 0 0 -1 92.219 -164.112)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g class='fig-s-line'>
+<path d='M82.809-203.258H239.299' fill='none'/>
+<g transform='translate(239.016 -203.258)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g class='fig-s-line'>
+<path d='M383.932-213.797H457.613' fill='none'/>
+<g transform='translate(457.331 -213.797)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g class='fig-s-line'>
+<path d='M82.809-283.056H540.422' fill='none'/>
+<g transform='translate(540.139 -283.056)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g class='fig-s-line'>
+<path d='M82.809-311.662H239.299' fill='none'/>
+<g transform='translate(239.016 -311.662)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g class='fig-f-muted fig-s-muted'>
+<g transform='matrix(1.004 0 0 -1.004 143.587 -94.854)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g9-84'/>
+<use x='-66.518' y='-72' href='#concepts-register-write-g9-97'/>
+<use x='-60.508' y='-72' href='#concepts-register-write-g9-115'/>
+<use x='-55.144' y='-72' href='#concepts-register-write-g9-107'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 128.529 -106.899)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='-66.82' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='-59.383' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-56.136' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='-50.882' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-43.621' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-40.374' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='-35.435' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-32.253' y='-72' href='#concepts-register-write-g7-103'/>
+<use x='-27.424' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-22.346' y='-72' href='#concepts-register-write-g7-116'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 372.026 -94.854)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g9-75'/>
+<use x='-64.98' y='-72' href='#concepts-register-write-g9-101'/>
+<use x='-58.982' y='-72' href='#concepts-register-write-g9-114'/>
+<use x='-54.757' y='-72' href='#concepts-register-write-g9-110'/>
+<use x='-48.436' y='-72' href='#concepts-register-write-g9-101'/>
+<use x='-42.438' y='-72' href='#concepts-register-write-g9-108'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 346.668 -106.899)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g5-108'/>
+<use x='-66.45' y='-72' href='#concepts-register-write-g5-115'/>
+<use x='-60.9' y='-72' href='#concepts-register-write-g5-109'/>
+<use x='-55.35' y='-72' href='#concepts-register-write-g5-47'/>
+<use x='-49.8' y='-72' href='#concepts-register-write-g5-116'/>
+<use x='-44.25' y='-72' href='#concepts-register-write-g5-112'/>
+<use x='-38.7' y='-72' href='#concepts-register-write-g5-109'/>
+<use x='-33.15' y='-72' href='#concepts-register-write-g5-95'/>
+<use x='-27.6' y='-72' href='#concepts-register-write-g5-99'/>
+<use x='-22.05' y='-72' href='#concepts-register-write-g5-111'/>
+<use x='-16.5' y='-72' href='#concepts-register-write-g5-109'/>
+<use x='-10.95' y='-72' href='#concepts-register-write-g5-109'/>
+<use x='-5.4' y='-72' href='#concepts-register-write-g5-97'/>
+<use x='.15' y='-72' href='#concepts-register-write-g5-110'/>
+<use x='5.7' y='-72' href='#concepts-register-write-g5-100'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 610.83 -94.854)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g9-84'/>
+<use x='-65.765' y='-72' href='#concepts-register-write-g9-80'/>
+<use x='-58.874' y='-72' href='#concepts-register-write-g9-77'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 577.448 -106.899)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-68.652' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-63.573' y='-72' href='#concepts-register-write-g7-103'/>
+<use x='-58.689' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-56.377' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='-51.937' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-48.727' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-43.649' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-38.071' y='-72' href='#concepts-register-write-g7-48'/>
+<use x='-32.521' y='-72' href='#concepts-register-write-g7-120'/>
+<use x='-27.831' y='-72' href='#concepts-register-write-g7-48'/>
+<use x='-22.281' y='-72' href='#concepts-register-write-g7-49'/>
+<use x='-16.731' y='-72' href='#concepts-register-write-g7-56'/>
+<use x='-11.181' y='-72' href='#concepts-register-write-g7-49'/>
+<use x='-5.631' y='-72' href='#concepts-register-write-g7-56'/>
+<use x='-.081' y='-72' href='#concepts-register-write-g7-69'/>
+<use x='5.311' y='-72' href='#concepts-register-write-g7-48'/>
+<use x='10.861' y='-72' href='#concepts-register-write-g7-48'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 121.955 -137.011)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g1-117'/>
+<use x='-66' y='-72' href='#concepts-register-write-g1-112'/>
+<use x='-60' y='-72' href='#concepts-register-write-g1-97'/>
+<use x='-54' y='-72' href='#concepts-register-write-g1-116'/>
+<use x='-48' y='-72' href='#concepts-register-write-g1-99'/>
+<use x='-42' y='-72' href='#concepts-register-write-g1-104'/>
+<use x='-30' y='-72' href='#concepts-register-write-g1-108'/>
+<use x='-24' y='-72' href='#concepts-register-write-g1-111'/>
+<use x='-18' y='-72' href='#concepts-register-write-g1-97'/>
+<use x='-12' y='-72' href='#concepts-register-write-g1-100'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 118.822 -147.551)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-68.605' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='-63.351' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='-58.097' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-54.851' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-52.538' y='-72' href='#concepts-register-write-g7-109'/>
+<use x='-44.463' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-37.202' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='-32.262' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='-27.008' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-23.761' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='-18.507' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='-13.327' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-9.933' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-7.62' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-4.373' y='-72' href='#concepts-register-write-g7-121'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 143.034 -322.202)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g1-114'/>
+<use x='-66' y='-72' href='#concepts-register-write-g1-111'/>
+<use x='-60' y='-72' href='#concepts-register-write-g1-111'/>
+<use x='-54' y='-72' href='#concepts-register-write-g1-116'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 112.49 -332.741)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='-66.746' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='-59.383' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-55.988' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='-50.734' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='-45.48' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-42.234' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-39.921' y='-72' href='#concepts-register-write-g7-109'/>
+<use x='-31.846' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-24.585' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='-19.645' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='-14.391' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-11.144' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='-5.89' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='-.71' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='2.684' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='4.997' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='8.244' y='-72' href='#concepts-register-write-g7-121'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 300.104 -171.641)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g3-112'/>
+<use x='-66.2' y='-72' href='#concepts-register-write-g3-111'/>
+<use x='-60.6' y='-72' href='#concepts-register-write-g3-108'/>
+<use x='-57.88' y='-72' href='#concepts-register-write-g3-105'/>
+<use x='-55.38' y='-72' href='#concepts-register-write-g3-99'/>
+<use x='-50.35' y='-72' href='#concepts-register-write-g3-121'/>
+<use x='-43' y='-72' href='#concepts-register-write-g3-115'/>
+<use x='-38.13' y='-72' href='#concepts-register-write-g3-101'/>
+<use x='-32.64' y='-72' href='#concepts-register-write-g3-115'/>
+<use x='-27.83' y='-72' href='#concepts-register-write-g3-115'/>
+<use x='-22.96' y='-72' href='#concepts-register-write-g3-105'/>
+<use x='-20.46' y='-72' href='#concepts-register-write-g3-111'/>
+<use x='-14.86' y='-72' href='#concepts-register-write-g3-110'/>
+<use x='-9.18' y='-72' href='#concepts-register-write-g3-58'/>
+<use x='-3.9' y='-72' href='#concepts-register-write-g3-111'/>
+<use x='1.7' y='-72' href='#concepts-register-write-g3-110'/>
+<use x='7.38' y='-72' href='#concepts-register-write-g3-101'/>
+<use x='15.23' y='-72' href='#concepts-register-write-g3-111'/>
+<use x='20.77' y='-72' href='#concepts-register-write-g3-102'/>
+<use x='26.37' y='-72' href='#concepts-register-write-g3-116'/>
+<use x='29.88' y='-72' href='#concepts-register-write-g3-104'/>
+<use x='35.56' y='-72' href='#concepts-register-write-g3-101'/>
+<use x='43.41' y='-72' href='#concepts-register-write-g3-116'/>
+<use x='46.92' y='-72' href='#concepts-register-write-g3-119'/>
+<use x='54.55' y='-72' href='#concepts-register-write-g3-111'/>
+<use x='62.51' y='-72' href='#concepts-register-write-g3-98'/>
+<use x='68.31' y='-72' href='#concepts-register-write-g3-114'/>
+<use x='71.94' y='-72' href='#concepts-register-write-g3-97'/>
+<use x='77.28' y='-72' href='#concepts-register-write-g3-110'/>
+<use x='82.96' y='-72' href='#concepts-register-write-g3-99'/>
+<use x='87.99' y='-72' href='#concepts-register-write-g3-104'/>
+<use x='93.67' y='-72' href='#concepts-register-write-g3-101'/>
+<use x='99.16' y='-72' href='#concepts-register-write-g3-115'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 259.392 -189.708)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-119'/>
+<use x='-64.896' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-61.501' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-59.189' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-56.025' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-52.816' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-47.737' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='-42.483' y='-72' href='#concepts-register-write-g7-44'/>
+<use x='-37.784' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='-32.604' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-27.027' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='-21.773' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='-16.565' y='-72' href='#concepts-register-write-g7-119'/>
+<use x='-9.461' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-6.066' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-3.754' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-.59' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='2.62' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='7.698' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='15.135' y='-72' href='#concepts-register-write-g7-119'/>
+<use x='22.239' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='24.551' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='27.798' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='35.235' y='-72' href='#concepts-register-write-g7-80'/>
+<use x='40.841' y='-72' href='#concepts-register-write-g7-67'/>
+<use x='46.585' y='-72' href='#concepts-register-write-g7-82'/>
+<use x='52.505' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='59.193' y='-72' href='#concepts-register-write-g7-57'/>
+<use x='66.926' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='71.865' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='77.119' y='-72' href='#concepts-register-write-g7-100'/>
+<use x='84.667' y='-72' href='#concepts-register-write-g7-49'/>
+<use x='90.217' y='-72' href='#concepts-register-write-g7-49'/>
+<use x='97.95' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='102.89' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='108.319' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='111.566' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='116.82' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='121.898' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='124.211' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='129.789' y='-72' href='#concepts-register-write-g7-98'/>
+<use x='135.154' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='140.334' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='145.588' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='150.842' y='-72' href='#concepts-register-write-g7-100'/>
+<use x='158.39' y='-72' href='#concepts-register-write-g7-118'/>
+<use x='162.857' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='167.797' y='-72' href='#concepts-register-write-g7-108'/>
+<use x='170.313' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='175.567' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='180.645' y='-72' href='#concepts-register-write-g7-115'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 328.551 -213.798)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g3-115'/>
+<use x='-67.13' y='-72' href='#concepts-register-write-g3-105'/>
+<use x='-64.63' y='-72' href='#concepts-register-write-g3-103'/>
+<use x='-59.35' y='-72' href='#concepts-register-write-g3-110'/>
+<use x='-51.31' y='-72' href='#concepts-register-write-g3-119'/>
+<use x='-43.63' y='-72' href='#concepts-register-write-g3-105'/>
+<use x='-41.13' y='-72' href='#concepts-register-write-g3-116'/>
+<use x='-37.62' y='-72' href='#concepts-register-write-g3-104'/>
+<use x='-29.58' y='-72' href='#concepts-register-write-g3-116'/>
+<use x='-26.07' y='-72' href='#concepts-register-write-g3-104'/>
+<use x='-20.39' y='-72' href='#concepts-register-write-g3-101'/>
+<use x='-12.54' y='-72' href='#concepts-register-write-g3-78'/>
+<use x='-5.47' y='-72' href='#concepts-register-write-g3-86'/>
+<use x='2.98' y='-72' href='#concepts-register-write-g3-119'/>
+<use x='10.66' y='-72' href='#concepts-register-write-g3-114'/>
+<use x='14.33' y='-72' href='#concepts-register-write-g3-105'/>
+<use x='16.83' y='-72' href='#concepts-register-write-g3-116'/>
+<use x='20.3' y='-72' href='#concepts-register-write-g3-101'/>
+<use x='25.79' y='-72' href='#concepts-register-write-g3-114'/>
+<use x='31.82' y='-72' href='#concepts-register-write-g3-107'/>
+<use x='36.92' y='-72' href='#concepts-register-write-g3-101'/>
+<use x='42.36' y='-72' href='#concepts-register-write-g3-121'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 262.252 -248.427)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='-64.878' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='-60.373' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-58.06' y='-72' href='#concepts-register-write-g7-103'/>
+<use x='-53.176' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='-47.922' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='-42.983' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-39.736' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='-34.482' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-31.134' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-23.872' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='-18.766' y='-72' href='#concepts-register-write-g7-118'/>
+<use x='-14.289' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-9.211' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-3.633' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-.387' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='4.867' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='12.129' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='16.633' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='21.712' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='26.161' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='30.666' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='32.978' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='38.158' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='45.595' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='50.849' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='56.029' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='61.283' y='-72' href='#concepts-register-write-g7-99'/>
+<use x='65.88' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='73.142' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='78.081' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='83.335' y='-72' href='#concepts-register-write-g7-100'/>
+<use x='90.883' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='94.13' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='99.384' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='101.696' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='108.384' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='113.351' y='-72' href='#concepts-register-write-g7-120'/>
+<use x='118.041' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='122.981' y='-72' href='#concepts-register-write-g7-99'/>
+<use x='127.633' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='133.063' y='-72' href='#concepts-register-write-g7-78'/>
+<use x='139.603' y='-72' href='#concepts-register-write-g7-86'/>
+<use x='145.236' y='-72' href='#concepts-register-write-g7-95'/>
+<use x='150.462' y='-72' href='#concepts-register-write-g7-69'/>
+<use x='155.855' y='-72' href='#concepts-register-write-g7-120'/>
+<use x='160.545' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='163.755' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='168.833' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='174.087' y='-72' href='#concepts-register-write-g7-100'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 193.321 -269.506)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g5-78'/>
+<use x='-66.45' y='-72' href='#concepts-register-write-g5-86'/>
+<use x='-60.9' y='-72' href='#concepts-register-write-g5-95'/>
+<use x='-55.35' y='-72' href='#concepts-register-write-g5-69'/>
+<use x='-49.8' y='-72' href='#concepts-register-write-g5-120'/>
+<use x='-44.25' y='-72' href='#concepts-register-write-g5-116'/>
+<use x='-38.7' y='-72' href='#concepts-register-write-g5-101'/>
+<use x='-33.15' y='-72' href='#concepts-register-write-g5-110'/>
+<use x='-27.6' y='-72' href='#concepts-register-write-g5-100'/>
+<use x='-22.05' y='-72' href='#concepts-register-write-g5-40'/>
+<use x='-16.5' y='-72' href='#concepts-register-write-g5-101'/>
+<use x='-10.95' y='-72' href='#concepts-register-write-g5-118'/>
+<use x='-5.4' y='-72' href='#concepts-register-write-g5-101'/>
+<use x='.15' y='-72' href='#concepts-register-write-g5-110'/>
+<use x='5.7' y='-72' href='#concepts-register-write-g5-116'/>
+<use x='11.25' y='-72' href='#concepts-register-write-g5-41'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 350.837 -272.517)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-68.605' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='-63.351' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='-58.097' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-54.851' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-52.538' y='-72' href='#concepts-register-write-g7-109'/>
+<use x='-44.463' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-37.202' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='-32.262' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='-27.008' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-23.761' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='-18.507' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='-13.327' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-9.933' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-7.62' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-4.373' y='-72' href='#concepts-register-write-g7-121'/>
+<use x='.242' y='-72' href='#concepts-register-write-g7-58'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 367.211 -284.562)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-112'/>
+<use x='-66.635' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='-61.696' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='-57.246' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='-52.742' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-47.663' y='-72' href='#concepts-register-write-g7-100'/>
+<use x='-40.115' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='-34.935' y='-72' href='#concepts-register-write-g7-110'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 544.611 -283.056)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-68.652' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-63.573' y='-72' href='#concepts-register-write-g7-103'/>
+<use x='-58.689' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-56.377' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='-51.937' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-48.727' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-43.649' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-38.071' y='-72' href='#concepts-register-write-g7-61'/>
+<use x='-30.338' y='-72' href='#concepts-register-write-g7-83'/>
+<use x='-24.964' y='-72' href='#concepts-register-write-g7-72'/>
+<use x='-18.424' y='-72' href='#concepts-register-write-g7-65'/>
+<use x='-12.68' y='-72' href='#concepts-register-write-g7-45'/>
+<use x='-8.989' y='-72' href='#concepts-register-write-g7-50'/>
+<use x='-3.439' y='-72' href='#concepts-register-write-g7-53'/>
+<use x='2.111' y='-72' href='#concepts-register-write-g7-54'/>
+<use x='7.661' y='-72' href='#concepts-register-write-g7-40'/>
+<use x='10.76' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='14.108' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='19.186' y='-72' href='#concepts-register-write-g7-103'/>
+<use x='24.07' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='26.383' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='30.823' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='34.033' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='39.111' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='44.689' y='-72' href='#concepts-register-write-g7-124'/>
+<use x='47.593' y='-72' href='#concepts-register-write-g7-124'/>
+<use x='52.681' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='57.685' y='-72' href='#concepts-register-write-g7-118'/>
+<use x='62.162' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='67.24' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='72.494' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='75.741' y='-72' href='#concepts-register-write-g7-41'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 544.059 -295.101)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-69.688' y='-72' href='#concepts-register-write-g7-102'/>
+<use x='-64.508' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-61.261' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='-56.007' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-48.746' y='-72' href='#concepts-register-write-g7-112'/>
+<use x='-43.381' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='-38.201' y='-72' href='#concepts-register-write-g7-108'/>
+<use x='-35.685' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-33.372' y='-72' href='#concepts-register-write-g7-99'/>
+<use x='-28.719' y='-72' href='#concepts-register-write-g7-121'/>
+<use x='-21.921' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='-16.981' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='-11.727' y='-72' href='#concepts-register-write-g7-100'/>
+<use x='-4.179' y='-72' href='#concepts-register-write-g7-99'/>
+<use x='.418' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='5.598' y='-72' href='#concepts-register-write-g7-109'/>
+<use x='13.673' y='-72' href='#concepts-register-write-g7-109'/>
+<use x='21.749' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='26.688' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='31.942' y='-72' href='#concepts-register-write-g7-100'/>
+<use x='39.49' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='44.744' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='49.684' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='54.188' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='61.625' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='66.879' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='72.059' y='-72' href='#concepts-register-write-g7-108'/>
+<use x='74.575' y='-72' href='#concepts-register-write-g7-100'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 256.955 -349.303)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-68.753' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='-63.499' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-56.238' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='-51.733' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='-46.794' y='-72' href='#concepts-register-write-g7-109'/>
+<use x='-38.719' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-31.457' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='-26.953' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-21.874' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='-17.425' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='-12.92' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='-10.608' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='-5.428' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='2.009' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='6.949' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='12.203' y='-72' href='#concepts-register-write-g7-100'/>
+<use x='19.751' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='24.255' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='26.568' y='-72' href='#concepts-register-write-g7-103'/>
+<use x='31.452' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='36.706' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='41.645' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='44.892' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='50.146' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='53.495' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='58.573' y='-72' href='#concepts-register-write-g7-58'/>
+<use x='63.457' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='66.704' y='-72' href='#concepts-register-write-g7-104'/>
+<use x='71.958' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='79.219' y='-72' href='#concepts-register-write-g7-119'/>
+<use x='86.323' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='89.718' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='92.03' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='95.24' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='100.318' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='105.896' y='-72' href='#concepts-register-write-g7-107'/>
+<use x='110.613' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='115.645' y='-72' href='#concepts-register-write-g7-121'/>
+<use x='122.444' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='126.949' y='-72' href='#concepts-register-write-g7-105'/>
+<use x='129.261' y='-72' href='#concepts-register-write-g7-103'/>
+<use x='134.145' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='139.399' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='146.087' y='-72' href='#concepts-register-write-g7-102'/>
+<use x='149.047' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='154.227' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='159.805' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='164.744' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='169.924' y='-72' href='#concepts-register-write-g7-121'/>
+<use x='174.494' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='179.674' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='184.928' y='-72' href='#concepts-register-write-g7-101'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 193.321 -377.91)' stroke='none' class='fig-f-muted'>
+<use x='-72' y='-72' href='#concepts-register-write-g5-78'/>
+<use x='-66.45' y='-72' href='#concepts-register-write-g5-86'/>
+<use x='-60.9' y='-72' href='#concepts-register-write-g5-95'/>
+<use x='-55.35' y='-72' href='#concepts-register-write-g5-69'/>
+<use x='-49.8' y='-72' href='#concepts-register-write-g5-120'/>
+<use x='-44.25' y='-72' href='#concepts-register-write-g5-116'/>
+<use x='-38.7' y='-72' href='#concepts-register-write-g5-101'/>
+<use x='-33.15' y='-72' href='#concepts-register-write-g5-110'/>
+<use x='-27.6' y='-72' href='#concepts-register-write-g5-100'/>
+<use x='-22.05' y='-72' href='#concepts-register-write-g5-40'/>
+<use x='-16.5' y='-72' href='#concepts-register-write-g5-101'/>
+<use x='-10.95' y='-72' href='#concepts-register-write-g5-118'/>
+<use x='-5.4' y='-72' href='#concepts-register-write-g5-101'/>
+<use x='.15' y='-72' href='#concepts-register-write-g5-110'/>
+<use x='5.7' y='-72' href='#concepts-register-write-g5-116'/>
+<use x='11.25' y='-72' href='#concepts-register-write-g5-41'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 352.142 -382.427)' class='fig-f-accent'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-114'/>
+<use x='-68.652' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-63.573' y='-72' href='#concepts-register-write-g7-102'/>
+<use x='-60.576' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='-55.322' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='-50.818' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-45.739' y='-72' href='#concepts-register-write-g7-100'/>
+<use x='-40.374' y='-72' href='#concepts-register-write-g7-58'/>
+<use x='-35.49' y='-72' href='#concepts-register-write-g7-69'/>
+<use x='-30.098' y='-72' href='#concepts-register-write-g7-65'/>
+<use x='-24.307' y='-72' href='#concepts-register-write-g7-67'/>
+<use x='-18.683' y='-72' href='#concepts-register-write-g7-67'/>
+<use x='-12.939' y='-72' href='#concepts-register-write-g7-69'/>
+<use x='-7.546' y='-72' href='#concepts-register-write-g7-83'/>
+<use x='-2.172' y='-72' href='#concepts-register-write-g7-44'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 340.745 -392.966)' class='fig-f-accent'>
+<use x='-72' y='-72' href='#concepts-register-write-g7-99'/>
+<use x='-67.403' y='-72' href='#concepts-register-write-g7-111'/>
+<use x='-62.223' y='-72' href='#concepts-register-write-g7-117'/>
+<use x='-56.969' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='-51.715' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='-48.505' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='-43.427' y='-72' href='#concepts-register-write-g7-100'/>
+<use x='-35.879' y='-72' href='#concepts-register-write-g7-97'/>
+<use x='-30.939' y='-72' href='#concepts-register-write-g7-115'/>
+<use x='-24.252' y='-72' href='#concepts-register-write-g7-84'/>
+<use x='-19.377' y='-72' href='#concepts-register-write-g7-112'/>
+<use x='-14.012' y='-72' href='#concepts-register-write-g7-109'/>
+<use x='-5.937' y='-72' href='#concepts-register-write-g7-69'/>
+<use x='-.544' y='-72' href='#concepts-register-write-g7-120'/>
+<use x='4.146' y='-72' href='#concepts-register-write-g7-116'/>
+<use x='7.356' y='-72' href='#concepts-register-write-g7-101'/>
+<use x='12.434' y='-72' href='#concepts-register-write-g7-110'/>
+<use x='17.688' y='-72' href='#concepts-register-write-g7-100'/>
+</g>
+</g>
+</g>
+</g>
+</svg>

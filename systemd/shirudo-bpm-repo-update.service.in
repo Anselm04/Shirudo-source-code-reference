@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# Copyright (c) 2026 Authors of shirudo
+
+[Unit]
+Description=shirudo: refresh BPM OCI repositories and upgrade packages
+Wants=network-online.target
+After=network-online.target shirudo.service
+RequiresMountsFor=/etc/shirudo/bpm /var/lib/shirudo
+
+[Service]
+Type=oneshot
+SyslogIdentifier=shirudo
+LimitMEMLOCK=infinity
+TimeoutStartSec=30min
+EnvironmentFile=-/etc/shirudo/bpm/environment
+# One unreachable registry fails the update; the upgrade still runs
+# from what the others refreshed.
+ExecStart=-@bindir@/shirudo bpm repo update
+ExecStart=@bindir@/shirudo bpm upgrade

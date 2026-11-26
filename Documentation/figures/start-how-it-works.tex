@@ -1,0 +1,70 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The life of a upatch from the operator host through a registry to a
+% target and its TPM, and the evidence back to the operator, in the
+% numbered steps of start/how-it-works.rst.
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (760,380);
+
+  \draw[box] (10,50) rectangle (200,300);
+  \draw[box] (240,110) rectangle (390,210);
+  \draw[frame] (430,10) rectangle (750,330);
+  \draw[box, rounded corners=3bp] (445,44) rectangle (740,148);
+  \draw[box, rounded corners=3bp] (445,184) rectangle (605,316);
+  \draw[box, rounded corners=3bp] (620,184) rectangle (740,316);
+
+  \draw[flow] (200,160) -- (238,160);
+  \draw[flow] (390,130) -- (443,130);
+  \draw[flow] (527,148) -- (527,182);
+  \draw[flow] (680,148) -- (680,182);
+  \draw[flow] (680,316) -- (680,362) -- (105,362) -- (105,302);
+
+  \begin{scope}[every node/.append style={note, small}]
+    \node[anchor=base west, font=\figbody] at (442,32) {target};
+
+    \node[anchor=base, large] at (105,74) {Operator host};
+    \node[anchor=base, large] at (315,134) {OCI registry};
+    \node[anchor=base] at (315,158) {packages (.bee)};
+    \node[anchor=base] at (315,174) {signed index};
+    \node[anchor=base] at (315,190) {tree publication};
+    \node[anchor=base, large] at (592,66) {shirudo, one-shot commands};
+    \node[anchor=base, large] at (527,206) {Kernel};
+    \node[anchor=base, large] at (680,206) {TPM};
+    \node[anchor=base] at (219,152) {push};
+    \node[anchor=base] at (416,122) {pull};
+    \node[anchor=base] at (390,354) {evidence for the operator's nonce};
+
+    \foreach \x/\y/\n in {22/104/1, 22/146/2, 22/252/7,
+        457/90/3, 457/128/4, 457/230/5}
+      \node[anchor=base west] at (\x,\y) {\n};
+
+    \foreach \x/\y/\t in {37/104/shirudo build,
+        37/120/signed loader artifact,
+        37/146/shirudo bpm build,
+        37/162/bpm push,
+        37/178/bpm tree append,
+        37/252/shirudo attest verify,
+        37/268/attest predict,
+        472/90/{bpm repo update, bpm upgrade,},
+        472/106/bpm tree sync (timers),
+        472/128/upatch load,
+        533/170/bpf(),
+        686/170/extend,
+        472/230/signature check,
+        472/246/against .bpf keyring,
+        472/266/LSM admission,
+        472/286/{loader runs, links},
+        472/302/attached and pinned}
+      \node[anchor=base west] at (\x,\y) {\t};
+
+    \foreach \y/\t in {232/6, 248/register extended,
+        276/attestation key, 292/signs evidence}
+      \node[anchor=base] at (680,\y) {\t};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

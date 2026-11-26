@@ -1,0 +1,1428 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# Copyright (c) 2026 Authors of shirudo
+#
+# Makefile.shirudo -- main build graph.
+#
+# Five strict build phases:
+#   1. vendored libbpf (vendor/libbpf) and the vmlinux.h generator
+#   2. generated headers   (vendor/linux/vmlinux.h)
+#   3. compiled objects    (util/*.o, builtin-*.o, shirudo.o, bpf/*.bpf.o)
+#   4. embedded BPF        (util/loader.o, .incbin of bpf/*.bpf.o)
+#   5. link                (shirudo, shirudo-target, shirudo-build)
+
+include Makefile.version
+
+PROFILE ?= operator
+CONFIG_MK ?= config.mk
+-include $(CONFIG_MK)
+# Nothing here writes the config: the top-level Makefile has written it
+# before it gets here, except in a dry run, which only prints that step.
+CONFIG_MK_DEP := $(wildcard $(CONFIG_MK))
+
+# Both profiles run on OpenSSL: libcrypto for SHA-256, certificates and
+# CMS, libssl behind libcurl for TLS. The operator links the system
+# shared libraries; the target links static dependencies staged by
+# make target-deps and the compiler's static C and compiler runtimes.
+CRYPTO_SRC := util/crypto_openssl.c
+TLS_SRC := util/tls_openssl.c
+ifeq ($(PROFILE),target)
+OBJ_PREFIX := build/target/
+CRYPTO_CFLAGS := $(TARGET_TLS_CFLAGS)
+else
+OBJ_PREFIX :=
+CRYPTO_CFLAGS :=
+endif
+
+obj = $(OBJ_PREFIX)$(1)
+
+# ----- toolchain --------------------------------------------------
+
+CC      ?= cc
+LD      := $(CC)
+AR      ?= ar
+LDFLAGS ?=
+SHIRUDO_BUNDLE_RPATH ?= 0
+CLANG   ?= clang
+# libbpf, its BPF-side headers and the BPF UAPI headers are vendored under
+# vendor/libbpf (refreshed on demand with make bpf-deps); nothing in
+# a normal build reaches outside the repository for them. vmlinux.h is
+# dumped from BTF by the in-tree generator, so bpftool is not needed.
+LIBBPF_VENDOR    := vendor/libbpf
+LIBBPF_DIR       := $(LIBBPF_VENDOR)/bpf
+LIBBPF_A         := $(LIBBPF_VENDOR)/libbpf.a
+BPF_UAPI_INCLUDE := $(LIBBPF_VENDOR)/include/uapi
+VMLINUX_GEN      := tools/gen-vmlinux-h/gen-vmlinux-h
+BPF_VMLINUX_H ?=
+# Prefer BTF from the testing bpf-next target; otherwise use the running host.
+# A caller can still override this explicitly for another target kernel.
+BPF_VMLINUX_BTF ?= $(if $(wildcard artifacts/bpf-next-kernel-debs/vmlinux.btf),artifacts/bpf-next-kernel-debs/vmlinux.btf,/sys/kernel/btf/vmlinux)
+# Generated, never committed: the C rendering of the selected BTF.
+VMLINUX_H := vendor/linux/vmlinux.h
+VMLINUX_BTF_SOURCE := vendor/linux/.vmlinux-btf-source
+VMLINUX_BTF_SOURCE_CURRENT := $(shell cat $(VMLINUX_BTF_SOURCE) 2>/dev/null)
+VMLINUX_BTF_SOURCE_SELECTED := $(if $(BPF_VMLINUX_H),header:$(BPF_VMLINUX_H),$(BPF_VMLINUX_BTF))
+ifneq ($(VMLINUX_BTF_SOURCE_SELECTED),$(VMLINUX_BTF_SOURCE_CURRENT))
+VMLINUX_BTF_SOURCE_CHANGED := FORCE_VMLINUX_BTF
+endif
+
+SHIRUDO_LIBEXEC_DIR ?= $(libexecdir)/shirudo
+
+# Where operator-installed BPF headers live on a packaged host;
+# also baked into shirudo-build as a runtime fallback -I path.
+SHIRUDO_BPF_INCDIR  ?= $(sharedir)/shirudo/bpf/include
+# Installed kernel BTF types used as the default vmlinux.h fallback.
+SHIRUDO_VMLINUX_PATH ?= $(sharedir)/shirudo/vmlinux.h
+# The clang shirudo-build runs, as it never searches PATH.
+SHIRUDO_CLANG_PATH ?= /usr/bin/clang
+
+# A warning fails the build, ours and that of the vendored libbpf and
+# the BPF objects alike; WERROR=0 lets a compiler newer than the tree
+# finish the build while its new warnings get fixed.
+WERROR ?= 1
+WERROR_CFLAGS := $(if $(filter 1,$(WERROR)),-Werror)
+WARNINGS := -Wall -Wextra -Wno-unused-parameter -Wstrict-prototypes -Wvla \
+            -Wmissing-prototypes -Wpointer-arith -Wshadow \
+            -Wdeclaration-after-statement -Wformat-security -Wformat=2 \
+            -Wwrite-strings -Wundef -Wtype-limits -Wimplicit-fallthrough \
+            $(WERROR_CFLAGS)
+
+# The warnings that not every compiler shirudo builds with has, each
+# kept where the compiler takes it: a __DATE__ that would make the build
+# unreproducible, a switch without a default, an include directory that
+# does not exist, gcc's test of a logical operator on equal operands, a
+# bidirectional control character, which makes source read other than
+# it compiles, and a nested function's trampoline, which needs an
+# executable stack. gcc's
+# -Wmaybe-uninitialized is off, as in the kernel: what it reports
+# changes with the gcc version and the optimization level, so it fails a
+# build on one host and not on the next, and the uninit Coccinelle rule
+# and -ftrivial-auto-var-init=zero cover what it would.
+cc-option = $(foreach f,$(2),$(shell $(1) -Werror $(f) -E -x c /dev/null \
+		-o /dev/null >/dev/null 2>&1 && echo $(f)))
+PROBED_WARNINGS := -Wdate-time -Wswitch-default -Wmissing-include-dirs \
+                   -Wlogical-op -Wno-maybe-uninitialized -Wbidi-chars=any \
+                   -Wtrampolines
+CC_WARNINGS := $(call cc-option,$(CC),$(PROBED_WARNINGS))
+
+SHIRUDO_DEBUG ?= 1
+DEBUG_CFLAGS := $(if $(filter 1 yes y true,$(SHIRUDO_DEBUG)),-g,)
+
+# Toolchain hardening, set here rather than left to the compiler's
+# defaults, which differ between distributions, or to packaging flags,
+# which CFLAGS below replaces. Stack-clash protection, zeroing the
+# call-used registers and control-flow protection exist for x86-64 and
+# arm64; riscv64 gets the rest.
+HARDEN_ARCH := $(firstword $(subst -, ,$(shell $(CC) -dumpmachine)))
+HARDEN_CFLAGS := -fPIE -fstack-protector-strong \
+                 -ftrivial-auto-var-init=zero
+ifeq ($(HARDEN_ARCH),x86_64)
+HARDEN_CFLAGS += -fstack-clash-protection -fzero-call-used-regs=used \
+                 -fcf-protection=full
+endif
+ifeq ($(HARDEN_ARCH),aarch64)
+HARDEN_CFLAGS += -fstack-clash-protection -fzero-call-used-regs=used \
+                 -mbranch-protection=standard
+endif
+HARDEN_LDFLAGS := -pie -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack
+HARDEN_STATIC_PIE_LDFLAGS := $(filter-out -pie,$(HARDEN_LDFLAGS))
+
+# The language the kernel builds in: signed overflow wraps rather than
+# license the compiler to drop a test for it, a NULL test after a
+# dereference stays, a pointer cast between types is not miscompiled,
+# char is unsigned on every architecture, as it is on arm64 and riscv64
+# already, and only a [] at the end of a struct is a flexible array, so
+# _FORTIFY_SOURCE and the sanitizers bound one of a fixed size. Where
+# the compiler has it, gcc 15 and newer, the padding of an initialized
+# automatic object is zeroed too, rather than left with what the stack
+# held, for an object that is hashed, written out or handed to the
+# kernel.
+LANG_CFLAGS := -fno-strict-overflow -fno-delete-null-pointer-checks \
+               -fno-strict-aliasing -funsigned-char -fstrict-flex-arrays=3
+PROBED_LANG := -fzero-init-padding-bits=all
+CC_LANG := $(call cc-option,$(CC),$(PROBED_LANG))
+
+CFLAGS_BASE := -O2 $(DEBUG_CFLAGS) -std=gnu11 $(WARNINGS) $(CC_WARNINGS) \
+               $(HARDEN_CFLAGS) $(LANG_CFLAGS) $(CC_LANG) \
+               -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE \
+               -DLIBEXEC_DIR='"$(SHIRUDO_LIBEXEC_DIR)"' \
+               -DBPF_INCDIR='"$(SHIRUDO_BPF_INCDIR)"' \
+               -DVMLINUX_PATH='"$(SHIRUDO_VMLINUX_PATH)"' \
+               -DCLANG_PATH='"$(SHIRUDO_CLANG_PATH)"'
+
+# GCC coverage is collected from a build on a clean checkout: the host's
+# counters from the checkout, the target's from the test VMs.
+COVERAGE ?= 0
+ifeq ($(COVERAGE),1)
+CFLAGS_BASE += --coverage -fprofile-abs-path -fprofile-update=atomic
+endif
+
+# make SANITIZE=address,undefined instruments the host-side binaries and
+# the test helpers; BPF objects come from clang -target bpf and are never
+# affected. Recovery is off so that every report fails the run. The
+# fortified libc calls stay out of such a build, as they would bypass the
+# sanitizer's own checks. SANITIZE=memory instruments the vendored libbpf
+# too and wants every library linked instrumented as well, which
+# .github/scripts/msan-deps.sh builds: MemorySanitizer takes what it did
+# not see written as uninitialized.
+SANITIZE ?=
+comma := ,
+SANITIZE_MEMORY := $(filter memory,$(subst $(comma), ,$(SANITIZE)))
+SANITIZE_CFLAGS := $(if $(SANITIZE),-fsanitize=$(SANITIZE)) \
+                   $(if $(SANITIZE_MEMORY),-fsanitize-memory-track-origins=2)
+ifneq ($(SANITIZE),)
+CFLAGS_BASE += -O1 -fno-omit-frame-pointer $(SANITIZE_CFLAGS) \
+               -fno-sanitize-recover=all -U_FORTIFY_SOURCE
+else
+# No frame larger than 128 KiB: a table belongs on the heap, where its
+# allocation fails cleanly, not on a stack two such frames would take a
+# good part of. ASan pads every object, so the sanitized build is left
+# without the limit. ANALYZE=1 builds for clang's static analyzer,
+# without _FORTIFY_SOURCE and with -fno-inline: glibc's fortified and
+# inline wrappers hide from it which libc function a call makes, and
+# with it the errno a failure sets and the memory getline() hands back.
+ANALYZE ?=
+CFLAGS_BASE += -U_FORTIFY_SOURCE \
+               $(if $(ANALYZE),-fno-inline,-D_FORTIFY_SOURCE=3) \
+               -Wframe-larger-than=131072
+endif
+
+INCLUDES := \
+    -I. \
+    -Iinclude \
+    -Iutil \
+    -I$(LIBBPF_VENDOR) \
+    -I$(BPF_UAPI_INCLUDE)
+
+CFLAGS := $(CFLAGS_BASE) $(INCLUDES) \
+          $(LIBSSL_CFLAGS) $(LIBCRYPTO_CFLAGS) $(TSS2_CFLAGS) \
+          $(LIBELF_CFLAGS) $(ZLIB_CFLAGS) $(LIBCURL_CFLAGS) \
+          $(CRYPTO_CFLAGS)
+
+# libbpf is always linked from its archive. The normal shirudo binary keeps
+# the existing dynamic OpenSSL/libcurl profile for operator builds.
+STATIC_LIBS = \
+    $(LIBBPF_A)
+
+DYNAMIC_LIBS := \
+    $(LIBSSL_LIBS) $(LIBCRYPTO_LIBS) $(TSS2_LIBS) \
+    $(LIBELF_LIBS) $(ZLIB_LIBS) $(LIBCURL_LIBS)
+
+CFLAGS += $(LUAJIT_CFLAGS) -DHAVE_LUAJIT
+DYNAMIC_LIBS += $(LUAJIT_LIBS)
+
+ifeq ($(PROFILE),target)
+CFLAGS += -fPIE
+endif
+
+ifeq ($(SHIRUDO_BUNDLE_RPATH),1)
+RPATH_LDFLAGS := -Wl,--disable-new-dtags -Wl,-rpath,'$$ORIGIN/../lib/shirudo'
+else
+RPATH_LDFLAGS :=
+endif
+
+# vmlinux.h dumps anonymous structs in a way that trips
+# -Wmissing-declarations; the BPF_PROG() / BPF_KPROBE() macros
+# generate auto-named params that often go unused. Neither is
+# fixable upstream of us, so silence both for BPF compilation.
+# -fno-jump-tables keeps a switch in branches: clang 23 otherwise reads
+# its results from a table in .rodata at an offset the verifier cannot
+# bound, and refuses the program.
+CLANG_BPF := $(CLANG) -target bpf -mcpu=v4 -fno-jump-tables -O2 -g -Wall -Wextra \
+             -Wvla -Wshadow \
+             -Wtype-limits -Wimplicit-fallthrough \
+             -Wno-missing-declarations -Wno-unused-parameter \
+             -Wdeclaration-after-statement $(WERROR_CFLAGS)
+
+# ----- source manifests -------------------------------------------
+
+UTIL_SRCS := \
+	$(CRYPTO_SRC) \
+	$(TLS_SRC) \
+    util/loader.c \
+    util/upatch.c \
+    util/xdp.c \
+    util/measured.c \
+    util/java_agent.c \
+    util/keyring.c \
+    util/keys.c \
+    util/identity.c \
+    util/nv_writer.c \
+    util/tamper.c \
+    util/integrity.c \
+    util/initrd.c \
+    util/paths.c \
+    util/harden.c \
+    util/preflight.c \
+    util/kernel_abi.c \
+    util/kernel_prereq.c \
+    util/log.c \
+    util/io.c \
+    util/tpm.c \
+    util/tpm_wire.c \
+    util/attest.c \
+    util/chain.c \
+    util/chain_history.c \
+    util/hex.c \
+    util/string.c \
+    util/bpm_tree.c \
+    util/bpm_tree_overlap.c \
+    util/bpm_tree_state.c \
+    util/bpm_oci.c \
+    util/curl.c \
+    util/bpm_cleanup.c \
+    util/bpm_install.c \
+    util/bpm_package.c \
+    util/bpm_state.c \
+    util/kconfig.c \
+    util/kernel_build_id.c \
+    util/kernel_release.c \
+    util/config.c \
+    util/image_bootstrap.c \
+    util/image_cache.c \
+    util/image_config.c \
+    util/image_runtime.c \
+    util/image_guards.c \
+    util/image_keys.c \
+    util/config_image.c \
+    util/dm_verity.c \
+    util/config_update.c \
+    util/config_measure.c \
+    util/config_attest.c \
+    util/bpm_source_config.c \
+    util/eventlog.c \
+    util/json.c \
+    util/report.c \
+    util/malloc.c \
+    util/sysinfo.c \
+    util/similar.c \
+    util/help.c \
+    util/options.c \
+    util/timefmt.c \
+    util/conditions.c \
+    util/keepalive.c \
+    util/keepalive_quote.c \
+    util/format.c \
+    util/seal.c \
+    util/serializer.c \
+    util/upatch_maps.c \
+    util/upatch_rodata.c \
+    util/upatch_decode.c \
+    util/upatch_maps_otel.c \
+    util/elf_target.c \
+    util/upatch_pins.c \
+    util/upatch_verify.c \
+    util/upatch_resolve.c \
+    util/upatch_table.c
+
+BUILTIN_GENKEY_SRC := builtin-genkey.c
+
+BUILTIN_SRCS := \
+    builtin-init.c \
+    $(BUILTIN_GENKEY_SRC) \
+    builtin-status.c \
+    builtin-keys.c \
+    builtin-config.c \
+    builtin-image.c \
+    builtin-upatch.c \
+    builtin-bpm.c \
+    builtin-attest.c \
+    builtin-build.c \
+    builtin-version.c
+
+# BPF-side libbpf headers, used straight from vendor/libbpf (the BPF
+# compile rule adds it to the include path so <bpf/...> resolves) and
+# installed for shirudo build on operator hosts.
+BPF_VENDOR_HEADERS := bpf_helpers bpf_helper_defs bpf_tracing \
+                      bpf_core_read bpf_endian
+BPF_LIBBPF_HEADERS := $(addprefix $(LIBBPF_DIR)/,\
+                                  $(addsuffix .h,$(BPF_VENDOR_HEADERS)))
+BPF_LIB_HEADERS    := bpf/lib/misc.h \
+                      bpf/lib/serializer.h \
+                      bpf/lib/policy.h \
+                      bpf/lib/xattr.h \
+                      bpf/lib/decoder.h
+
+# bpf/*.bpf.c sources compiled with clang -target bpf and embedded via
+# .incbin into util/loader.o. bpf/lib/ is include-only.
+BPF_SRCS := \
+    bpf/bpf2.c \
+    bpf/seal.c \
+    bpf/unload.c
+
+# shirudo-build is operator-only and links util/sign.c (CMS signer)
+# plus a small subset of util/. The core shirudo binary does NOT
+# link util/sign.c.
+BUILD_SRCS := \
+    tools/shirudo-build/shirudo-build.c \
+    tools/shirudo-build/compile.c \
+    tools/shirudo-build/package.c \
+    tools/shirudo-build/jar.c \
+    tools/shirudo-build/vmlinux.c \
+    tools/shirudo-build/bpm-build.c \
+    tools/shirudo-build/bpm-publish.c \
+    tools/shirudo-build/bpm-show.c \
+    tools/shirudo-build/vouch.c \
+    tools/shirudo-build/image.c
+
+# shirudo-quote-check is a backend's program: it checks keepalive quotes
+# with the TPM parsers of util/ and is never linked into shirudo.
+QUOTE_CHECK_SRCS := \
+    tools/quote-check/quote-check.c \
+    tools/quote-check/row.c
+
+# ----- derived names ----------------------------------------------
+
+UTIL_OBJS    := $(foreach s,$(UTIL_SRCS),$(call obj,$(s:.c=.o)))
+BUILTIN_OBJS := $(foreach s,$(BUILTIN_SRCS),$(call obj,$(s:.c=.o)))
+BPF_OBJS     := $(BPF_SRCS:.c=.bpf.o)
+BUILD_OBJS   := $(foreach s,$(BUILD_SRCS),$(call obj,$(s:.c=.o)))
+QUOTE_CHECK_OBJS := $(foreach s,$(QUOTE_CHECK_SRCS),$(call obj,$(s:.c=.o)))
+
+MAIN_OBJ     := $(call obj,shirudo.o)
+VERSION_OBJ  := $(call obj,util/version_id.o)
+SIGN_OBJ     := $(call obj,util/sign.o)
+
+# Header-dependency tracking (-MMD -MP writes a .d per .o). Without this,
+# changing a header would leave dependent .o files stale -- e.g. a struct
+# whose size grew in a header but whose .c was not re-touched, producing
+# an ABI mismatch and memory corruption at runtime.
+DEP_OBJS := $(MAIN_OBJ) $(BUILTIN_OBJS) $(UTIL_OBJS) $(VERSION_OBJ) \
+            $(BUILD_OBJS) $(SIGN_OBJ) $(QUOTE_CHECK_OBJS)
+DEPS     := $(DEP_OBJS:.o=.d)
+
+# ----- top-level goals --------------------------------------------
+
+.PHONY: all install install-common install-target install-operator clean distclean \
+		test-helpers verity-test-helpers unit-tests quote-check \
+        bpf libbpf
+
+all: shirudo
+
+# shirudo-build is built only when explicitly requested or on the
+# operator install target.
+shirudo-build: tools/shirudo-build/shirudo-build
+
+quote-check: tools/quote-check/shirudo-quote-check
+
+# ----- phase 1: vendored libbpf and the vmlinux.h generator -------
+
+LIBBPF_SRCS := $(wildcard $(LIBBPF_DIR)/*.c $(LIBBPF_DIR)/*.h \
+                          $(LIBBPF_VENDOR)/include/linux/*.h \
+                          $(LIBBPF_VENDOR)/include/asm/*.h \
+                          $(LIBBPF_VENDOR)/include/uapi/linux/*.h \
+                          $(LIBBPF_VENDOR)/Makefile)
+
+libbpf: $(LIBBPF_A)
+
+# libbpf compiles against the libelf and zlib headers the binary links,
+# which need not be the system's.
+$(LIBBPF_A): $(LIBBPF_SRCS)
+	@printf '  LIBBPF\n'
+	$(Q)$(MAKE) -C $(LIBBPF_VENDOR) CC="$(CC)" Q="$(Q)" \
+		EXTRA_CFLAGS="$(WERROR_CFLAGS) $(LIBELF_CFLAGS) $(ZLIB_CFLAGS) \
+			$(if $(SANITIZE_MEMORY), \
+			-fno-omit-frame-pointer $(SANITIZE_CFLAGS))"
+
+# Build-time only; links the vendored libbpf and dumps BTF as C.
+$(VMLINUX_GEN): tools/gen-vmlinux-h/gen-vmlinux-h.c $(LIBBPF_A)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS_BASE) $(INCLUDES) $(LDFLAGS) -o $@ $< $(LIBBPF_A) \
+	    $(LIBELF_LIBS) $(ZLIB_LIBS)
+
+# ----- phase 2: generated headers ---------------------------------
+
+ifneq ($(BPF_VMLINUX_H),)
+$(VMLINUX_H): $(BPF_VMLINUX_H) $(VMLINUX_BTF_SOURCE_CHANGED)
+	@printf '  COPY    $@\n'
+	$(Q)mkdir -p $(dir $@)
+	$(Q)cp $< $@
+	$(Q)printf '%s\n' '$(VMLINUX_BTF_SOURCE_SELECTED)' > $(VMLINUX_BTF_SOURCE)
+else
+$(VMLINUX_H): $(VMLINUX_GEN) $(BPF_VMLINUX_BTF) $(VMLINUX_BTF_SOURCE_CHANGED)
+	@printf '  GEN     $@\n'
+	$(Q)mkdir -p $(dir $@)
+	$(Q)$< $(BPF_VMLINUX_BTF) > $@
+	$(Q)printf '%s\n' '$(VMLINUX_BTF_SOURCE_SELECTED)' > $(VMLINUX_BTF_SOURCE)
+endif
+
+.PHONY: FORCE_VMLINUX_BTF
+FORCE_VMLINUX_BTF:
+
+# ----- phase 3: compile rules -------------------------------------
+
+%.o: %.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+
+build/target/%.o: %.c Makefile.shirudo $(CONFIG_MK_DEP)
+	@printf '  CC      $@\n'
+	$(Q)mkdir -p $(dir $@)
+	$(Q)$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+
+-include $(DEPS)
+
+# The tree walk limits of util/bpm_tree.h and the keepalive window of
+# util/keepalive.h. The test VM bundle builds its target with them low,
+# TREE_LIMIT_CFLAGS='-DTREE_MAX_WALK_OPS=<n> -DTREE_MAX_JOIN_OPS=<n>
+# -DKEEPALIVE_WINDOW_OPS=<n>', so that a target test reaches them; the
+# operator profile ignores it. The objects that read them rebuild whenever the value
+# differs from the one they were built with, so a build without it never
+# keeps the lowered limits.
+ifeq ($(PROFILE),target)
+TREE_LIMIT_CFLAGS ?=
+else
+override TREE_LIMIT_CFLAGS :=
+endif
+TREE_LIMIT_STAMP := build/tree-limits-$(PROFILE)
+TREE_LIMIT_OBJS := $(call obj,builtin-bpm.o) $(call obj,builtin-status.o) \
+		   $(call obj,util/bpm_tree.o)
+
+.PHONY: FORCE_TREE_LIMITS
+FORCE_TREE_LIMITS:
+
+$(TREE_LIMIT_STAMP): FORCE_TREE_LIMITS
+	$(Q)mkdir -p $(dir $@)
+	$(Q)printf '%s\n' '$(TREE_LIMIT_CFLAGS)' | cmp -s - $@ 2>/dev/null || \
+	    printf '%s\n' '$(TREE_LIMIT_CFLAGS)' > $@
+
+$(TREE_LIMIT_OBJS): $(TREE_LIMIT_STAMP)
+$(TREE_LIMIT_OBJS): CFLAGS += $(TREE_LIMIT_CFLAGS)
+
+# BPF objects pull vmlinux.h from vendor/linux, <bpf/...> helper headers
+# and UAPI kernel headers from vendor/libbpf, and shirudo's own BPF
+# library headers from bpf/lib.
+bpf/%.bpf.o: bpf/%.c $(VMLINUX_H) $(BPF_LIBBPF_HEADERS) \
+              $(wildcard bpf/lib/*.h) include/shirudo/tpm.h \
+              include/shirudo/enforcement.h
+	@printf '  CLANG   $@\n'
+	$(Q)$(CLANG_BPF) -Iinclude -Ibpf/lib -I$(dir $(VMLINUX_H)) -I$(LIBBPF_VENDOR) \
+	    -I$(BPF_UAPI_INCLUDE) \
+	    -c $< -o $@
+
+bpf/bpf2.bpf.o build/unit/identity: include/shirudo/pin_grant.h
+
+# ----- version_id ------------------------------------------------
+
+# Regenerated every build; cheap (one sha256sum invocation).
+.PHONY: util/version_id.c
+util/version_id.c:
+	@printf '  GEN     $@\n'
+	$(Q)set -eu; \
+	describe=$$($(SHIRUDO_GIT_DESCRIBE) 2>/dev/null || cat VERSION); \
+	describe_c=$$(printf '%s' "$$describe" | sed 's/[\\"]/\\&/g'); \
+	rev=$$(git rev-parse HEAD 2>/dev/null || cat VERSION); \
+	dirty=$$(git diff-index --quiet HEAD 2>/dev/null || echo -dirty); \
+	cfg=$$(sha256sum config.mk Makefile.shirudo 2>/dev/null | \
+	       sha256sum | cut -c1-16); \
+	id=$$(printf '%s%s|%s' "$$rev$$dirty" "$$cfg" | \
+	      sha256sum | cut -d' ' -f1); \
+	extra_c=$$(printf '%s' "$(EXTRAVERSION)" | sed 's/[\\"]/\\&/g'); \
+	name_c=$$(printf '%s' "$(NAME)" | sed 's/[\\"]/\\&/g'); \
+	{ \
+	    echo "// SPDX-License-Identifier: BSD-2-Clause"; \
+	    echo "/* Copyright (c) 2026 Authors of shirudo */"; \
+	    echo "/* AUTO-GENERATED. Do not edit. Do not commit. */"; \
+	    echo ""; \
+	    echo "#include \"version.h\""; \
+	    echo ""; \
+	    echo "const char shirudo_version[] = \"$$describe_c\";"; \
+	    echo "const char shirudo_version_id[] = \"$$id\";"; \
+	    echo "const char shirudo_extraversion[] = \"$$extra_c\";"; \
+	    echo "const char shirudo_release_name[] = \"$$name_c\";"; \
+	} > $@
+
+# ----- phase 5: link ---------------------------------------------
+
+shirudo: $(MAIN_OBJ) $(BUILTIN_OBJS) $(UTIL_OBJS) $(VERSION_OBJ) $(LIBBPF_A)
+	@printf '  LD      $@\n'
+	$(Q)$(LD) $(CFLAGS) $(HARDEN_LDFLAGS) $(LDFLAGS) $(RPATH_LDFLAGS) -o $@ \
+	    $(MAIN_OBJ) $(BUILTIN_OBJS) $(UTIL_OBJS) $(VERSION_OBJ) \
+	    $(STATIC_LIBS) $(DYNAMIC_LIBS)
+
+shirudo-target: $(MAIN_OBJ) $(BUILTIN_OBJS) $(UTIL_OBJS) $(VERSION_OBJ) $(LIBBPF_A) \
+                Makefile.shirudo $(CONFIG_MK_DEP) .github/scripts/check-static-target.sh
+	@printf '  LD      $@ (static PIE)\n'
+	$(Q)$(LD) $(CFLAGS) $(TARGET_TLS_CFLAGS) \
+	    $(HARDEN_STATIC_PIE_LDFLAGS) $(LDFLAGS) \
+	    -static-pie -static-libgcc -o $@ \
+	    $(MAIN_OBJ) $(BUILTIN_OBJS) $(UTIL_OBJS) $(VERSION_OBJ) \
+	    $(STATIC_LIBS) $(TARGET_TLS_STATIC_LINK_LIBS) \
+	    $(TARGET_STATIC_RUNTIME_LINK_LIBS)
+	$(Q)sh .github/scripts/check-static-target.sh $@ || \
+	    { rm -f $@; exit 1; }
+
+# util/loader.o has a make-level dep on every embedded bpf object.
+util/loader.o: $(BPF_OBJS)
+build/target/util/loader.o: $(BPF_OBJS)
+
+# shirudo-build links util/sign.c (CMS signer) plus a subset of util,
+# util/loader.o for its .incbin of bpf/unload.bpf.o (used by the
+# --unload directive emission path), and the OCI client for the
+# operator-only `bpm build|push|tree append|tree show`. Not linked into
+# the core shirudo binary.
+tools/shirudo-build/shirudo-build: $(BUILD_OBJS) $(SIGN_OBJ) util/config_image.o \
+                                   util/log.o util/json.o util/loader.o \
+                                   util/io.o util/malloc.o util/paths.o util/config.o \
+                                   util/image_config.o util/upatch.o util/timefmt.o \
+                                   util/elf_target.o util/hex.o util/keys.o \
+                                   util/seal.o util/harden.o util/string.o \
+                                   util/crypto_openssl.o util/tls_openssl.o \
+                                   util/bpm_oci.o util/curl.o util/bpm_package.o \
+                                   util/upatch_rodata.o util/format.o \
+                                   util/bpm_tree.o util/bpm_tree_overlap.o \
+                                   util/chain_history.o util/options.o \
+                                   util/help.o util/similar.o \
+                                   util/kernel_release.o $(VERSION_OBJ) \
+                                   $(LIBBPF_A)
+	@printf '  LD      $@\n'
+	$(Q)$(LD) $(CFLAGS) $(HARDEN_LDFLAGS) $(LDFLAGS) $(RPATH_LDFLAGS) -o $@ $^ \
+	    $(STATIC_LIBS) $(DYNAMIC_LIBS)
+
+# A backend runs the checker where it does not choose the libraries, as
+# a function inside a database container for one, so it is a static PIE
+# whatever the profile. The sanitizer runtimes do not link statically.
+PKG_CONFIG ?= pkg-config
+QUOTE_CHECK_UTIL_SRCS := util/tpm_wire.c util/crypto_openssl.c util/hex.c \
+                         util/json.c util/io.c util/seal.c util/log.c \
+                         util/malloc.c util/string.c util/options.c \
+                         util/help.c util/similar.c
+
+# A distribution without a static libcrypto, Fedora for one, gets the
+# prefix of a static OpenSSL here. The checker's objects then compile
+# against its headers, apart from those of shirudo, whose OpenSSL may be
+# another major version.
+QUOTE_CHECK_OPENSSL ?=
+ifneq ($(SANITIZE),)
+override QUOTE_CHECK_OPENSSL :=
+endif
+ifeq ($(QUOTE_CHECK_OPENSSL),)
+QUOTE_CHECK_LINK_OBJS := $(QUOTE_CHECK_OBJS) $(QUOTE_CHECK_UTIL_SRCS:.c=.o)
+QUOTE_CHECK_PKG_CONFIG := $(PKG_CONFIG)
+else
+QUOTE_CHECK_LINK_OBJS := $(addprefix build/quote-check/, \
+	$(QUOTE_CHECK_SRCS:.c=.o) $(QUOTE_CHECK_UTIL_SRCS:.c=.o))
+QUOTE_CHECK_PKG_CONFIG := PKG_CONFIG_PATH= \
+	PKG_CONFIG_LIBDIR=$(QUOTE_CHECK_OPENSSL)/lib/pkgconfig $(PKG_CONFIG)
+-include $(QUOTE_CHECK_LINK_OBJS:.o=.d)
+endif
+
+ifeq ($(SANITIZE),)
+QUOTE_CHECK_LDFLAGS := $(HARDEN_STATIC_PIE_LDFLAGS) -static-pie -static-libgcc
+QUOTE_CHECK_LIBS := $(shell $(QUOTE_CHECK_PKG_CONFIG) --static --libs libcrypto 2>/dev/null)
+else
+QUOTE_CHECK_LDFLAGS := $(HARDEN_LDFLAGS)
+QUOTE_CHECK_LIBS := $(LIBCRYPTO_LIBS)
+endif
+
+build/quote-check/%.o: %.c Makefile.shirudo $(CONFIG_MK_DEP)
+	@printf '  CC      $@\n'
+	$(Q)mkdir -p $(dir $@)
+	$(Q)$(CC) -I$(QUOTE_CHECK_OPENSSL)/include $(CFLAGS) -MMD -MP -c $< -o $@
+
+tools/quote-check/shirudo-quote-check: $(QUOTE_CHECK_LINK_OBJS)
+	@printf '  LD      $@\n'
+	$(Q)$(LD) $(CFLAGS) $(QUOTE_CHECK_LDFLAGS) $(LDFLAGS) -o $@ $^ \
+	    $(QUOTE_CHECK_LIBS)
+
+# ----- install ----------------------------------------------------
+
+# The reboot-persistence units, with @bindir@ resolved to the install path.
+systemd/shirudo.service: systemd/shirudo.service.in
+	@printf '  GEN     $@\n'
+	$(Q)sed 's|@bindir@|$(bindir)|g' $< > $@
+
+systemd/shirudo-initrd.service: systemd/shirudo-initrd.service.in
+	@printf '  GEN     $@\n'
+	$(Q)sed 's|@bindir@|$(bindir)|g' $< > $@
+
+# The periodic map exporter is target-only and uses the same installed binary.
+systemd/shirudo-map-export.service: systemd/shirudo-map-export.service.in
+	@printf '  GEN     $@\n'
+	$(Q)sed 's|@bindir@|$(bindir)|g' $< > $@
+
+# The periodic status keepalive is target-only and uses the same installed
+# binary and OTLP environment as the map exporter.
+systemd/shirudo-keepalive.service: systemd/shirudo-keepalive.service.in
+	@printf '  GEN     $@\n'
+	$(Q)sed 's|@bindir@|$(bindir)|g' $< > $@
+
+systemd/shirudo-xdp-reconcile.service: systemd/shirudo-xdp-reconcile.service.in
+	@printf '  GEN     $@\n'
+	$(Q)sed 's|@bindir@|$(bindir)|g' $< > $@
+
+# The BPM repository refresh is target-only and uses the same installed
+# binary plus the optional BPM OCI environment file.
+systemd/shirudo-bpm-repo-update.service: systemd/shirudo-bpm-repo-update.service.in
+	@printf '  GEN     $@\n'
+	$(Q)sed 's|@bindir@|$(bindir)|g' $< > $@
+
+# The optional signed upatch tree refresh is target-only and exits cleanly
+# when /etc/shirudo/bpm/upatch-tree.conf is absent.
+systemd/shirudo-bpm-tree-sync.service: systemd/shirudo-bpm-tree-sync.service.in
+	@printf '  GEN     $@\n'
+	$(Q)sed 's|@bindir@|$(bindir)|g' $< > $@
+
+install: shirudo install-common
+	@printf '  INSTALL $(DESTDIR)$(bindir)/shirudo\n'
+	$(Q)install -d $(DESTDIR)$(bindir)
+	$(Q)install -m 0755 shirudo $(DESTDIR)$(bindir)/shirudo
+
+install-common:
+	@printf '  INSTALL $(DESTDIR)$(completionsdir)/shirudo\n'
+	$(Q)install -d $(DESTDIR)$(completionsdir)
+	$(Q)install -m 0644 completion/shirudo.bash \
+	    $(DESTDIR)$(completionsdir)/shirudo
+
+# Target machines additionally get the reboot-persistence, periodic map
+# export, and status keepalive units. They are deliberately NOT in
+# install-operator.
+install-target: shirudo-target install-common systemd/shirudo.service \
+		systemd/shirudo-initrd.service \
+		systemd/shirudo-map-export.service \
+		systemd/shirudo-map-export.timer \
+		systemd/shirudo-keepalive.service \
+		systemd/shirudo-keepalive.timer \
+		systemd/shirudo-xdp-reconcile.service \
+		systemd/shirudo-xdp-reconcile.timer \
+		systemd/shirudo-bpm-repo-update.service \
+		systemd/shirudo-bpm-repo-update.timer \
+		systemd/shirudo-bpm-tree-sync.service \
+		systemd/shirudo-bpm-tree-sync.timer
+	@printf '  INSTALL $(DESTDIR)$(bindir)/shirudo (static PIE)\n'
+	$(Q)install -d $(DESTDIR)$(bindir)
+	$(Q)install -m 0755 shirudo-target $(DESTDIR)$(bindir)/shirudo
+	@printf '  INSTALL $(DESTDIR)$(bindir)/shirudo-gen-initrd\n'
+	$(Q)install -m 0755 tools/gen-initrd/shirudo-gen-initrd \
+	    $(DESTDIR)$(bindir)/shirudo-gen-initrd
+	@printf '  INSTALL $(DESTDIR)$(dracutmodulesdir)/90shirudo\n'
+	$(Q)install -d $(DESTDIR)$(dracutmodulesdir)/90shirudo
+	$(Q)install -m 0755 tools/gen-initrd/module-setup.sh \
+	    $(DESTDIR)$(dracutmodulesdir)/90shirudo/module-setup.sh
+	@printf '  INSTALL $(DESTDIR)$(systemdunitdir)/shirudo*.service,timer\n'
+	$(Q)install -d $(DESTDIR)$(systemdunitdir)
+	$(Q)install -m 0644 systemd/shirudo.service \
+	    systemd/shirudo-initrd.service \
+	    systemd/shirudo-map-export.service \
+	    systemd/shirudo-map-export.timer \
+	    systemd/shirudo-keepalive.service \
+	    systemd/shirudo-keepalive.timer \
+	    systemd/shirudo-xdp-reconcile.service \
+	    systemd/shirudo-xdp-reconcile.timer \
+	    systemd/shirudo-bpm-repo-update.service \
+	    systemd/shirudo-bpm-repo-update.timer \
+	    systemd/shirudo-bpm-tree-sync.service \
+	    systemd/shirudo-bpm-tree-sync.timer \
+	    $(DESTDIR)$(systemdunitdir)/
+	@printf '  INSTALL $(DESTDIR)$(udevrulesdir)/90-shirudo-xdp-reconcile.rules\n'
+	$(Q)install -d $(DESTDIR)$(udevrulesdir)
+	$(Q)install -m 0644 systemd/90-shirudo-xdp-reconcile.rules \
+	    $(DESTDIR)$(udevrulesdir)/
+
+install-operator: install shirudo-build quote-check $(VMLINUX_H) $(BPF_LIBBPF_HEADERS) $(BPF_LIB_HEADERS)
+	@printf '  INSTALL $(DESTDIR)$(libexecdir)/shirudo/shirudo-build\n'
+	$(Q)install -d $(DESTDIR)$(libexecdir)/shirudo
+	$(Q)install -m 0755 tools/shirudo-build/shirudo-build \
+	    $(DESTDIR)$(libexecdir)/shirudo/shirudo-build
+	@printf '  INSTALL $(DESTDIR)$(bindir)/shirudo-quote-check\n'
+	$(Q)install -m 0755 tools/quote-check/shirudo-quote-check \
+	    $(DESTDIR)$(bindir)/shirudo-quote-check
+	$(Q)install -d $(DESTDIR)$(libexecdir)/shirudo/gen-image
+	$(Q)install -m 0755 tools/gen-image/shirudo-gen-* \
+	    $(DESTDIR)$(libexecdir)/shirudo/gen-image/
+	$(Q)install -m 0644 tools/gen-image/common.sh \
+	    tools/gen-image/runtime-service*.conf.in \
+	    $(DESTDIR)$(libexecdir)/shirudo/gen-image/
+	@printf '  INSTALL $(DESTDIR)$(sharedir)/shirudo/vmlinux.h\n'
+	$(Q)install -d $(DESTDIR)$(sharedir)/shirudo
+	$(Q)install -m 0644 $(VMLINUX_H) \
+	    $(DESTDIR)$(sharedir)/shirudo/vmlinux.h
+	@printf '  INSTALL $(DESTDIR)$(SHIRUDO_BPF_INCDIR)/bpf/\n'
+	$(Q)install -d $(DESTDIR)$(SHIRUDO_BPF_INCDIR)/bpf
+	$(Q)install -m 0644 $(BPF_LIBBPF_HEADERS) \
+	    $(DESTDIR)$(SHIRUDO_BPF_INCDIR)/bpf/
+	@printf '  INSTALL $(DESTDIR)$(SHIRUDO_BPF_INCDIR)/\n'
+	$(Q)install -m 0644 $(BPF_LIB_HEADERS) \
+	    $(DESTDIR)$(SHIRUDO_BPF_INCDIR)/
+
+# ----- test -------------------------------------------------------
+
+# A libtpms-backed TPM for the host-side register tests; built only
+# where libtpms is installed, the tests skip without it.
+TPMSIM_CFLAGS := $(shell pkg-config --cflags libtpms 2>/dev/null)
+TPMSIM_LIBS := $(shell pkg-config --libs libtpms 2>/dev/null)
+TPMSIM_HELPER := $(if $(TPMSIM_LIBS),testing/helper/tpmsim-cmd,)
+
+# Target fixtures must run without the host ELF interpreter or sanitizer.
+VERITY_TEST_HELPERS := build/verity-tests/shirudo-policy-probe
+
+build/verity-tests/shirudo-policy-probe: \
+		testing/helper/policy-probe.c util/identity.h util/paths.h
+	@printf '  CC      $@\n'
+	$(Q)mkdir -p $(dir $@)
+	$(Q)$(CC) -O2 $(DEBUG_CFLAGS) -std=gnu11 $(WARNINGS) \
+	    -Iinclude -D_GNU_SOURCE -static -o $@ $<
+
+
+ifeq ($(PROFILE),target)
+VERITY_TEST_LIBS := $(TARGET_TLS_STATIC_LINK_LIBS) \
+		    $(TARGET_STATIC_RUNTIME_LINK_LIBS)
+VERITY_TEST_LDFLAGS := $(HARDEN_STATIC_PIE_LDFLAGS) -static-pie -static-libgcc
+else
+VERITY_TEST_LIBS := $(DYNAMIC_LIBS)
+endif
+
+build/verity-tests/shirudo-image-fault: testing/helper/image-fault.c \
+		testing/helper/image-fault.h \
+		$(MAIN_OBJ) $(BUILTIN_OBJS) $(UTIL_OBJS) $(VERSION_OBJ) $(LIBBPF_A)
+	@printf '  CC      $@\n'
+	$(Q)mkdir -p $(dir $@)
+	$(Q)$(CC) $(CFLAGS) $(LDFLAGS) $(RPATH_LDFLAGS) \
+		$(VERITY_TEST_LDFLAGS) -o $@ $(filter-out %.h,$^) \
+		-Wl,--wrap=main,--wrap=Esys_PCR_Extend \
+		-Wl,--wrap=config_root_begin,--wrap=config_root_end \
+		$(STATIC_LIBS) $(VERITY_TEST_LIBS)
+
+verity-test-helpers: $(VERITY_TEST_HELPERS) build/verity-tests/shirudo-image-fault
+
+# Compiled test helpers (also usable as fuzz entry points).
+TEST_HELPERS := $(VERITY_TEST_HELPERS) \
+                testing/helper/test-image-cli \
+                testing/helper/test-image-cleanup \
+                testing/helper/test-mode-objects \
+                testing/helper/test-seal-output \
+                testing/helper/test-image-config \
+                testing/helper/test-config-image \
+                testing/helper/test-config-update \
+                testing/helper/test-config-attest \
+                testing/helper/test-tpm-command \
+                testing/helper/test-image-keys \
+                testing/helper/test-conditions \
+                testing/helper/test-config-image \
+                testing/helper/test-harden \
+                testing/helper/test-tpm-wire \
+                testing/helper/test-register \
+                testing/helper/test-register-cli \
+                testing/helper/test-nv-cphash \
+                testing/helper/test-tpm-session \
+                testing/helper/test-eventlog \
+                testing/helper/test-keys \
+                testing/helper/test-seal \
+                $(TPMSIM_HELPER) \
+		testing/helper/test-config \
+		testing/helper/test-bpm-source \
+                testing/helper/test-bpf-load \
+                testing/helper/test-bpf-cmd \
+                testing/helper/test-exec-fail \
+                testing/helper/test-exec-shared \
+                testing/helper/test-xfs-attrmulti \
+                testing/helper/test-perf-attach \
+                testing/helper/test-otel-map \
+                testing/helper/test-upatch-map-types \
+                testing/helper/test-upatch-prog-metadata \
+                testing/helper/test-upatch-rodata \
+                testing/helper/test-upatch-decode \
+                testing/helper/test-upatch-serializer-pages \
+                testing/helper/test-signed-load \
+                testing/helper/test-upatch-link-lockdown \
+                testing/helper/test-xdp \
+                testing/helper/test-exec-churn \
+		testing/end2end/exec-paths \
+		testing/end2end/policy-exec
+TEST_HELPERS += testing/helper/test-nv-writer
+TEST_HELPERS += testing/helper/test-keyring-seal
+TEST_HELPERS += testing/helper/test-tpm-preopened
+TEST_HELPERS += testing/helper/test-keepalive-quote
+
+testing/helper/test-conditions: testing/helper/test-conditions.c util/conditions.o \
+                                util/string.o util/malloc.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-harden: testing/helper/test-harden.c util/harden.o util/log.o \
+		util/string.o util/malloc.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(LIBCRYPTO_LIBS)
+
+# chain.o's read/extend paths reference util/tpm (libtss2), so the
+# symbols must resolve even for a helper that never extends.
+# util/malloc.o brings in x*/libc_free that chain.o/tpm.o use.
+# util/config.o resolves config_load(), called by tpm.o.
+# The register code pulls in the eventlog, which pulls in the seal
+# label writer, the JSON codec and the measured set it folds.
+REGISTER_OBJS := util/config_attest.o util/config_update.o util/config_measure.o util/config_image.o \
+                 util/chain.o util/tpm.o util/tpm_wire.o util/eventlog.o \
+                 util/measured.o util/paths.o util/timefmt.o util/upatch.o \
+                 util/hex.o util/crypto_openssl.o util/json.o util/string.o \
+                 util/io.o util/seal.o util/config.o util/image_config.o \
+                 util/log.o util/malloc.o \
+                 util/initrd.o util/nv_writer.o util/identity.o \
+                 $(VERSION_OBJ) $(LIBBPF_A)
+REGISTER_LIBS := $(LIBCRYPTO_LIBS) $(LIBSSL_LIBS) $(TSS2_LIBS) \
+                 $(LIBBPF_A) $(LIBELF_LIBS) $(ZLIB_LIBS)
+
+TPM_CLIENT_SRCS := testing/helper/tpm-client.c testing/helper/tpm-session.h
+
+testing/helper/test-nv-writer: testing/helper/test-nv-writer.c $(REGISTER_OBJS)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(REGISTER_LIBS)
+
+testing/helper/test-keyring-seal: testing/helper/test-keyring-seal.c \
+		testing/helper/keyring-seal.h builtin-init.c \
+		$(filter-out $(call obj,builtin-init.o),$(BUILTIN_OBJS)) \
+		$(UTIL_OBJS) $(VERSION_OBJ) $(LIBBPF_A)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< \
+		$(filter %.o %.a,$^) \
+		-Wl,--wrap=keyring_bpf_add_cert -Wl,--wrap=keyring_bpf_seal \
+		$(STATIC_LIBS) $(DYNAMIC_LIBS)
+
+testing/helper/test-tpm-preopened: testing/helper/test-tpm-preopened.c \
+                                 $(TPM_CLIENT_SRCS) $(REGISTER_OBJS)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $(filter-out %.h,$^) $(REGISTER_LIBS) \
+		-Wl,--wrap=enforcement_active
+
+testing/helper/test-keys: testing/helper/test-keys.c util/keys.o \
+                          util/upatch.o $(REGISTER_OBJS)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(REGISTER_LIBS)
+
+testing/helper/test-seal: testing/helper/test-seal.c util/seal.o util/io.o \
+                          util/log.o util/string.o util/malloc.o \
+                          util/config.o util/image_config.o util/hex.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-eventlog: testing/helper/test-eventlog.c $(REGISTER_OBJS)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(REGISTER_LIBS)
+
+testing/helper/test-tpm-wire: testing/helper/test-tpm-wire.c util/tpm_wire.o util/hex.o \
+                        util/crypto_openssl.o util/io.o util/seal.o util/malloc.o util/log.o \
+                        util/string.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ -lcrypto -lssl
+
+testing/helper/test-register: testing/helper/test-register.c util/attest.o util/keyring.o \
+                        util/upatch.o $(TPM_CLIENT_SRCS) $(REGISTER_OBJS)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $(filter-out %.h,$^) $(REGISTER_LIBS) \
+		-Wl,--wrap=enforcement_active
+
+testing/helper/test-register-cli: testing/helper/test-register-cli.c \
+		$(BUILTIN_OBJS) $(UTIL_OBJS) $(VERSION_OBJ) $(LIBBPF_A)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(STATIC_LIBS) $(DYNAMIC_LIBS)
+
+testing/helper/test-keepalive-quote: testing/helper/test-keepalive-quote.c \
+		util/keepalive_quote.o $(REGISTER_OBJS)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(REGISTER_LIBS)
+
+testing/helper/tpmsim-cmd: testing/helper/tpmsim-cmd.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS_BASE) -Iinclude $(TPMSIM_CFLAGS) -o $@ $< $(TPMSIM_LIBS) -lcrypto
+
+testing/helper/test-nv-cphash: testing/helper/test-nv-cphash.c util/keyring.o \
+		$(TPM_CLIENT_SRCS) $(REGISTER_OBJS)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $(filter-out %.h,$^) $(REGISTER_LIBS) \
+		-Wl,--wrap=enforcement_active
+
+testing/helper/test-tpm-session: testing/helper/test-tpm-session.c \
+		util/attest.o util/upatch.o $(TPM_CLIENT_SRCS) $(REGISTER_OBJS)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $(filter-out %.h,$^) $(REGISTER_LIBS) \
+		-Wl,--wrap=enforcement_active,--wrap=identity_read
+
+testing/helper/test-config: testing/helper/test-config.c util/config.o util/io.o util/seal.o util/log.o util/hex.o \
+                            util/image_config.o util/string.o util/malloc.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-bpm-source: testing/helper/test-bpm-source.c util/bpm_source_config.o \
+                                util/string.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-bpf-load: testing/helper/test-bpf-load.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-bpf-cmd: testing/helper/test-bpf-cmd.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-exec-fail: testing/helper/test-exec-fail.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-exec-shared: testing/helper/test-exec-shared.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-xfs-attrmulti: testing/helper/test-xfs-attrmulti.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-perf-attach: testing/helper/test-perf-attach.c util/string.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -I$(BPF_UAPI_INCLUDE) -o $@ $^
+
+testing/helper/test-upatch-link-lockdown: testing/helper/test-upatch-link-lockdown.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -I$(BPF_UAPI_INCLUDE) -o $@ $^
+
+testing/helper/test-xdp: testing/helper/test-xdp.c $(LIBBPF_A)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(LIBELF_LIBS) $(ZLIB_LIBS)
+
+# Needs the vendored uapi bpf.h (excl_prog_hash / fd_array_cnt / keyring_id
+# are newer than a stock system header) and libcrypto for SHA-256.
+testing/helper/test-signed-load: testing/helper/test-signed-load.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -I$(BPF_UAPI_INCLUDE) \
+	    -o $@ $^ -lcrypto
+
+testing/helper/test-otel-map: testing/helper/test-otel-map.c util/upatch_maps.o \
+                        util/upatch_maps_otel.o util/curl.o util/crypto_openssl.o \
+                        util/tls_openssl.o util/serializer.o util/seal.o \
+                        util/config.o util/image_config.o \
+                        util/upatch_decode.o util/upatch_pins.o \
+                        util/upatch_resolve.o \
+                        util/upatch.o util/json.o util/string.o util/log.o \
+                        util/paths.o \
+                        util/io.o util/malloc.o $(LIBBPF_A) util/hex.o util/timefmt.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(DYNAMIC_LIBS)
+
+testing/helper/test-upatch-map-types: testing/helper/test-upatch-map-types.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-upatch-prog-metadata: testing/helper/test-upatch-prog-metadata.c \
+                                    util/upatch.o util/malloc.o util/string.o \
+                                    util/hex.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-upatch-serializer-pages: testing/helper/test-upatch-serializer-pages.c \
+                                       util/upatch_maps.o util/upatch_pins.o util/upatch_resolve.o \
+                                       util/serializer.o util/seal.o \
+                                       util/json.o util/string.o \
+                                       util/config.o util/image_config.o \
+                                       util/malloc.o util/io.o util/paths.o \
+                                       util/log.o util/hex.o util/timefmt.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(STATIC_LIBS) $(DYNAMIC_LIBS)
+
+testing/helper/test-upatch-rodata: testing/helper/test-upatch-rodata.c \
+                               util/upatch.o util/seal.o util/json.o \
+                               util/string.o util/malloc.o util/io.o \
+                               util/log.o util/hex.o util/format.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(STATIC_LIBS) $(DYNAMIC_LIBS)
+
+testing/helper/test-upatch-decode: testing/helper/test-upatch-decode.c \
+			      util/upatch_decode.o util/upatch.o util/malloc.o util/hex.o \
+			      util/string.o util/seal.o util/io.o util/log.o util/json.o \
+			      util/crypto_openssl.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(DYNAMIC_LIBS)
+
+testing/helper/test-exec-churn: testing/helper/test-exec-churn.c util/io.o util/seal.o util/malloc.o \
+                                 util/log.o util/string.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/end2end/exec-paths: testing/end2end/exec_paths.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -pthread -o $@ $^
+
+testing/end2end/policy-exec: testing/end2end/policy_exec.c
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^
+
+testing/helper/test-config-image: testing/helper/test-config-image.c \
+		util/config_image.o util/crypto_openssl.o util/malloc.o \
+		util/io.o util/seal.o util/hex.o util/log.o \
+		util/string.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ -lcrypto -lssl
+
+testing/helper/test-config-update: testing/helper/test-config-update.c \
+		util/config_update.o util/config_measure.o util/config_image.o \
+		$(REGISTER_OBJS)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(REGISTER_LIBS)
+
+testing/helper/test-tpm-command: testing/helper/test-tpm-command.c include/shirudo/tpm_command.h
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $<
+
+testing/helper/test-config-attest: testing/helper/test-config-attest.c \
+		util/attest.o util/upatch.o $(REGISTER_OBJS)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(REGISTER_LIBS)
+
+testing/helper/test-image-keys: testing/helper/test-image-keys.c \
+		util/image_keys.o util/keys.o $(REGISTER_OBJS)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(REGISTER_LIBS)
+
+testing/helper/test-image-config: testing/helper/test-image-config.c \
+		util/image_bootstrap.o util/hex.o util/config_measure.o \
+		util/crypto_openssl.o util/config.o util/image_config.o \
+		util/io.o util/seal.o util/log.o util/malloc.o \
+		util/string.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) -o $@ $^ $(LIBCRYPTO_LIBS) $(LIBSSL_LIBS)
+
+testing/helper/test-image-cli: testing/helper/test-image-cli.c \
+		testing/helper/image-cli.h builtin-bpm.c \
+		$(filter-out $(call obj,builtin-bpm.o),$(BUILTIN_OBJS)) \
+		$(UTIL_OBJS) $(VERSION_OBJ) $(LIBBPF_A)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) $(LDFLAGS) $(RPATH_LDFLAGS) -o $@ \
+		$(filter-out builtin-bpm.c testing/helper/image-cli.h,$^) \
+		-Wl,--wrap=bpm_tree_fetch_publication \
+		-Wl,--wrap=keys_load_image_root -Wl,--wrap=keys_check_image_set \
+		$(STATIC_LIBS) $(DYNAMIC_LIBS)
+
+testing/helper/test-image-cleanup: testing/helper/test-image-cleanup.c \
+		testing/helper/image-cleanup.h util/image_runtime.c $(BUILTIN_OBJS) \
+		$(filter-out $(call obj,util/image_runtime.o),$(UTIL_OBJS)) \
+		$(VERSION_OBJ) $(LIBBPF_A)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) $(LDFLAGS) $(RPATH_LDFLAGS) -o $@ \
+		$(filter-out %.h util/image_runtime.c,$^) \
+		-Wl,--wrap=dm_verity_remove,--wrap=nanosleep \
+		$(STATIC_LIBS) $(DYNAMIC_LIBS)
+
+testing/helper/test-mode-objects: testing/helper/test-mode-objects.c \
+		$(call obj,util/loader.o) $(LIBBPF_A)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ -lelf -lz
+
+testing/helper/test-seal-output: testing/helper/test-seal-output.c \
+		util/seal.o util/io.o util/log.o util/string.o util/malloc.o
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ -Wl,--wrap=write_complete
+
+test-helpers: $(TEST_HELPERS)
+
+# ----- unit tests -------------------------------------------------
+
+# util/<m>.c is tested by testing/unit/<m>.c. Each test links the util
+# objects from an archive, so it pulls in only what its module needs.
+UNIT_SRCS  := $(filter-out testing/unit/unit.c,$(wildcard testing/unit/*.c))
+UNIT_TESTS := $(patsubst testing/unit/%.c,build/unit/%,$(UNIT_SRCS))
+UNIT_LIB   := build/unit/libshirudo.a
+
+$(UNIT_LIB): $(UTIL_OBJS) $(VERSION_OBJ)
+	@printf '  AR      $@\n'
+	$(Q)mkdir -p $(dir $@)
+	$(Q)rm -f $@
+	$(Q)$(AR) rcs $@ $^
+
+# The quote checker's rows are no util module: its suite links the
+# object the program is built from.
+build/unit/quote_check: UNIT_OBJS := tools/quote-check/row.o
+build/unit/quote_check: tools/quote-check/row.o
+
+# The same for the builder's jar check.
+build/unit/jar: UNIT_OBJS := tools/shirudo-build/jar.o
+build/unit/jar: tools/shirudo-build/jar.o
+
+UNIT_COVERAGE_CFLAGS = $(if $(filter --coverage,$(CFLAGS)),-DUNIT_GCOV)
+
+build/unit/%: testing/unit/%.c testing/unit/unit.c testing/unit/unit.h \
+		$(UNIT_LIB) $(LIBBPF_A)
+	@printf '  CC      $@\n'
+	$(Q)$(CC) $(CFLAGS) $(UNIT_COVERAGE_CFLAGS) $(LDFLAGS) -Itesting/unit \
+		-o $@ $< testing/unit/unit.c \
+		$(UNIT_OBJS) $(UNIT_LIB) $(LIBBPF_A) $(DYNAMIC_LIBS)
+
+build/unit/curl: LDFLAGS += -Wl,--wrap=curl_slist_free_all
+build/unit/upatch_pins: LDFLAGS += -Wl,--wrap=opendir,--wrap=readdir64
+
+unit-tests: $(UNIT_TESTS)
+
+# ----- sparse -----------------------------------------------------
+
+# make sparse runs sparse over the sources the binaries are built from,
+# the vendored ones aside, and fails on any warning it gives. The
+# vendored linux/types.h defines __bitwise as nothing, so sparse reads
+# the system's copy, which makes __le32 and its kin restricted types
+# under __CHECKER__, in its place. _FORTIFY_SOURCE=3 and libcurl's
+# typecheck-gcc.h are left out: sparse does not know the builtin the
+# first needs and reports the sizeof the second applies to a function,
+# and the compiler runs both checks. sparse has no __has_include either,
+# which glibc 2.43 asks to find <linux/openat2.h> before declaring a
+# struct open_how of its own; __glibc_has_open_how gives the answer the
+# compiler would. sparse predefines no __FLT_EVAL_METHOD__, which
+# glibc's <math.h> tests, so -Wundef is the compiler's to check.
+SPARSE_TYPES_H ?= /usr/include/linux/types.h
+SPARSE_SRCS    := shirudo.c $(BUILTIN_SRCS) $(UTIL_SRCS) $(BUILD_SRCS) \
+                  $(QUOTE_CHECK_SRCS)
+
+.PHONY: sparse
+sparse:
+	$(Q)for f in $(SPARSE_SRCS); do \
+		printf '  SPARSE  %s\n' "$$f"; \
+		cgcc -no-compile -Wsparse-error $(CFLAGS) -Wno-undef \
+		     -U_FORTIFY_SOURCE \
+		     -DCURL_DISABLE_TYPECHECK -D__glibc_has_open_how=1 \
+		     -include $(SPARSE_TYPES_H) -D_UAPI_LINUX_TYPES_H \
+		     "$$f" || exit 1; \
+	done
+
+# ----- fuzzing ----------------------------------------------------
+
+# libFuzzer targets for the parsers of input from outside the host, built
+# with clang from the util sources under the sanitizers SANITIZE names, ASan
+# and UBSan without it; make -C testing fuzz builds and runs them. FUZZ_OUT
+# keeps the builds of another engine apart, as make -C testing afl does.
+FUZZ_CC ?= clang
+FUZZ_OUT ?= testing/fuzz
+FUZZ_SANITIZE := $(if $(SANITIZE),$(SANITIZE_CFLAGS), \
+                 -fsanitize=address$(comma)undefined)
+FUZZ_WARNINGS := $(call cc-option,$(FUZZ_CC),$(PROBED_WARNINGS))
+FUZZ_CFLAGS := -O1 -g -std=gnu11 -fno-omit-frame-pointer $(LANG_CFLAGS) \
+               $(call cc-option,$(FUZZ_CC),$(PROBED_LANG)) \
+               -fsanitize=fuzzer $(FUZZ_SANITIZE) \
+               -fno-sanitize-recover=all $(WARNINGS) $(FUZZ_WARNINGS) \
+               -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE $(INCLUDES) \
+               $(LIBCRYPTO_CFLAGS) $(LIBCURL_CFLAGS) $(ZLIB_CFLAGS)
+FUZZ_LIBS := $(LIBCRYPTO_LIBS) $(LIBSSL_LIBS) $(LIBCURL_LIBS) $(ZLIB_LIBS)
+FUZZ_BASE := util/json.c util/string.c util/hex.c util/malloc.c \
+             testing/fuzz/log.c
+FUZZ_CONFIG := util/config.c util/image_config.c
+FUZZ_SEAL := util/seal.c $(FUZZ_CONFIG)
+FUZZ_OCI := util/bpm_oci.c util/curl.c util/io.c $(FUZZ_SEAL) \
+            util/crypto_openssl.c util/tls_openssl.c
+FUZZ_PACKAGE := util/bpm_package.c util/bpm_tree.c util/chain_history.c \
+                util/upatch.c util/keys.c $(FUZZ_OCI)
+
+FUZZ_TARGETS := $(patsubst testing/fuzz/%.c,$(FUZZ_OUT)/%, \
+                $(wildcard testing/fuzz/fuzz-*.c))
+
+$(FUZZ_OUT)/fuzz-tpm-command: testing/fuzz/fuzz-tpm-command.c $(FUZZ_BASE) \
+                               include/shirudo/tpm_command.h
+
+$(FUZZ_OUT)/fuzz-json: testing/fuzz/fuzz-json.c $(FUZZ_BASE)
+$(FUZZ_OUT)/fuzz-oci-manifest: testing/fuzz/fuzz-oci-manifest.c \
+                                $(FUZZ_BASE) $(FUZZ_OCI)
+$(FUZZ_OUT)/fuzz-bpm-index: testing/fuzz/fuzz-bpm-index.c \
+                             $(FUZZ_BASE) $(FUZZ_PACKAGE)
+$(FUZZ_OUT)/fuzz-tree: testing/fuzz/fuzz-tree.c $(FUZZ_BASE) \
+                        util/bpm_tree.c util/chain_history.c \
+                        util/upatch.c $(FUZZ_OCI)
+$(FUZZ_OUT)/fuzz-upatch: testing/fuzz/fuzz-upatch.c $(FUZZ_BASE) \
+                          util/upatch.c
+$(FUZZ_OUT)/fuzz-prog-metadata: testing/fuzz/fuzz-prog-metadata.c \
+                                 $(FUZZ_BASE) util/upatch.c
+$(FUZZ_OUT)/fuzz-rodata: testing/fuzz/fuzz-rodata.c $(FUZZ_BASE) \
+                          util/upatch.c util/upatch_rodata.c util/format.c \
+                          util/io.c $(FUZZ_SEAL) $(LIBBPF_A)
+$(FUZZ_OUT)/fuzz-rodata: FUZZ_CFLAGS += $(LIBELF_CFLAGS)
+$(FUZZ_OUT)/fuzz-rodata: FUZZ_LIBS += $(LIBBPF_A) $(LIBELF_LIBS) $(ZLIB_LIBS)
+$(FUZZ_OUT)/fuzz-bpm-tar: testing/fuzz/fuzz-bpm-tar.c $(FUZZ_BASE) \
+                           $(FUZZ_PACKAGE)
+$(FUZZ_OUT)/fuzz-bpm-package: testing/fuzz/fuzz-bpm-package.c $(FUZZ_BASE) \
+                               $(FUZZ_PACKAGE)
+$(FUZZ_OUT)/fuzz-tpm-wire: testing/fuzz/fuzz-tpm-wire.c $(FUZZ_BASE) \
+                            util/tpm_wire.c util/crypto_openssl.c util/io.c \
+                            $(FUZZ_SEAL)
+$(FUZZ_OUT)/fuzz-attest: testing/fuzz/fuzz-attest.c $(FUZZ_BASE) \
+                          util/attest.c util/chain.c util/chain_history.c \
+                          util/nv_writer.c util/tpm.c \
+                          util/tpm_wire.c util/eventlog.c util/timefmt.c \
+                          util/crypto_openssl.c util/io.c $(FUZZ_SEAL) \
+                          util/config_attest.c util/config_update.c \
+                          util/config_measure.c util/initrd.c util/identity.c \
+                          util/keyring.c util/version_id.c util/upatch.c \
+                          $(LIBBPF_A)
+$(FUZZ_OUT)/fuzz-attest: FUZZ_CFLAGS += $(TSS2_CFLAGS) $(LIBELF_CFLAGS)
+$(FUZZ_OUT)/fuzz-attest: FUZZ_LIBS += $(TSS2_LIBS) $(LIBBPF_A) $(LIBELF_LIBS) $(ZLIB_LIBS)
+$(FUZZ_OUT)/fuzz-eventlog: testing/fuzz/fuzz-eventlog.c $(FUZZ_BASE) \
+                            util/eventlog.c util/timefmt.c util/upatch.c \
+                            $(FUZZ_SEAL) util/io.c util/crypto_openssl.c \
+                            util/identity.c testing/fuzz/chain.c $(LIBBPF_A)
+$(FUZZ_OUT)/fuzz-eventlog: FUZZ_CFLAGS += $(LIBELF_CFLAGS)
+$(FUZZ_OUT)/fuzz-eventlog: FUZZ_LIBS += $(LIBBPF_A) $(LIBELF_LIBS) $(ZLIB_LIBS)
+$(FUZZ_OUT)/fuzz-kernel: testing/fuzz/fuzz-kernel.c $(FUZZ_BASE) \
+                          util/kernel_build_id.c
+$(FUZZ_OUT)/fuzz-elf: testing/fuzz/fuzz-elf.c $(FUZZ_BASE) \
+                       util/elf_target.c $(LIBBPF_A)
+$(FUZZ_OUT)/fuzz-elf: FUZZ_CFLAGS += $(LIBELF_CFLAGS)
+$(FUZZ_OUT)/fuzz-elf: FUZZ_LIBS += $(LIBBPF_A) $(LIBELF_LIBS)
+$(FUZZ_OUT)/fuzz-serializer: testing/fuzz/fuzz-serializer.c $(FUZZ_BASE) \
+                              util/upatch_maps.c util/upatch_pins.c \
+                              util/upatch_resolve.c util/serializer.c $(FUZZ_SEAL) util/io.c util/paths.c \
+                              util/timefmt.c $(LIBBPF_A)
+$(FUZZ_OUT)/fuzz-serializer: FUZZ_CFLAGS += $(LIBELF_CFLAGS)
+$(FUZZ_OUT)/fuzz-serializer: FUZZ_LIBS += $(LIBBPF_A) $(LIBELF_LIBS)
+$(FUZZ_OUT)/fuzz-cms: testing/fuzz/fuzz-cms.c $(FUZZ_BASE) util/keys.c \
+                       util/crypto_openssl.c util/io.c $(FUZZ_SEAL)
+$(FUZZ_OUT)/fuzz-decoder: testing/fuzz/fuzz-decoder.c $(FUZZ_BASE) \
+                           util/upatch_decode.c util/upatch.c util/io.c \
+                           util/crypto_openssl.c $(FUZZ_SEAL)
+$(FUZZ_OUT)/fuzz-decoder: FUZZ_CFLAGS += $(LUAJIT_CFLAGS) -DHAVE_LUAJIT \
+	-DFUZZ_SOURCE_TREE='"$(CURDIR)"'
+$(FUZZ_OUT)/fuzz-decoder: FUZZ_LIBS += $(LUAJIT_LIBS)
+$(FUZZ_OUT)/fuzz-otel: testing/fuzz/fuzz-otel.c $(FUZZ_BASE) \
+                        util/upatch_maps_otel.c util/curl.c \
+                        util/crypto_openssl.c \
+                        util/tls_openssl.c util/io.c util/version_id.c \
+                        $(FUZZ_SEAL)
+$(FUZZ_OUT)/fuzz-beefile: testing/fuzz/fuzz-beefile.c $(FUZZ_BASE) \
+                           tools/shirudo-build/bpm-build.c $(FUZZ_PACKAGE) \
+                           util/upatch.c util/timefmt.c util/paths.c \
+                           util/version_id.c util/options.c util/help.c \
+                           util/similar.c
+$(FUZZ_OUT)/fuzz-oci-http: testing/fuzz/fuzz-oci-http.c $(FUZZ_BASE) \
+                            $(FUZZ_OCI)
+$(FUZZ_OUT)/fuzz-oci-ref: testing/fuzz/fuzz-oci-ref.c $(FUZZ_BASE) \
+                           $(FUZZ_OCI)
+$(FUZZ_OUT)/fuzz-registry-auth: testing/fuzz/fuzz-registry-auth.c \
+                                 $(FUZZ_BASE) $(FUZZ_OCI)
+$(FUZZ_OUT)/fuzz-config: testing/fuzz/fuzz-config.c $(FUZZ_BASE) \
+                          $(FUZZ_CONFIG) util/seal.c util/io.c \
+                          util/bpm_source_config.c
+$(FUZZ_OUT)/fuzz-image: testing/fuzz/fuzz-image.c $(FUZZ_BASE) \
+                         util/image_bootstrap.c util/config_image.c \
+                         util/config_measure.c util/crypto_openssl.c \
+                         util/io.c util/paths.c \
+                         $(FUZZ_SEAL)
+$(FUZZ_OUT)/fuzz-config-update: testing/fuzz/fuzz-config-update.c \
+                                 $(FUZZ_BASE) util/config_update.c \
+                                 util/config_measure.c testing/fuzz/chain.c \
+                                 util/crypto_openssl.c util/io.c $(FUZZ_SEAL)
+FUZZ_TREE_STATE := util/bpm_tree_state.c util/bpm_tree.c \
+                   util/chain_history.c util/upatch.c $(FUZZ_OCI) \
+                   util/kconfig.c util/kernel_build_id.c \
+                   util/kernel_release.c \
+                   testing/fuzz/chain.c
+$(FUZZ_OUT)/fuzz-tree-state: testing/fuzz/fuzz-tree-state.c $(FUZZ_BASE) \
+                              $(FUZZ_TREE_STATE)
+$(FUZZ_OUT)/fuzz-kconfig: testing/fuzz/fuzz-kconfig.c $(FUZZ_BASE) \
+                           $(FUZZ_TREE_STATE)
+$(FUZZ_OUT)/fuzz-quote-check: testing/fuzz/fuzz-quote-check.c $(FUZZ_BASE) \
+                               tools/quote-check/row.c util/tpm_wire.c \
+                               util/crypto_openssl.c util/io.c util/seal.c
+$(FUZZ_OUT)/fuzz-upatch-info: testing/fuzz/fuzz-upatch-info.c $(FUZZ_BASE) \
+                              testing/fuzz/output.c builtin-upatch.c \
+                              builtin.h util/chain.c util/crypto_openssl.c \
+                              util/curl.c util/elf_target.c util/eventlog.c \
+                              util/help.c util/identity.c util/initrd.c \
+                              util/io.c util/java_agent.c util/kernel_abi.c \
+                              util/keyring.c util/keys.c util/measured.c \
+                              util/nv_writer.c \
+                              util/options.c util/paths.c util/report.c \
+                              util/serializer.c util/similar.c \
+                              util/timefmt.c util/tls_openssl.c util/tpm.c \
+                              util/tpm_wire.c util/upatch.c \
+                              util/upatch_decode.c util/upatch_maps.c \
+                              util/upatch_maps_otel.c util/upatch_pins.c \
+                              util/upatch_resolve.c util/upatch_table.c \
+                              util/upatch_verify.c util/version_id.c \
+                              util/xdp.c $(FUZZ_SEAL) $(LIBBPF_A)
+# util/upatch_decode.c defines upatch_decode_map_signal(), which
+# builtin-upatch.c calls, with LuaJIT alone; upatch info runs no Lua.
+$(FUZZ_OUT)/fuzz-upatch-info: FUZZ_CFLAGS += $(TSS2_CFLAGS) $(LIBELF_CFLAGS) \
+                                             $(LUAJIT_CFLAGS) -DHAVE_LUAJIT
+$(FUZZ_OUT)/fuzz-upatch-info: FUZZ_LIBS += $(TSS2_LIBS) $(LIBBPF_A) \
+                                           $(LIBELF_LIBS) $(LUAJIT_LIBS)
+$(FUZZ_OUT)/fuzz-bpm-info: testing/fuzz/fuzz-bpm-info.c $(FUZZ_BASE) \
+                           testing/fuzz/output.c builtin-bpm.c builtin.h \
+                           $(FUZZ_PACKAGE) util/bpm_source_config.c \
+                           util/bpm_state.c util/bpm_tree_state.c \
+                           util/chain.c util/eventlog.c util/help.c \
+                           util/identity.c util/image_keys.c \
+                           util/initrd.c util/kconfig.c \
+                           util/kernel_build_id.c \
+                           util/kernel_release.c util/keyring.c \
+                           util/nv_writer.c util/options.c util/paths.c \
+                           util/similar.c util/timefmt.c util/tpm.c \
+                           util/tpm_wire.c util/upatch_pins.c \
+                           util/upatch_rodata.c util/format.c $(LIBBPF_A)
+$(FUZZ_OUT)/fuzz-bpm-info: FUZZ_CFLAGS += $(TSS2_CFLAGS) $(LIBELF_CFLAGS)
+$(FUZZ_OUT)/fuzz-bpm-info: FUZZ_LIBS += $(TSS2_LIBS) $(LIBBPF_A) $(LIBELF_LIBS)
+$(FUZZ_OUT)/fuzz-attest-report: testing/fuzz/fuzz-attest-report.c \
+                               $(FUZZ_BASE) testing/fuzz/output.c \
+                               builtin-attest.c builtin.h util/attest.c \
+                               util/chain.c util/chain_history.c \
+                               util/config_attest.c util/config_measure.c \
+                               util/config_update.c util/crypto_openssl.c \
+                               util/eventlog.c util/help.c util/identity.c \
+                               util/initrd.c util/io.c util/keyring.c \
+                               util/keys.c util/measured.c util/nv_writer.c \
+                               util/options.c util/paths.c util/similar.c \
+                               util/timefmt.c util/tpm.c util/tpm_wire.c \
+                               util/upatch.c util/version_id.c $(FUZZ_SEAL) \
+                               $(LIBBPF_A)
+$(FUZZ_OUT)/fuzz-attest-report: FUZZ_CFLAGS += $(TSS2_CFLAGS) $(LIBELF_CFLAGS)
+$(FUZZ_OUT)/fuzz-attest-report: FUZZ_LIBS += $(TSS2_LIBS) $(LIBBPF_A) \
+                                             $(LIBELF_LIBS)
+
+# A target that reaches static parsers or printers includes their source,
+# which it then depends on without linking it a second time.
+$(FUZZ_OUT)/fuzz-oci-http: FUZZ_INCLUDED := util/bpm_oci.c
+$(FUZZ_OUT)/fuzz-tree-state $(FUZZ_OUT)/fuzz-kconfig: \
+	FUZZ_INCLUDED := util/bpm_tree_state.c
+$(FUZZ_OUT)/fuzz-otel: FUZZ_INCLUDED := util/upatch_maps_otel.c
+$(FUZZ_OUT)/fuzz-serializer: FUZZ_INCLUDED := util/upatch_maps.c
+$(FUZZ_OUT)/fuzz-decoder: FUZZ_INCLUDED := util/upatch_decode.c
+$(FUZZ_OUT)/fuzz-config-update: FUZZ_INCLUDED := util/config_update.c
+$(FUZZ_OUT)/fuzz-upatch-info: FUZZ_INCLUDED := builtin-upatch.c
+$(FUZZ_OUT)/fuzz-bpm-info: FUZZ_INCLUDED := builtin-bpm.c
+$(FUZZ_OUT)/fuzz-attest-report: FUZZ_INCLUDED := builtin-attest.c
+
+# A target compiles its sources and links in one step, so it depends on
+# every header a source may include, and on the compiler and flags it was
+# built with: a binary built against an older header or by another
+# compiler looks current otherwise.
+FUZZ_HEADERS := testing/fuzz/fuzz.h $(wildcard include/shirudo/*.h util/*.h \
+                tools/shirudo-build/*.h tools/quote-check/*.h)
+FUZZ_STAMP := $(FUZZ_OUT)/.fuzz-flags
+FUZZ_SIGNATURE := $(FUZZ_CC) $(FUZZ_CFLAGS) $(LDFLAGS) $(FUZZ_LIBS) \
+                  $(AFL_LLVM_CMPLOG)
+
+.PHONY: FORCE_FUZZ_FLAGS
+FORCE_FUZZ_FLAGS:
+
+$(FUZZ_STAMP): FORCE_FUZZ_FLAGS
+	$(Q)mkdir -p $(dir $@)
+	$(Q)printf '%s\n' '$(subst ','\'',$(FUZZ_SIGNATURE))' | \
+	    cmp -s - $@ 2>/dev/null || \
+	    printf '%s\n' '$(subst ','\'',$(FUZZ_SIGNATURE))' > $@
+
+$(FUZZ_TARGETS): $(FUZZ_HEADERS) $(FUZZ_STAMP)
+	@printf '  FUZZ    $@\n'
+	$(Q)$(FUZZ_CC) $(FUZZ_CFLAGS) $(LDFLAGS) -o $@ \
+		$(filter-out $(FUZZ_INCLUDED),$(filter %.c,$^)) $(FUZZ_LIBS)
+
+fuzz-targets: $(FUZZ_TARGETS)
+
+# ----- clean ------------------------------------------------------
+
+clean:
+	$(Q)rm -f shirudo shirudo-target tools/shirudo-build/shirudo-build $(TEST_HELPERS)
+	$(Q)rm -f tools/quote-check/shirudo-quote-check
+	$(Q)rm -f $(MAIN_OBJ) $(BUILTIN_OBJS) $(UTIL_OBJS) \
+	          $(BUILD_OBJS) $(SIGN_OBJ) $(QUOTE_CHECK_OBJS) $(VERSION_OBJ) \
+	          util/version_id.c
+	$(Q)rm -rf build/target build/unit build/quote-check build/fuzz-afl \
+	    build/fuzz-afl-cmplog
+	$(Q)rm -f $(DEPS) testing/helper/*.d
+	$(Q)rm -f $(BPF_OBJS) $(VMLINUX_H) systemd/shirudo.service \
+	    systemd/shirudo-initrd.service \
+	          systemd/shirudo-map-export.service \
+	          systemd/shirudo-keepalive.service \
+	          systemd/shirudo-bpm-repo-update.service \
+	          systemd/shirudo-bpm-tree-sync.service
+
+distclean:
+	$(Q)$(MAKE) -C $(LIBBPF_VENDOR) clean
+	$(Q)rm -f $(VMLINUX_GEN)

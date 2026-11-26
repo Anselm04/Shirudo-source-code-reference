@@ -1,0 +1,14 @@
+[package]
+name = "seg-match"
+description = "An upatch every node of the test VM selects, for the tree that t7108 walks"
+license = "GPL-2.0 OR BSD-2-Clause"
+authors = ["Authors of shirudo"]
+
+[[upatches]]
+source = "shirudo-test-seg-match.bpf.c"
+
+[upatches.tree]
+id = "shirudo-test-seg-match"
+
+[upatches.tree.selector.labels]
+env = ["tree-test"]

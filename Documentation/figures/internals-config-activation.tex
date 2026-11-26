@@ -1,0 +1,79 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% How a config becomes active: a live image update or init at boot, the
+% latter after an image stage and a reboot, runs one sequence whose
+% pending record and config PCR extension decide what an interruption
+% leaves (internals/config-images.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+% A step: index, first and second line.
+\newcommand\figstep[3]{%
+  \draw[box, rounded corners=3bp] (40+98*#1-98,150) rectangle ++(90,46);
+  \node[small, anchor=base] at (85+98*#1-98,169) {#2};
+  \node[small, anchor=base] at (85+98*#1-98,185) {#3};}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (840,332);
+
+  \begin{scope}[box/.append style={rounded corners=3bp}]
+    \draw[box] (20,14) rectangle (200,64);
+    \draw[box] (240,14) rectangle (380,64);
+    \draw[box] (420,14) rectangle (620,64);
+    \draw[box] (660,14) rectangle (820,64);
+  \end{scope}
+  \draw[flow] (200,39) -- (238,39);
+  \draw[flow] (380,39) -- (418,39);
+  \draw[link] (520,64) -- (520,112);
+  \draw[link] (740,64) -- (740,112) -- (85,112);
+  \draw[flow] (85,112) -- (85,148);
+
+  \fill[fig-s2, opacity=0.12, rounded corners=3bp]
+    (228,140) rectangle (826,206);
+
+  \figstep{1}{verify, map,}{mount, check}
+  \figstep{2}{read counts}{and the PCR}
+  \figstep{3}{record}{pending}
+  \figstep{4}{extend the}{config PCR}
+  \figstep{5}{read it back,}{compare}
+  \figstep{6}{append to}{the events}
+  \figstep{7}{revoke keys,}{mount config}
+  \figstep{8}{record}{complete}
+  \foreach \i in {1,...,7}
+    \draw[flow] (40+98*\i-8,173) -- (40+98*\i-2,173);
+
+  % What an interruption leaves.
+  \begin{scope}[link, thin]
+    \draw (236,232) -- (816,232);
+    \draw (236,227) -- (236,237);
+    \draw (816,227) -- (816,237);
+  \end{scope}
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node[title] at (110,34) {image stage};
+    \node[small, note] at (110,54) {verify, cache, next-boot};
+    \node[title] at (310,34) {reboot};
+    \node[small, note] at (310,54) {by hand};
+    \node[title] at (520,34) {init at boot};
+    \node[small, note] at (520,54) {the record's target, or next-boot};
+    \node[title] at (740,34) {image update};
+    \node[small, note] at (740,54) {a live update};
+  \end{scope}
+
+  \begin{scope}[every node/.append style={note, small, anchor=base west}]
+    \node[text=fig-s2, font=\figsmall\bfseries] at (236,134) {pending};
+    \node at (40,220) {ENOKEY, ESTALE:};
+    \node at (40,236) {nothing recorded};
+    \node at (236,254) {Stopped or refused here, by a crash, a power loss, a
+      failed mount or revocation, or EUCLEAN:};
+    \node at (236,270) {the selection stays pending, and every command but
+      status and image status refuses, init too,};
+    \node at (236,286) {until the next TPM boot, whose init maps the target
+      again and records a fresh boot event.};
+    \node at (40,320) {At boot, step 8 waits for the restore and the register
+      binding. Completing removes a staged next-boot.};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

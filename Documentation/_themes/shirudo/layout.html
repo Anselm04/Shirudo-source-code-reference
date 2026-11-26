@@ -1,0 +1,78 @@
+{#- SPDX-License-Identifier: BSD-2-Clause -#}
+{#- Copyright (c) 2026 Authors of shirudo -#}
+{%- extends "basic/layout.html" %}
+
+{%- block htmltitle %}
+<title>{% if pagename == root_doc %}shirudo documentation{% else %}{{ title|striptags|e }} · shirudo docs{% endif %}</title>
+{%- endblock %}
+
+{%- block extrahead %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try { var t = localStorage.getItem("shirudo-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}</script>
+<script src="{{ pathto('_static/shirudo.js', 1) }}" defer></script>
+{%- endblock %}
+
+{%- block relbar1 %}{% endblock %}
+{%- block relbar2 %}{% endblock %}
+
+{%- block header %}
+<header class="bar">
+  <div class="bar-in">
+    <a class="brand" href="{{ pathto(root_doc) }}" aria-label="shirudo documentation home">
+      <img class="logo" src="{{ pathto('_static/shirudo-horizontal-for-light-back.svg', 1) }}" alt="shirudo">
+      <img class="logo on-dark" src="{{ pathto('_static/shirudo-horizontal-for-dark-back.svg', 1) }}" alt="shirudo">
+      <span>docs</span>
+    </a>
+    <div class="tools">
+      <form class="search" action="{{ pathto('search') }}" method="get" role="search">
+        <input type="search" name="q" placeholder="Search docs" aria-label="Search the documentation">
+        <kbd>/</kbd>
+      </form>
+      <button class="theme-toggle" type="button" hidden></button>
+      <a class="gh" href="{{ repository }}">GitHub</a>
+    </div>
+  </div>
+</header>
+{%- endblock %}
+
+{%- block content %}
+<div class="shell">
+  <nav class="side" aria-label="Documentation">
+    <button class="menu-toggle" type="button" aria-expanded="false">Menu</button>
+    <div class="tree">
+      {{ toctree(collapse=False, includehidden=True, titles_only=True, maxdepth=-1) }}
+    </div>
+  </nav>
+  <main>
+    {%- if pagename != root_doc %}
+    <div class="crumbs">
+      <a href="{{ pathto(root_doc) }}">Docs</a>
+      {%- for parent in parents %}
+      <a href="{{ parent.link|e }}">{{ parent.title }}</a>
+      {%- endfor %}
+      <span>{{ title|striptags|e }}</span>
+    </div>
+    {%- endif %}
+    <article class="body" role="main">
+      {% block body %}{% endblock %}
+    </article>
+    {%- if source_file %}
+    <footer class="pfoot">
+      <span>Source: <code>{{ source_file }}</code></span>
+      {%- if last_change %}
+      <span>Last change: <code>{{ last_change }}</code>, {{ last_change_date }} UTC</span>
+      {%- endif %}
+      <a href="{{ github_url }}">View on GitHub</a>
+    </footer>
+    {%- endif %}
+  </main>
+  <nav class="toc" aria-label="On this page">
+    {%- if display_toc %}
+    <h2>On this page</h2>
+    {{ toc }}
+    {%- endif %}
+  </nav>
+</div>
+{%- endblock %}
+
+{%- block footer %}{% endblock %}

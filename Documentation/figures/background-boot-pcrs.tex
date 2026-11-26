@@ -1,0 +1,90 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% When PCRs 9 and 11 are extended during the boot of a UKI, from
+% systemd-stub through the initrd to the root file system, and the
+% window in which shirudo-initrd.service binds the register
+% (concepts/background/boot.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    unit/.style={box, rounded corners=3bp},
+    ours/.style={draw=fig-accent, fill=fig-accent, fill opacity=0.08,
+      text opacity=1, rounded corners=3bp},
+    extend/.style={flow, thin}]
+  \useasboundingbox (0,0) rectangle (840,300);
+
+  % The initrd's window: PCR 11 holds the enter-initrd value.
+  \fill[fig-s2, opacity=0.12] (250,206) rectangle (650,250);
+  \draw[link, thin, dash pattern=on 2.25bp off 3bp] (661,30) -- (661,290);
+
+  \draw[link] (70,140) -- (836,140);
+  \draw[link] (70,215) -- (836,215);
+
+  \draw[unit] (72,44) rectangle (156,86);
+  \draw[unit] (164,44) rectangle (236,86);
+  \draw[unit] (245,44) rectangle (337,86);
+  \draw[unit] (346,44) rectangle (452,86);
+  \draw[ours] (462,44) rectangle (568,86);
+  \draw[unit] (578,44) rectangle (650,86);
+  \draw[ours] (672,44) rectangle (768,86);
+
+  \draw[extend] (115,86) -- (115,210);
+  \draw[extend] (200,86) -- (200,135);
+  \draw[extend] (291,86) -- (291,135);
+  \draw[extend] (399,86) -- (399,135);
+  \draw[extend, draw=fig-accent] (515,86) -- (515,135);
+  \draw[extend] (614,86) -- (614,135);
+  \draw[link, thin, dash pattern=on 2.25bp off 3bp, <->]
+    (515,40) -- (515,32) -- (614,32) -- (614,40);
+
+  \foreach \x in {200,291,399,614}
+    \fill[fig-s1] (\x,140) circle (4.5);
+  \fill[fig-accent] (515,140) circle (4.5);
+  \foreach \x in {115,250,650,774,816}
+    \fill[fig-s2] (\x,215) circle (4.5);
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node[title, anchor=base west] at (10,145) {PCR 9};
+    \node[title, anchor=base west] at (10,220) {PCR 11};
+
+    \node[small, note] at (158,20) {UKI};
+    \node[small, note] at (448,20) {initrd};
+    \node[small, note] at (750,20) {root file system};
+    \node[small, note] at (565,26) {either order};
+
+    \node[small] at (115,62) {systemd-stub};
+    \node[small, note] at (115,78) {its sections};
+    \node[small] at (200,62) {EFI stub};
+    \node[small, note] at (200,78) {of the kernel};
+    \node[small] at (291,62) {pcrosseparator};
+    \node[small, note] at (291,78) {systemd 261+};
+    \node[small] at (399,62) {tpm2-setup-early};
+    \node[small, note] at (399,78) {inits NvPCRs};
+    \node[small] at (515,62) {shirudo-initrd};
+    \node[small, note] at (515,78) {binds the register};
+    \node[small] at (614,62) {pcrnvdone};
+    \node[small] at (720,62) {shirudo.service};
+    \node[small, note] at (720,78) {extends nothing};
+
+    \node[small] at (200,162) {command line,};
+    \node[small] at (200,176) {initrd};
+    \node[small] at (291,162) {os-separator};
+    \node[small] at (399,162) {nvpcr-init};
+    \node[small, color=fig-accent] at (515,162) {shirudo's anchor};
+    \node[small] at (614,162) {nvpcr-separator};
+
+    \node[small, anchor=base west] at (122,204) {UKI sections};
+    \node[small, anchor=base west] at (254,204) {enter-initrd};
+    \node[small, anchor=base east] at (646,204) {leave-initrd};
+    \node[small] at (774,204) {sysinit};
+    \node[small] at (816,204) {ready};
+
+    \node[small, note] at (450,242) {PCR 11 holds the enter-initrd value:
+      the register can be bound only here};
+    \node[small, note, anchor=base west] at (667,286) {switch root};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

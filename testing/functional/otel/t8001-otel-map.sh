@@ -1,0 +1,590 @@
+#!/bin/sh
+# SPDX-License-Identifier: BSD-2-Clause
+# Copyright (c) 2026 Authors of shirudo
+
+cd "$(dirname "$0")/../.."
+. ./test-lib.sh
+
+H=$PWD/helper/test-otel-map
+S=$PWD/../shirudo
+M=$PWD/helper
+W=$(mktemp -d) || exit 1
+trap 'rm -rf "$W"' EXIT
+cd "$W" || exit 1
+
+test_expect_success 'OTLP CLI options reject invalid combinations early' '
+	for args in "--otel-retries=11" "--otel --otel-retries=" \
+		    "--otel-insecure" "--tenant-id=tenant-uuid-1234" \
+		    "--s3-uri=s3://bucket" "--otel-endpoint=http://127.0.0.1:1" \
+		    "--otel" "--otel --otel" "--otel --otel-endpoint=" \
+		    "--otel --tenant-id=bad/tenant" \
+		    "--otel --tenant-id=one --tenant-id=two" \
+		    "--otel=s3" "--all unexpected"; do
+		rc=0
+		"$S" upatch map $args >/dev/null 2>&1 || rc=$?
+		[ "$rc" = 2 ] || {
+			echo "upatch map $args: exit $rc"
+			return 1
+		}
+	done
+'
+
+test_expect_success 'a map that cannot be read fails before any export or JSON line' '
+	rc=0
+	"$S" upatch map missing values --json=combined.ndjson --otel \
+		--tenant-id=tenant-uuid-1234 \
+		--otel-endpoint=http://127.0.0.1:1 >/dev/null 2>&1 || rc=$?
+	[ "$rc" = 1 ] && [ ! -e combined.ndjson ] || return 1
+	rc=0
+	"$S" upatch map missing values --otel \
+		--s3-uri=s3://test-bucket/prefix >/dev/null 2>&1 || rc=$?
+	[ "$rc" = 1 ]
+'
+
+test_expect_success 'automatic OTLP signal classification is structural' '
+	case "$($H classify-unsigned)" in metric:*) :;; *) false;; esac &&
+	case "$($H classify-hash)" in metric:*) :;; *) false;; esac &&
+	case "$($H classify-lru-hash)" in metric:*) :;; *) false;; esac &&
+	case "$($H classify-signed)" in log:*) :;; *) false;; esac &&
+	case "$($H classify-array)" in log:*) :;; *) false;; esac &&
+	case "$($H classify-no-btf)" in log:*) :;; *) false;; esac &&
+	case "$($H classify-serialized)" in log:*) :;; *) false;; esac
+'
+
+test_expect_success 'local JSON also honors aligned per-CPU strides' '
+	"$H" local-json | python3 -c '\''
+import json,sys
+d=json.load(sys.stdin)
+entry=d["entries"][0]
+assert entry["values_per_cpu"] == ["5", "7"]
+assert entry["sum"] == "12"
+'\''
+'
+
+test_expect_success 'structured OTLP log preserves aligned per-CPU values' '
+	"$H" log | python3 -c '\''
+import json,socket,sys
+d=json.load(sys.stdin)
+assert set(d) == {"resourceLogs"}
+rl=d["resourceLogs"][0]
+assert set(rl) == {"resource", "scopeLogs"}
+resource={x["key"]:x["value"] for x in rl["resource"]["attributes"]}
+assert resource == {"service.name": {"stringValue": "shirudo"},
+                    "service.version": {"stringValue": "test-1"},
+                    "host.name": {"stringValue": socket.gethostname()}}, resource
+sl=rl["scopeLogs"][0]
+assert set(sl) == {"scope", "logRecords"}
+assert sl["scope"] == {"name": "shirudo.upatch.maps", "version": "test-1"}
+r=sl["logRecords"][0]
+assert set(r) == {"timeUnixNano", "observedTimeUnixNano", "severityNumber", "severityText", "eventName", "body", "attributes"}
+assert r["timeUnixNano"].isdigit() and r["observedTimeUnixNano"].isdigit()
+assert r["severityNumber"] == 9 and r["severityText"] == "INFO"
+assert r["eventName"] == "shirudo.bpf.map.snapshot"
+attrs={x["key"]:x["value"] for x in r["attributes"]}
+assert attrs == {
+    "shirudo.upatch.name": {"stringValue": "test-upatch"},
+    "shirudo.upatch.location": {"stringValue": "fentry/test_hook"},
+    "shirudo.map.name": {"stringValue": "hits_total"},
+    "shirudo.map.type": {"stringValue": "percpu_array"},
+    "shirudo.map.max_entries": {"intValue": "1"},
+    "shirudo.map.n_entries": {"intValue": "1"},
+    "shirudo.map.n_cpus": {"intValue": "2"},
+    "shirudo.map.serialized": {"boolValue": False},
+    "shirudo.map.truncated": {"boolValue": False},
+}, attrs
+vals=r["body"]["kvlistValue"]["values"]
+root={x["key"]:x["value"] for x in vals}
+data={x["key"]:x["value"] for x in root["data"]["kvlistValue"]["values"]}
+entry=data["entries"]["arrayValue"]["values"][0]["kvlistValue"]["values"]
+entry={x["key"]:x["value"] for x in entry}
+assert [x["stringValue"] for x in entry["values_per_cpu"]["arrayValue"]["values"]] == ["5", "7"]
+assert entry["sum"]["stringValue"] == "12"
+'\''
+'
+
+test_expect_success 'OTLP log tolerates an unavailable upatch location' '
+	"$H" log-no-location | python3 -c '\''
+import json,sys
+d=json.load(sys.stdin)
+r=d["resourceLogs"][0]["scopeLogs"][0]["logRecords"][0]
+attrs={x["key"]:x["value"] for x in r["attributes"]}
+assert attrs["shirudo.upatch.location"]["stringValue"] == ""
+'\''
+'
+
+test_expect_success 'OTLP metric emits one aggregated gauge point' '
+	"$H" metric | python3 -c '\''
+import json,socket,sys
+d=json.load(sys.stdin)
+assert set(d) == {"resourceMetrics"}
+rm=d["resourceMetrics"][0]
+assert set(rm) == {"resource", "scopeMetrics"}
+resource={x["key"]:x["value"] for x in rm["resource"]["attributes"]}
+assert resource == {"service.name": {"stringValue": "shirudo"},
+                    "service.version": {"stringValue": "test-1"},
+                    "host.name": {"stringValue": socket.gethostname()}}, resource
+sm=rm["scopeMetrics"][0]
+assert set(sm) == {"scope", "metrics"}
+assert sm["scope"] == {"name": "shirudo.upatch.maps", "version": "test-1"}
+assert len(sm["metrics"]) == 1
+m=sm["metrics"][0]
+assert m["unit"] == "1"
+assert m["name"] == "shirudo.test.hits"
+p=m["gauge"]["dataPoints"][0]
+assert p["asInt"] == "12"
+assert "startTimeUnixNano" not in p
+'\''
+'
+
+test_expect_success 'OTLP counter is cumulative, monotonic, and carries map lifetime' '
+	"$H" counter | python3 -c '\''
+import json,sys
+d=json.load(sys.stdin)
+s=d["resourceMetrics"][0]["scopeMetrics"][0]["metrics"][0]["sum"]
+assert s["aggregationTemporality"] == 2 and s["isMonotonic"] is True
+p=s["dataPoints"][0]
+assert p["asInt"] == "12"
+assert p["startTimeUnixNano"] == "1544712660300000000"
+'\''
+'
+
+test_expect_success 'Retry-After accepts delta seconds and HTTP dates, capped at 30 seconds' '
+	test "$("$H" retry-after 20 1735689600)" = 20 &&
+	test "$("$H" retry-after 60 1735689600)" = 30 &&
+	test "$("$H" retry-after "Wed, 01 Jan 2025 00:00:20 GMT" 1735689600)" = 20 &&
+	test "$("$H" retry-after "Wednesday, 01-Jan-25 00:00:45 GMT" 1735689600)" = 30 &&
+	test "$("$H" retry-after "Wed Jan  1 00:00:10 2025" 1735689600)" = 10 &&
+	test "$("$H" retry-after "Wed, 31 Dec 2024 23:59:59 GMT" 1735689600)" = 0 &&
+	! "$H" retry-after invalid 1735689600 >/dev/null 2>&1
+'
+
+test_expect_success 'OTLP base URL always appends the selected signal path' '
+	rm -f otel.port otel.body otel.meta;
+	python3 "$M"/otel-mock.py success otel.port otel.body otel.meta &
+	server=$!;
+	i=0; while test ! -s otel.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat otel.port) &&
+	"$H" send-auto-log "http://127.0.0.1:$port/base" &&
+	wait $server &&
+	grep -q "\"path\": \"/base/v1/logs\"" otel.meta &&
+	rm -f otel.port otel.body otel.meta;
+	python3 "$M"/otel-mock.py success otel.port otel.body otel.meta &
+	server=$!;
+	i=0; while test ! -s otel.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat otel.port) &&
+	"$H" send-auto-metric "http://127.0.0.1:$port/base" &&
+	wait $server &&
+	python3 -c '\''
+import json
+assert json.load(open("otel.meta"))["path"] == "/base/v1/metrics"
+d=json.load(open("otel.body"))
+assert d["resourceMetrics"][0]["scopeMetrics"][0]["metrics"][0]["sum"]["dataPoints"][0]["asInt"] == "12"
+'\'' &&
+	rm -f otel.port otel.body otel.meta;
+	python3 "$M"/otel-mock.py success otel.port otel.body otel.meta &
+	server=$!;
+	i=0; while test ! -s otel.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat otel.port) &&
+	"$H" send-metric "http://127.0.0.1:$port/custom" &&
+	wait $server &&
+	python3 -c '\''
+import json
+assert json.load(open("otel.meta"))["path"] == "/custom/v1/metrics"
+d=json.load(open("otel.body"))
+assert d["resourceMetrics"][0]["scopeMetrics"][0]["metrics"][0]["gauge"]["dataPoints"][0]["asInt"] == "12"
+'\''
+'
+
+test_expect_success 'remote cleartext requires explicit insecure override' '
+	"$H" security
+'
+
+test_expect_success '--otel=s3 validates credentials, destinations, and complete views' '
+	"$H" s3-validation
+'
+
+test_expect_success 'tenant IDs are validated after OTEL header decoding' '
+	"$H" tenant-validation
+'
+
+test_expect_success 'OTLP HTTP sends JSON, auth headers, gzip, and retries' '
+	rm -f otel.port otel.body otel.meta;
+	python3 "$M"/otel-mock.py retry otel.port otel.body otel.meta &
+	server=$!;
+	i=0; while test ! -s otel.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat otel.port) &&
+	OTEL_EXPORTER_OTLP_LOGS_HEADERS="Authorization=Bearer%20secret" \
+	OTEL_EXPORTER_OTLP_LOGS_COMPRESSION=gzip \
+		"$H" send-log "http://127.0.0.1:$port" 3 &&
+	wait $server &&
+	python3 -c '\''
+import json
+json.load(open("otel.body"))
+m=json.load(open("otel.meta"))
+assert m["attempts"] == 3 and m["path"] == "/v1/logs"
+assert m["authorization"] == "Bearer secret"
+assert m["content_encoding"] == "gzip"
+assert m["content_type"] == "application/json" and m["raw_bytes"] > 0
+'\''
+'
+
+test_expect_success 'OTLP partial success is a non-retryable failure' '
+	rm -f otel.port otel.body otel.meta;
+	python3 "$M"/otel-mock.py partial otel.port otel.body otel.meta &
+	server=$!;
+	i=0; while test ! -s otel.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat otel.port) &&
+	! "$H" send-log "http://127.0.0.1:$port" 3 &&
+	wait $server &&
+	python3 -c '\''
+import json
+m=json.load(open("otel.meta"))
+assert m["attempts"] == 1
+'\''
+'
+
+test_expect_success 'OTLP retryable statuses retry, permanent errors do not, and exhaustion fails' '
+	for status in 429 502 503 504
+	do
+		rm -f otel.port otel.body otel.meta
+		python3 "$M"/otel-mock.py "retry-$status" otel.port otel.body otel.meta &
+		server=$!
+		i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+		port=$(cat otel.port) &&
+		"$H" send-log "http://127.0.0.1:$port" 1 && wait "$server" &&
+		python3 -c '\''import json; assert json.load(open("otel.meta"))["attempts"] == 2'\'' || return 1
+	done &&
+	for status in 400 500
+	do
+		rm -f otel.port otel.body otel.meta
+		python3 "$M"/otel-mock.py "fatal-$status" otel.port otel.body otel.meta &
+		server=$!
+		i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+		port=$(cat otel.port) && ! "$H" send-log "http://127.0.0.1:$port" 3 && wait "$server" &&
+		python3 -c '\''import json; assert json.load(open("otel.meta"))["attempts"] == 1'\'' || return 1
+	done &&
+	rm -f otel.port otel.body otel.meta
+	python3 "$M"/otel-mock.py retry-exhaust-503 otel.port otel.body otel.meta &
+	server=$!
+	i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+	port=$(cat otel.port) && ! "$H" send-log "http://127.0.0.1:$port" 2 && wait "$server" &&
+	python3 -c '\''import json; assert json.load(open("otel.meta"))["attempts"] == 3'\''
+'
+
+test_expect_success 'OTLP handles partial success, malformed responses, disconnects, timeouts, and Retry-After' '
+	for mode in partial-zero malformed disconnect timeout
+	do
+		rm -f otel.port otel.body otel.meta
+		python3 "$M"/otel-mock.py "$mode" otel.port otel.body otel.meta &
+		server=$!
+		i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+		port=$(cat otel.port)
+		if test "$mode" = partial-zero; then
+			"$H" send-log "http://127.0.0.1:$port" 0 || return 1
+		else
+			if test "$mode" = timeout; then
+				! OTEL_EXPORTER_OTLP_LOGS_TIMEOUT=100 "$H" send-log "http://127.0.0.1:$port" 0 || return 1
+			else
+				! "$H" send-log "http://127.0.0.1:$port" 0 || return 1
+			fi
+		fi
+		wait "$server" || return 1
+	done &&
+	rm -f otel.port otel.body otel.meta
+	python3 "$M"/otel-mock.py retry-after otel.port otel.body otel.meta &
+	server=$!
+	i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+	port=$(cat otel.port) && "$H" send-log "http://127.0.0.1:$port" 1 && wait "$server" &&
+	python3 -c '\''import json; m=json.load(open("otel.meta")); assert m["attempts"] == 2 and 850 <= m["interval_ms"] <= 3000'\''
+'
+
+test_expect_success 'signal-specific OTEL endpoint and settings override generic environment values' '
+	rm -f otel.port otel.body otel.meta
+	python3 "$M"/otel-mock.py success otel.port otel.body otel.meta & specific=$!
+	i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+	port=$(cat otel.port) &&
+	OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:1/base \
+	OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://127.0.0.1:$port/v1/logs" \
+	OTEL_EXPORTER_OTLP_PROTOCOL=grpc \
+	OTEL_EXPORTER_OTLP_LOGS_PROTOCOL=http/json \
+	OTEL_EXPORTER_OTLP_COMPRESSION=none \
+	OTEL_EXPORTER_OTLP_LOGS_COMPRESSION=gzip \
+	OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer%20generic" \
+	OTEL_EXPORTER_OTLP_LOGS_HEADERS="Authorization=Bearer%20specific" \
+		"$H" send-log-env 0 && wait "$specific" &&
+	python3 -c '\''import json; m=json.load(open("otel.meta")); assert m["path"] == "/v1/logs" and m["authorization"] == "Bearer specific" and m["content_encoding"] == "gzip" and m["content_type"] == "application/json"'\''
+'
+
+test_expect_success 'explicit OTEL endpoint overrides signal and generic endpoint environment' '
+	rm -f otel.port otel.body otel.meta
+	python3 "$M"/otel-mock.py success otel.port otel.body otel.meta & server=$!
+	i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+	port=$(cat otel.port) &&
+	OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:1/generic \
+	OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://127.0.0.1:1/signal \
+		"$H" send-log "http://127.0.0.1:$port" 0 && wait "$server" &&
+	python3 -c '\''import json; assert json.load(open("otel.meta"))["path"] == "/v1/logs"'\''
+'
+
+test_expect_success 'OTLP request and decoded-record limits reject only oversized payloads' '
+	bytes=$("$H" record-size) &&
+	for max in "$bytes" "$((bytes + 1))"
+	do
+		rm -f otel.port otel.body otel.meta
+		python3 "$M"/otel-mock.py success otel.port otel.body otel.meta & server=$!
+		i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+		port=$(cat otel.port) && "$H" send-log-limits "http://127.0.0.1:$port" 0 "$max" 0 && wait "$server" || return 1
+	done &&
+	rm -f otel.port otel.body otel.meta
+	python3 "$M"/otel-mock.py no-request otel.port otel.body otel.meta & server=$!
+	i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+	port=$(cat otel.port) && ! "$H" send-log-limits "http://127.0.0.1:$port" 0 "$((bytes - 1))" 0 && wait "$server" &&
+	python3 -c '\''import json; assert json.load(open("otel.meta"))["attempts"] == 0'\'' &&
+	rm -f otel.port otel.body otel.meta
+	python3 "$M"/otel-mock.py success otel.port otel.body otel.meta & server=$!
+	i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+	port=$(cat otel.port) && "$H" send-log "http://127.0.0.1:$port" 0 && wait "$server" &&
+	request=$(python3 -c '\''import json; print(json.load(open("otel.meta"))["raw_bytes"])'\'') &&
+	rm -f otel.port otel.body otel.meta
+	python3 "$M"/otel-mock.py success otel.port otel.body otel.meta & server=$!
+	i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+	port=$(cat otel.port) && "$H" send-log-limits "http://127.0.0.1:$port" 0 0 "$request" && wait "$server" &&
+	rm -f otel.port otel.body otel.meta
+	python3 "$M"/otel-mock.py no-request otel.port otel.body otel.meta & server=$!
+	i=0; while test ! -s otel.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+	port=$(cat otel.port) && ! "$H" send-log-limits "http://127.0.0.1:$port" 0 0 "$((request - 1))" && wait "$server" &&
+	python3 -c '\''import json; assert json.load(open("otel.meta"))["attempts"] == 0'\''
+'
+
+test_expect_success 'HTTPS verifies by default and --otel-insecure disables verification noisily' '
+	command -v openssl >/dev/null || exit 0;
+	# The exporter only speaks TLS 1.3 with a hybrid ML-KEM group, which
+	# the mock server can offer only on an OpenSSL >= 3.5.
+	python3 -c "import ssl, sys; sys.exit(0 if ssl.OPENSSL_VERSION_INFO >= (3, 5) else 1)" || exit 0;
+	rm -f otel.crt otel.key otel.port otel.body otel.meta otel-tls.err;
+	openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
+		-subj /CN=localhost -addext subjectAltName=DNS:localhost \
+		-keyout otel.key -out otel.crt >/dev/null 2>&1;
+	python3 "$M"/otel-mock.py success otel.port otel.body otel.meta otel.crt otel.key &
+	server=$!;
+	i=0; while test ! -s otel.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat otel.port) &&
+	OTEL_EXPORTER_OTLP_LOGS_CERTIFICATE=otel.crt \
+		"$H" send-log "https://localhost:$port" 0 &&
+	wait $server &&
+	rm -f otel.port otel.body otel.meta;
+	python3 "$M"/otel-mock.py success otel.port otel.body otel.meta otel.crt otel.key &
+	server=$!;
+	i=0; while test ! -s otel.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat otel.port) &&
+	"$H" send-log-insecure "https://127.0.0.1:$port" 0 \
+		2>otel-tls.err &&
+	wait $server &&
+	grep -q "disables TLS certificate and hostname verification" otel-tls.err
+'
+
+test_expect_success '--otel=s3 uploads gzip JSON then emits a small reference event' '
+	rm -f s3.port s3.snapshot s3.log s3.meta;
+	python3 "$M"/otel-s3-mock.py success s3.port s3.snapshot s3.log s3.meta &
+	server=$!;
+	i=0; while test ! -s s3.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat s3.port) &&
+	AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=secret \
+	AWS_SESSION_TOKEN=session AWS_REGION=us-east-1 \
+	OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://127.0.0.1:$port/v1/logs" \
+	OTEL_EXPORTER_OTLP_LOGS_HEADERS="X-Tenant-ID=ignored-env-tenant" \
+		"$H" send-s3 "http://127.0.0.1:$port" 0 &&
+	wait $server &&
+	python3 -c '\''
+import base64,gzip,hashlib,json
+raw=open("s3.snapshot","rb").read()
+snap=json.loads(gzip.decompress(raw))
+assert snap["schema"] == 1 and snap["upatch"] == "test-upatch"
+assert snap["map"] == "hits_total" and snap["data"]["truncated"] is False
+meta=json.load(open("s3.meta")); put,post=meta["requests"]
+digest=hashlib.sha256(raw).hexdigest()
+assert put["method"] == "PUT" and put["path"].endswith(digest+".json.gz")
+assert put["authorization"].startswith("AWS4-HMAC-SHA256 Credential=test/")
+assert put["sigv4_valid"] is True
+assert put["content_encoding"] == "gzip" and put["content_type"] == "application/json"
+assert put["if_none_match"] == "*" and put["cache_control"] == "immutable"
+assert put["content_sha256"] == digest
+assert put["checksum_sha256"] == base64.b64encode(hashlib.sha256(raw).digest()).decode()
+assert put["security_token"] == "session"
+assert put["tenant_id"] == ""
+assert post == {"method":"POST","path":"/v1/logs","content_encoding":"","tenant_id":"tenant-uuid-1234"}
+log=json.load(open("s3.log"))
+record=log["resourceLogs"][0]["scopeLogs"][0]["logRecords"][0]
+assert record["eventName"] == "shirudo.bpf.map.snapshot.reference"
+assert set(record["body"]) == {"stringValue"}
+attrs={x["key"]:x["value"] for x in record["attributes"]}
+uri=attrs.pop("shirudo.map.snapshot.uri")["stringValue"]
+assert uri.startswith("s3://test-bucket/prefix/") and uri.endswith(digest+".json.gz")
+assert record["body"]["stringValue"] == "BPF map snapshot stored in S3: " + uri
+assert attrs == {
+    "shirudo.upatch.name": {"stringValue": "test-upatch"},
+    "shirudo.upatch.location": {"stringValue": "fentry/test_hook"},
+    "shirudo.map.name": {"stringValue": "hits_total"},
+    "shirudo.map.type": {"stringValue": "percpu_array"},
+    "shirudo.map.max_entries": {"intValue": "1"},
+    "shirudo.map.n_entries": {"intValue": "1"},
+    "shirudo.map.n_cpus": {"intValue": "2"},
+    "shirudo.map.serialized": {"boolValue": False},
+    "shirudo.map.truncated": {"boolValue": False},
+    "shirudo.map.snapshot.format": {"stringValue": "shirudo.map.v1+json"},
+    "shirudo.map.snapshot.content_type": {"stringValue": "application/json"},
+    "shirudo.map.snapshot.content_encoding": {"stringValue": "gzip"},
+    "shirudo.map.snapshot.size_bytes": {"intValue": str(len(raw))},
+    "shirudo.map.snapshot.uncompressed_size_bytes":
+        {"intValue": str(len(gzip.decompress(raw)))},
+    "shirudo.map.snapshot.sha256": {"stringValue": digest},
+}, attrs
+assert len(open("s3.log","rb").read()) < 16384
+'\''
+'
+
+test_expect_success '--otel=s3 streams snapshots larger than the configured OTLP limit' '
+	rm -f s3.port s3.snapshot s3.log s3.meta;
+	python3 "$M"/otel-s3-mock.py success s3.port s3.snapshot s3.log s3.meta &
+	server=$!;
+	i=0; while test ! -s s3.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat s3.port) &&
+	AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=secret AWS_REGION=us-east-1 \
+	OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://127.0.0.1:$port/v1/logs" \
+	OTEL_EXPORTER_OTLP_LOGS_HEADERS="X-Tenant-ID=tenant-env-5678" \
+		"$H" send-s3-large "http://127.0.0.1:$port" 0 &&
+	wait $server &&
+	python3 -c '\''
+import gzip,json
+body=gzip.decompress(open("s3.snapshot","rb").read())
+assert len(body) > 1024
+d=json.loads(body)
+assert d["data"]["serialized"] is True
+assert d["data"]["serialized_pages"] == 1
+meta=json.load(open("s3.meta")); put,post=meta["requests"]
+assert put["tenant_id"] == "" and post["tenant_id"] == "tenant-env-5678"
+assert len(open("s3.log","rb").read()) < 16384
+'\''
+'
+
+test_expect_success '--otel=s3 retries PUT and accepts a content-addressed duplicate' '
+	rm -f s3.port s3.snapshot s3.log s3.meta;
+	python3 "$M"/otel-s3-mock.py s3-retry s3.port s3.snapshot s3.log s3.meta &
+	server=$!;
+	i=0; while test ! -s s3.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat s3.port) &&
+	AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=secret AWS_REGION=us-east-1 \
+	OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://127.0.0.1:$port/v1/logs" \
+		"$H" send-s3 "http://127.0.0.1:$port" 1 &&
+	wait $server &&
+	python3 -c '\''
+import json
+m=json.load(open("s3.meta"))
+puts=[r for r in m["requests"] if r["method"] == "PUT"]
+assert m["put_attempts"] == 2 and puts[0]["path"] == puts[1]["path"]
+'\'' &&
+	rm -f s3.port s3.snapshot s3.log s3.meta;
+	python3 "$M"/otel-s3-mock.py exists s3.port s3.snapshot s3.log s3.meta &
+	server=$!;
+	i=0; while test ! -s s3.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat s3.port) &&
+	AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=secret AWS_REGION=us-east-1 \
+	OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://127.0.0.1:$port/v1/logs" \
+		"$H" send-s3 "http://127.0.0.1:$port" 0 &&
+	wait $server && test -s s3.log
+'
+
+test_expect_success '--otel=s3 encodes prefixes and falls back to AWS_DEFAULT_REGION' '
+	rm -f s3.port s3.snapshot s3.log s3.meta;
+	python3 "$M"/otel-s3-mock.py success s3.port s3.snapshot s3.log s3.meta &
+	server=$!;
+	i=0; while test ! -s s3.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat s3.port) &&
+	AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=secret AWS_REGION= \
+	AWS_DEFAULT_REGION=us-west-2 \
+	SHIRUDO_TEST_S3_URI="s3://test-bucket/prefix with space" \
+	OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://127.0.0.1:$port/v1/logs" \
+		"$H" send-s3 "http://127.0.0.1:$port" 0 &&
+	wait $server &&
+	python3 -c '\''
+import json
+m=json.load(open("s3.meta")); put,post=m["requests"]
+assert put["sigv4_valid"] and put["region"] == "us-west-2"
+assert "/prefix%20with%20space/" in put["path"]
+assert post["path"] == "/v1/logs"
+'\''
+'
+
+test_expect_success '--otel=s3 retries each retryable PUT response' '
+	for status in 408 409 500 502 503 504
+	do
+		rm -f s3.port s3.snapshot s3.log s3.meta
+		python3 "$M"/otel-s3-mock.py "s3-retry-$status" s3.port s3.snapshot s3.log s3.meta &
+		server=$!
+		i=0; while test ! -s s3.port && test "$i" -lt 50; do i=$((i+1)); sleep .02; done
+		port=$(cat s3.port) &&
+		AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=secret AWS_REGION=us-east-1 \
+		OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://127.0.0.1:$port/v1/logs" \
+			"$H" send-s3 "http://127.0.0.1:$port" 1 && wait "$server" &&
+		python3 -c '\''import json; assert json.load(open("s3.meta"))["put_attempts"] == 2'\'' || return 1
+	done
+'
+
+test_expect_success '--otel=s3 exhausts PUT retries without posting a reference' '
+	rm -f s3.port s3.snapshot s3.log s3.meta;
+	python3 "$M"/otel-s3-mock.py s3-exhaust s3.port s3.snapshot s3.log s3.meta &
+	server=$!;
+	i=0; while test ! -s s3.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat s3.port) &&
+	! AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=secret AWS_REGION=us-east-1 \
+	OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://127.0.0.1:$port/v1/logs" \
+		"$H" send-s3 "http://127.0.0.1:$port" 1 &&
+	wait $server &&
+	python3 -c '\''
+import json
+m=json.load(open("s3.meta"))
+assert m["put_attempts"] == 2
+assert all(r["method"] == "PUT" for r in m["requests"])
+'\''
+'
+
+test_expect_success '--otel=s3 retries collector reference without uploading twice' '
+	rm -f s3.port s3.snapshot s3.log s3.meta;
+	python3 "$M"/otel-s3-mock.py otel-retry s3.port s3.snapshot s3.log s3.meta &
+	server=$!;
+	i=0; while test ! -s s3.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat s3.port) &&
+	AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=secret AWS_REGION=us-east-1 \
+	OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://127.0.0.1:$port/v1/logs" \
+		"$H" send-s3 "http://127.0.0.1:$port" 1 &&
+	wait $server &&
+	python3 -c '\''
+import json
+m=json.load(open("s3.meta"))
+assert m["put_attempts"] == 1
+assert sum(r["method"] == "POST" for r in m["requests"]) == 2
+'\''
+'
+
+test_expect_success '--otel=s3 preserves upload-before-reference failure ordering' '
+	rm -f s3.port s3.snapshot s3.log s3.meta;
+	python3 "$M"/otel-s3-mock.py s3-fail s3.port s3.snapshot s3.log s3.meta &
+	server=$!;
+	i=0; while test ! -s s3.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat s3.port) &&
+	! AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=secret AWS_REGION=us-east-1 \
+	OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://127.0.0.1:$port/v1/logs" \
+		"$H" send-s3 "http://127.0.0.1:$port" 0 2>s3-fail.err &&
+	wait $server && test ! -e s3.log && ! grep -q secret s3-fail.err &&
+	rm -f s3.port s3.snapshot s3.log s3.meta;
+	python3 "$M"/otel-s3-mock.py otel-fail s3.port s3.snapshot s3.log s3.meta &
+	server=$!;
+	i=0; while test ! -s s3.port && test $i -lt 50; do i=$((i+1)); sleep .02; done &&
+	port=$(cat s3.port) &&
+	! AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=secret AWS_REGION=us-east-1 \
+	OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://127.0.0.1:$port/v1/logs" \
+		"$H" send-s3 "http://127.0.0.1:$port" 0 &&
+	wait $server && test -s s3.snapshot && test -s s3.log
+'
+
+test_done

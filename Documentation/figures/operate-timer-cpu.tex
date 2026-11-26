@@ -1,0 +1,29 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The CPU time the timers use per minute: keepalive 212 ms, map export
+% 172 ms, package update and upgrade 32 ms and tree sync 10 ms, 0.43 s
+% in all (operate/plan/overhead.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (720,76);
+
+  % One pixel is 0.77 ms.
+  \fill[fig-s1, bar] (0,8) rectangle ++(275.7,28);
+  \fill[fig-s2, bar] (277.7,8) rectangle ++(223.7,28);
+  \fill[fig-s3, bar] (503.4,8) rectangle ++(41.6,28);
+  \fill[fig-s4, bar] (547,8) rectangle ++(13,28);
+  \node[anchor=base west, text=fig-on, font=\bfseries] at (8,26) {212 ms};
+  \node[anchor=base west, text=fig-on, font=\bfseries] at (285.7,26) {172 ms};
+  \node[anchor=base west, note] at (570,26) {0.43 s per minute};
+
+  \foreach \x/\c/\t in {0/fig-s1/Keepalive, 99.4/fig-s2/Map export,
+      205.4/fig-s3/Package update and upgrade, 417/fig-s4/Tree sync} {
+    \fill[\c, rounded corners=1.5bp] (\x,57) rectangle ++(10,10);
+    \node[anchor=base west, note] at (\x+16,66) {\t};
+  }
+\end{tikzpicture}
+\end{document}

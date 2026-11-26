@@ -1,0 +1,87 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% What boot integration builds on which host: the images and the UKI
+% bootstrap file on the operator host, the image directory, the unit
+% drop-ins and the initrd on the target, and the UKI where the Secure Boot
+% key is (operate/deploy/boot-integration.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (840,432);
+
+  \draw[frame] (10,10) rectangle (830,160);
+  \draw[frame] (10,196) rectangle (830,330);
+  \draw[frame] (291,360) rectangle (830,428);
+  \foreach \x in {22, 291, 560} {
+    \draw[box] (\x,36) rectangle ++(258,114);
+    \draw[box] (\x,222) rectangle ++(258,98);
+  }
+
+  \draw[flow] (151,150) -- (151,220);
+  \draw[flow] (360,150) -- (360,178) -- (230,178) -- (230,220);
+  \draw[flow] (470,150) -- (470,220);
+  \draw[flow] (689,150) -- (689,220);
+  \draw[flow] (650,320) -- (650,358);
+  \draw[flow] (740,360) -- (740,322);
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node[large, anchor=base west] at (22,28) {Operator host};
+    \node[large, anchor=base west] at (22,214) {Target};
+    \node[large, anchor=base west] at (303,378)
+      {Secure Boot signing host, the operator host in most deployments};
+
+    \node[code] at (151,56) {shirudo-gen-image};
+    \node[small, note] at (151,74) {the config image, from config-root/};
+    \node[mono] at (151,96) {initial.img, .verity,};
+    \node[mono] at (151,112) {.roothash, .p7s};
+    \node[small, note] at (151,134) {root signed with the config key};
+
+    \node[code] at (420,56) {shirudo-gen-runtime};
+    \node[small, note] at (420,74) {from runtime.conf, the target binary,};
+    \node[small, note] at (420,90) {the BPF and config certificates};
+    \node[mono] at (420,108) {runtime.img, .verity,};
+    \node[mono] at (420,124) {.roothash, .p7s};
+    \node[mono] at (420,140) {runtime-service.conf};
+
+    \node[code] at (689,56) {uki-bootstrap.conf};
+    \node[small, note] at (689,74) {you write it, with the content};
+    \node[small, note] at (689,90) {of runtime.roothash};
+    \node[mono] at (689,112) {runtime.image};
+    \node[mono] at (689,128) {runtime.root\_hash};
+
+    \node[code] at (151,242) {/var/lib/shirudo/images/};
+    \node[small, note] at (151,262) {the runtime image: .img, .verity,};
+    \node[small, note] at (151,278) {.roothash; the target ignores .p7s};
+    \node[small, note] at (151,298) {the config image: all four files};
+
+    \node[large] at (420,242) {Unit drop-ins};
+    \node[small, note] at (420,262) {runtime-service.conf, installed as};
+    \node[mono] at (420,278) {shirudo.service.d/runtime.conf};
+    \node[small, note] at (420,294) {and one you write for each};
+    \node[small, note] at (420,310) {of the five timer services};
+
+    \node[code] at (689,242) {shirudo-gen-initrd};
+    \node[small, note] at (689,262) {embeds uki-bootstrap.conf, the BPF};
+    \node[small, note] at (689,278) {certificate, /usr/bin/shirudo and};
+    \node[small, note] at (689,294) {the TPM and dm-verity modules};
+    \node[small] at (689,312) {the initrd in /boot};
+
+    \node[small, note, anchor=base east] at (642,342) {initrd, kernel image};
+    \node[small, note, anchor=base west] at (748,342) {signed UKI};
+    \node[small, note, anchor=base west] at (303,398)
+      {a UKI from the kernel image, the initrd and a command line with};
+    \node[mono, anchor=base west] at (303,416)
+      {bpf.keyring\_unsealed=1 dm\_verity.keyring\_unsealed=1};
+
+    \node[small, note, anchor=base west] at (22,392)
+      {An arrow between hosts is a copy};
+    \node[small, note, anchor=base west] at (22,408)
+      {you make. The signed UKI goes to};
+    \node[small, note, anchor=base west] at (22,424)
+      {the target's EFI system partition.};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

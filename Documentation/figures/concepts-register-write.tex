@@ -1,0 +1,83 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% One write of the register: a task with runtime authority satisfies the
+% index's policy, has the writer key sign the exact NV_Extend and sends
+% it past lsm/tpm_command; root without authority gets the same
+% signature and is refused at the hook (concepts/measurement-register.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    reply/.style={flow, dash pattern=on 3.75bp off 3bp},
+    refused/.style={draw=fig-accent, fill=fig-accent, fill opacity=0.08,
+      text opacity=1, rounded corners=3bp}]
+  \useasboundingbox (0,0) rectangle (840,440);
+
+  % Lifelines, broken where a box sits on them.
+  \begin{scope}[link, thin, dash pattern=on 2.25bp off 3bp]
+    \draw (110,54) -- (110,70);
+    \draw (110,106) -- (110,316);
+    \draw (110,352) -- (110,430);
+    \draw (420,54) -- (420,118);
+    \draw (420,161) -- (420,176);
+    \draw (420,194) -- (420,221);
+    \draw (420,240) -- (420,248);
+    \draw (420,292) -- (420,355);
+    \draw (420,374) -- (420,396);
+    \draw (730,54) -- (730,262);
+    \draw (730,306) -- (730,430);
+  \end{scope}
+
+  \draw[box] (30,10) rectangle ++(160,44);
+  \draw[box] (340,10) rectangle ++(160,44);
+  \draw[box] (650,10) rectangle ++(160,44);
+  \draw[box] (30,70) rectangle ++(160,36);
+  \draw[box] (30,316) rectangle ++(160,36);
+  \draw[box] (330,248) rectangle ++(180,44);
+  \draw[box] (620,262) rectangle ++(216,44);
+  \draw[refused] (330,396) rectangle ++(180,36);
+
+  \draw[flow] (110,140) -- (728,140);
+  \draw[flow] (110,196) -- (728,196);
+  \draw[reply] (730,218) -- (112,218);
+  \draw[flow] (110,270) -- (328,270);
+  \draw[flow] (510,284) -- (618,284);
+  \draw[flow] (110,376) -- (728,376);
+  \draw[flow] (110,414) -- (328,414);
+
+  \begin{scope}[note, every node/.append style={anchor=base}]
+    \node[title] at (110,30) {Task};
+    \node[small] at (110,46) {on the target};
+    \node[title] at (420,30) {Kernel};
+    \node[mono] at (420,46) {lsm/tpm\_command};
+    \node[title] at (730,30) {TPM};
+    \node[small] at (730,46) {register 0x01818E00};
+
+    \node[code] at (110,86) {upatch load};
+    \node[small] at (110,100) {runtime authority};
+    \node[code] at (110,332) {root};
+    \node[small] at (110,346) {no runtime authority};
+
+    \node at (420,132) {policy session: one of the two branches};
+    \node[small] at (420,156) {written, or unwritten with PCRs 9 and 11
+      at their bound values};
+    \node at (420,188) {sign with the NV writer key};
+    \node[small] at (420,234) {a signature over the session nonce and
+      this exact NV\_Extend};
+
+    \node[mono] at (220,262) {NV\_Extend(event)};
+    \node[small] at (420,266) {runtime authority:};
+    \node[small] at (420,282) {passed on};
+    \node[small] at (728,280) {register = SHA-256(register || event)};
+    \node[small] at (728,296) {if the policy and command hash hold};
+
+    \node[small] at (420,368) {the same session and signature:
+      the writer key signs for anyone};
+    \node[mono] at (220,406) {NV\_Extend(event)};
+    \node[small, color=fig-accent] at (420,412) {refused: EACCES,};
+    \node[small, color=fig-accent] at (420,426) {counted as TpmExtend};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

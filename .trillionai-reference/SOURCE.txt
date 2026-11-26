@@ -1,0 +1,5 @@
+Upstream: https://github.com/shirudo-dev/shirudo
+Revision: 2a560729814a9ac0ac702bb15d39c2145522c143
+Source snapshot; upstream automation, unsupported entries, and restricted enterprise code where applicable excluded. Original licences retained. Commercial reuse requires licence audit.
+Copied files: 1903
+Excluded files: 22

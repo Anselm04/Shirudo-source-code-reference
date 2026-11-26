@@ -1,0 +1,97 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% A node's stored history in node_ops against the window of its newest
+% keepalive, on one seq axis: a record that extends the history, one
+% whose window starts past it and leaves a gap, and one that contradicts
+% it (operate/backend/status.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+% seq 0 to 700 at 0.9 px a seq from x = 170.
+\newcommand\sx[1]{\fpeval{170 + 0.9 * (#1)}}
+
+\begin{document}
+\begin{tikzpicture}[
+    stored/.style={draw=fig-line, fill=fig-line, fill opacity=0.12,
+      rounded corners=3bp},
+    window/.style={draw=fig-s1, fill=fig-s1, fill opacity=0.14,
+      rounded corners=3bp},
+    added/.style={draw=fig-s3, fill=fig-s3, fill opacity=0.18,
+      dash pattern=on 3bp off 2.25bp, rounded corners=3bp},
+    unknown/.style={draw=fig-line, dash pattern=on 3bp off 2.25bp,
+      rounded corners=3bp},
+    gaprow/.style={draw=fig-s4, fill=fig-s4, fill opacity=0.9},
+    bracket/.style={draw=fig-line, thin}]
+  \useasboundingbox (0,0) rectangle (840,288);
+
+  % The seq axis.
+  \draw[axis] (\sx{0},30) -- (\sx{700},30);
+  \foreach \s in {0,100,188,412,600,700}
+    \draw[axis] (\sx{\s},26) -- (\sx{\s},34);
+  \begin{scope}[every node/.append style={note, small, anchor=base}]
+    \foreach \s in {0,100,188,412,600,700}
+      \node at (\sx{\s},18) {\s};
+    \node[anchor=base east] at (150,34) {seq};
+  \end{scope}
+
+  % Row 1: the record extends the history.
+  \draw[stored] (\sx{0},48) rectangle (\sx{600},66);
+  \draw[added] (\sx{600},48) rectangle (\sx{700},66);
+  \draw[window] (\sx{188},72) rectangle (\sx{700},90);
+  \draw[bracket] (\sx{188},96) -- (\sx{188},100) -- (\sx{600},100)
+    -- (\sx{600},96);
+
+  % Row 2: the window starts past the history.
+  \draw[stored] (\sx{0},132) rectangle (\sx{100},150);
+  \draw[unknown] (\sx{100},132) rectangle (\sx{188},150);
+  \draw[added] (\sx{188},132) rectangle (\sx{700},150);
+  \draw[gaprow] (\sx{188}-3,130) rectangle (\sx{188}+3,152);
+  \draw[window] (\sx{188},156) rectangle (\sx{700},174);
+
+  % Row 3: the record contradicts the history.
+  \draw[stored] (\sx{0},216) rectangle (\sx{600},234);
+  \draw[window] (\sx{188},240) rectangle (\sx{700},258);
+  \draw[draw=fig-accent, line width=1.5bp] (\sx{412},211) -- (\sx{412},263);
+
+  % base_seq of every row.
+  \foreach \y in {70,154,238}
+    \fill[fig-s1] (\sx{188},\y+11) circle (3bp);
+
+  \begin{scope}[every node/.append style={anchor=base west}]
+    \node[title] at (0,62) {extends};
+    \node[note, small] at (0,80) {rows added};
+    \node[title] at (0,146) {gap};
+    \node[note, small] at (0,164) {history restarts};
+    \node[title] at (0,230) {contradiction};
+    \node[note, small] at (0,248) {node marked};
+
+    \begin{scope}[small]
+      \node at (\sx{0}+8,61) {stored history, node\_ops};
+      \node at (\sx{600}+8,61) {601 to 700};
+      \node at (\sx{188}+10,85) {window of the newest record, to last\_seq};
+      \node[note, anchor=base east] at (\sx{188}-8,85)
+        {base\_root at base\_seq};
+      \node[note] at (\sx{188}+10,113)
+        {compared: base\_root, then the code and root at each seq};
+
+      \node at (\sx{0}+8,145) {stored};
+      \node[note] at (\sx{100}+8,145) {unknown};
+      \node at (\sx{188}+10,145) {added 189 to 700, after a gap row};
+      \node at (\sx{188}+10,169) {window of the newest record};
+      \node[note] at (\sx{0},195)
+        {gap row: code 0, the record's base\_root; checks 4 and 6
+         read base and set unverified (gap)};
+
+      \node at (\sx{0}+8,229) {stored history, node\_ops};
+      \node at (\sx{188}+10,253) {window of the newest record};
+      \node[color=fig-accent] at (\sx{412}+6,229)
+        {code or root differs at 412};
+      \node[note] at (\sx{0},280)
+        {nothing added; a mark in history\_contradictions; check 4 fails
+         until an operator clears it};
+    \end{scope}
+  \end{scope}
+
+\end{tikzpicture}
+\end{document}

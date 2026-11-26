@@ -1,0 +1,27 @@
+#!/bin/sh
+# SPDX-License-Identifier: BSD-2-Clause
+# Copyright (c) 2026 Authors of shirudo
+#
+# testing/fixtures/pipeline/trivy -- stand in for Trivy in t9109, which
+# runs no vulnerability database. `version` prints a made-up database and
+# `sbom <options> <file>` the report trivy-report.json, one finding of
+# openssl. It fails for any SBOM but sbom.cdx.json beside it.
+
+set -eu
+
+here=$(cd "$(dirname "$0")" && pwd)
+
+case "${1:-}" in
+version)
+	printf '%s\n' '{"Version":"0.0.0-t9109","VulnerabilityDB":{"Version":2,"UpdatedAt":"2026-11-12T06:00:00Z"}}' ;;
+sbom)
+	for file; do :; done
+	cmp -s "$file" "$here/sbom.cdx.json" || {
+		echo "stub trivy: $file is not the fixture SBOM" >&2
+		exit 1
+	}
+	cat "$here/trivy-report.json" ;;
+*)
+	echo "stub trivy: no command $*" >&2
+	exit 2 ;;
+esac

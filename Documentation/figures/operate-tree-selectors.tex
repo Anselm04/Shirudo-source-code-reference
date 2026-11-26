@@ -1,0 +1,44 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% A target with kernel release 7.4.0, architecture x86_64 and label
+% env=prod going through a tree publication in sequence order: it applies
+% the operations whose selectors match and skips the others for good
+% (operate/run/deliver-packages.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    applied/.style={},
+    skipped/.style={dash pattern=on 3bp off 2.25bp}]
+  \useasboundingbox (0,0) rectangle (760,330);
+
+  \node[anchor=base west, note, large] at (10,28)
+    {Tree publication, in sequence order};
+  \node[anchor=base west, note, large] at (470,20) {Target};
+  \node[anchor=base west, note, small] at (470,36)
+    {release 7.4.0, x86\_64, label env=prod};
+
+  \foreach \y/\op/\sel/\res/\s in {
+      44/1 add obs/no selector/{applied: loaded and measured}/applied,
+      88/2 add fix-a/kernel\_release\_prefix 7.4/{applied: loaded and measured}/applied,
+      132/3 add fix-b/architecture aarch64/{skipped: architecture differs}/skipped,
+      176/4 add probe/labels env=canary/{skipped: label differs}/skipped,
+      220/5 delete fix-a/kernel\_release\_prefix 7.4/{applied: unloaded and measured}/applied} {
+    \draw[box, rounded corners=3bp] (10,\y) rectangle ++(420,34);
+    \draw[fig-line, rounded corners=3bp, \s] (470,\y) rectangle ++(280,34);
+    \draw[flow] (430,\y+17) -- (468,\y+17);
+    \node[anchor=base west, note, small] at (22,\y+21) {\op};
+    \node[anchor=base west, note, small] at (160,\y+21) {\sel};
+    \node[anchor=base west, note, small] at (482,\y+21) {\res};
+  }
+
+  \node[anchor=base west, note, small] at (10,290) {The cursor last\_seq
+    ends at 5. Operations 3 and 4 stay skipped, even if the target's
+    labels or};
+  \node[anchor=base west, note, small] at (10,308) {kernel change later;
+    a new operation with its own sequence number is the way to reach
+    the target.};
+\end{tikzpicture}
+\end{document}

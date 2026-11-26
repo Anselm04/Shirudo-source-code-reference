@@ -1,0 +1,33 @@
+# Files whose opens are recorded in the file table with the executable,
+# cgroup and credentials of the opener. A rule is a base name, a
+# parent/name pair or parent/* for every file in a directory; a trailing
+# "w" records only opens for writing. Nothing here is enforced.
+#
+# Process environment and credential material.
+environ
+shadow
+gshadow
+sudoers
+sudoers.d/*
+authorized_keys
+id_rsa
+id_ecdsa
+id_ed25519
+.netrc
+.git-credentials
+.pypirc
+.npmrc
+credentials
+.docker/config.json
+.kube/config
+token
+# Persistence through system configuration.
+ld.so.preload w
+crontab w
+cron.d/* w
+cron.hourly/* w
+cron.daily/* w
+passwd w
+rc.local w
+profile.d/* w
+modules-load.d/* w

@@ -1,0 +1,78 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% Binding the measurement register: PCRs 9 and 11 enter the write policy,
+% the NV writer key signs for it, and the initialized NV index's public
+% fields make the anchor extended into PCR 9, in the steps 1 to 4
+% (concepts/background/tpm.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (900,433);
+
+  \foreach \x/\y/\w/\h in {20/30/210/80, 20/140/210/110, 280/30/260/180,
+      280/250/260/70, 575/30/305/132, 575/205/305/155}
+    \draw[box] (\x,\y) rectangle ++(\w,\h);
+
+  \draw[flow] (230,70) -- (278,70);
+  \draw[flow] (230,175) -- (278,175);
+  \draw[flow] (540,90) -- (573,90);
+  \draw[flow] (410,250) -- (410,212);
+  \draw[flow] (728,162) -- (728,203);
+  \draw[flow] (728,360) -- (728,390) -- (125,390) -- (125,252);
+
+  \begin{scope}[note, every node/.append style={anchor=base west}]
+    \node[title] at (32,52) {PCR 11};
+    \node at (32,72) {UKI sections, enter-initrd};
+    \node at (32,92) {at binding: phase\_before};
+    \node[title] at (32,162) {PCR 9};
+    \foreach \y/\t in {182/{initrd, command line,}, 198/NvPCR anchors,
+        218/at binding: pcr\_before, 238/then shirudo's anchor}
+      \node at (32,\y) {\t};
+
+    \node[title] at (292,52) {Write policy};
+    \node at (292,74) {PolicyOR of two branches:};
+    \node at (304,94) {written: PolicyNvWritten(YES)};
+    \node at (304,114) {init: PolicyNvWritten(NO)};
+    \node at (332,132) {and PolicyPCR(9, 11)};
+    \node at (292,156) {then PolicySigned(writer key)};
+    \node at (292,176) {then PolicyCommandCode(NV\_Extend)};
+    \node[small] at (292,198) {digest = the index's authPolicy};
+    \node[title] at (292,272) {NV writer key};
+    \node at (292,292) {RSA-3072, owner hierarchy,};
+    \node at (292,310) {signs nonce and command hash};
+
+    \node[title] at (587,52) {NV index};
+    \begin{scope}[small]
+      \node at (587,72) {\bfseries Handle:\mdseries\ 0x01818E00};
+      \node at (587,90) {\bfseries Type:\mdseries\ TPM\_NT\_EXTEND};
+      \node[font=\figsmall\bfseries] at (587,108) {Attributes};
+      \foreach \y/\t in {123/POLICYWRITE, 136/ORDERLY, 149/CLEAR\_STCLEAR}
+        \node at (599,\y) {\t};
+    \end{scope}
+    \node[title] at (587,227) {Anchor};
+    \begin{scope}[mono]
+      \node at (587,249) {SHA-256(};
+      \node at (599,265) {"nvpcr-init:shirudo:0x1818e00:"};
+      \node at (599,281) {|| hex(0x000B || SHA-256(};
+      \node at (611,297) {handle || hash algorithm ID};
+      \node at (611,313) {|| written attributes || 0x0020};
+      \node at (611,329) {|| policy digest || size};
+      \node at (599,345) {)))};
+    \end{scope}
+  \end{scope}
+
+  \foreach \x/\y/\n in {254/58/1, 254/163/1, 557/76/2, 743/183/3, 390/375/4} {
+    \draw[fig-line, line width=0.9bp] (\x,\y) circle[radius=9];
+    \node[anchor=base, note, small] at (\x,\y+4) {\n};
+  }
+
+  \begin{scope}[note, small]
+    \node[anchor=base west] at (418,236) {signs};
+    \node[anchor=base] at (450,418)
+      {PCR\_Extend(9, anchor) closes the init branch};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

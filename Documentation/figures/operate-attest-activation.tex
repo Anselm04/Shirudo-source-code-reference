@@ -1,0 +1,66 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% Enrolling a target through credential activation: enroll.json carries
+% the attestation and endorsement keys, the operator challenges a vouched
+% endorsement key and the TPM releases the credential only to that
+% attestation key under it (operate/run/attest.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    lifeline/.style={draw=fig-line, thin, dash pattern=on 2.25bp off 3bp},
+    reply/.style={dash pattern=on 3.75bp off 3bp}]
+  \useasboundingbox (0,0) rectangle (900,540);
+
+  \draw[lifeline] (160,54) -- (160,208);
+  \draw[lifeline] (160,254) -- (160,416);
+  \draw[lifeline] (470,54) -- (470,530);
+  \draw[lifeline] (770,54) -- (770,530);
+
+  \foreach \x in {85, 395, 695}
+    \draw[box] (\x,10) rectangle ++(150,44);
+  \draw[box] (30,208) rectangle ++(260,46);
+  \draw[box] (30,416) rectangle ++(260,46);
+  \draw[box] (30,486) rectangle ++(260,44);
+
+  \draw[flow] (160,96) -- (468,96);
+  \draw[flow] (470,132) -- (768,132);
+  \draw[flow, reply] (770,150) -- (472,150);
+  \draw[flow] (470,186) -- (162,186);
+  \draw[flow] (160,292) -- (468,292);
+  \draw[flow] (470,330) -- (768,330);
+  \draw[flow, reply] (770,348) -- (472,348);
+  \draw[flow] (470,394) -- (162,394);
+  \draw[flow] (160,462) -- (160,484);
+
+  \begin{scope}[every node/.append style={note, anchor=base}]
+    \node[title] at (160,30) {Operator};
+    \node[small] at (160,46) {inventory, no TPM};
+    \node[title] at (470,30) {Target};
+    \node[mono] at (470,46) {shirudo attest};
+    \node[title] at (770,30) {TPM};
+    \node[small] at (770,46) {physical or virtual};
+
+    \node at (315,88) {nonce};
+    \node at (620,124) {CreatePrimary: AK, EK};
+    \node[small] at (620,166) {public areas, names, EK certificate};
+    \node[code] at (315,178) {enroll.json};
+
+    \node[code] at (160,228) {attest challenge};
+    \node[small] at (160,245) {EK vouched for by --ek-ca or --ek-name};
+
+    \node[code] at (315,284) {challenge.json, nonce-2};
+    \node at (620,322) {ActivateCredential};
+    \node[small] at (620,364)
+      {the credential, only to that AK under that EK};
+    \node[code] at (315,386) {answer.json};
+
+    \node[code] at (160,436) {verify --expect-credential};
+    \node[small] at (160,453) {with --ak-name and --ek-name};
+    \node[code] at (160,505) {inventory: ak-name, ek-name};
+    \node[small] at (160,521) {every later verify pins them};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

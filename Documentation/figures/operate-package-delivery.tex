@@ -1,0 +1,72 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% Package delivery: the operator host builds and pushes packages, a signed
+% index and tree operations to an OCI registry, and the target's timers
+% pull, verify and load them, which the kernel checks and the TPM measures
+% (operate/run/deliver-packages.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (760,360);
+
+  \draw[box] (10,40) rectangle ++(200,270);
+  \draw[box] (244,40) rectangle ++(212,270);
+  \draw[link, rounded corners=3bp] (252,96) rectangle ++(196,54);
+  \draw[link, rounded corners=3bp] (252,164) rectangle ++(196,40);
+  \draw[link, rounded corners=3bp] (252,218) rectangle ++(196,54);
+  \draw[frame] (490,10) rectangle ++(260,340);
+  \draw[box, rounded corners=3bp] (505,44) rectangle ++(230,208);
+  \draw[box, rounded corners=3bp] (505,268) rectangle ++(230,70);
+
+  \draw[flow] (210,175) -- (242,175);
+  \draw[flow] (456,175) -- (503,175);
+  \draw[flow] (620,252) -- (620,266);
+
+  \begin{scope}[note, small]
+    \node[anchor=base west, font=\figbody] at (502,32) {target};
+
+    \node[anchor=base, large] at (110,64) {Operator host};
+    \node[anchor=base, large] at (350,64) {OCI registry};
+    \node[anchor=base] at (350,82) {one endpoint per repository};
+    \node[anchor=base] at (350,119) {<namespace>/bpm-index:stable};
+    \node[anchor=base] at (350,137) {index and its signature};
+    \node[anchor=base] at (350,188) {packages (.bee)};
+    \node[anchor=base] at (350,241) {upatch tree};
+    \node[anchor=base] at (350,259) {publication and artifacts};
+    \node[anchor=base, large] at (620,66) {Timers};
+    \node[anchor=base, large] at (620,291) {Kernel and TPM};
+    \node[anchor=base] at (620,310) {signature checked against .bpf};
+    \node[anchor=base] at (620,326) {register extended per load};
+    \node[anchor=base] at (229,167) {push};
+    \node[anchor=base] at (476,167) {pull};
+
+    \foreach \y/\n in {100/1, 146/2, 208/3}
+      \node[anchor=base west] at (22,\y) {\n};
+    \foreach \y/\t in {100/shirudo bpm build,
+        116/<name>-<version>.bee,
+        146/shirudo bpm push,
+        162/package and a signed,
+        178/index entry,
+        208/shirudo bpm tree append,
+        224/{a signed tree operation,},
+        240/optional}
+      \node[anchor=base west] at (37,\y) {\t};
+
+    \foreach \y/\n in {92/4, 150/5, 208/6}
+      \node[anchor=base west] at (517,\y) {\n};
+    \foreach \y/\t in {92/{bpm repo update, every minute:},
+        108/verify each index against its,
+        124/{repository certificate, cache it},
+        150/{bpm upgrade: for a newer},
+        166/{version, check the digest and},
+        182/load each upatch,
+        208/{bpm tree sync, every minute:},
+        224/{verify against the signer set,},
+        240/apply matching operations}
+      \node[anchor=base west] at (532,\y) {\t};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,61 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% Two ways to learn the attestation key's name, credential activation
+% and a builder that created both keys in the TPM before handing it over,
+% both ending in the names every later verify pins
+% (internals/measurement-register.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (900,520);
+
+  \draw[link, thin, dash pattern=on 2.25bp off 3bp] (450,10) -- (450,350);
+
+  \foreach \y in {52,132,212,292}
+    \draw[box] (35,\y) rectangle ++(380,50);
+  \foreach \y in {52,132,212}
+    \draw[box] (485,\y) rectangle ++(380,50);
+  \draw[box] (250,384) rectangle ++(400,44);
+  \draw[box] (230,458) rectangle ++(440,50);
+
+  \foreach \x/\y in {225/102, 225/182, 225/262, 675/102, 675/182}
+    \draw[flow] (\x,\y) -- (\x,\y+28);
+  \draw[flow] (225,342) -- (225,362) -- (380,362) -- (380,382);
+  \draw[flow] (675,262) -- (675,362) -- (520,362) -- (520,382);
+  \draw[flow] (450,428) -- (450,456);
+
+  \begin{scope}[note, every node/.append style={anchor=base}]
+    \node[title] at (225,22) {Credential activation};
+    \node[small] at (225,40) {trust rests on the endorsement key};
+    \node[code] at (225,73) {target: attest --nonce};
+    \node[small] at (225,91) {AK name, EK public area, EK certificate};
+    \node[code] at (225,153) {attest challenge};
+    \node[small] at (225,171) {EK vouched for by --ek-ca or --ek-name};
+    \node[code] at (225,233) {target: attest --challenge};
+    \node[small] at (225,251)
+      {the TPM releases the credential only to that AK};
+    \node[code] at (225,313) {attest verify --expect-credential};
+    \node[small] at (225,331) {once, at enrollment};
+
+    \node[title] at (675,22) {Builder-recorded names};
+    \node[small] at (675,40)
+      {trust rests on the builder, and for a virtual TPM its host};
+    \node at (675,73) {The builder controls the TPM};
+    \node[small] at (675,91)
+      {a hypervisor's virtual TPM, or provisioning before deployment};
+    \node[code] at (675,153) {CreatePrimary: AK, EK};
+    \node[small] at (675,171) {attest's templates, endorsement hierarchy};
+    \node at (675,233) {The builder records the names};
+    \node[small] at (675,251) {before the TPM is handed to the target};
+
+    \node[code] at (450,403) {inventory: ak-name, ek-name};
+    \node[small] at (450,420) {on the operator host, one pair per target};
+    \node[code] at (450,479) {attest verify --ak-name --ek-name};
+    \node[small] at (450,497)
+      {every later verification, the same on both paths};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

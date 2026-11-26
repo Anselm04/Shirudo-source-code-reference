@@ -1,0 +1,57 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% Building the measurement register: in the initrd init defines the NV
+% index, extends the init event, anchors the index in PCR 9 and writes
+% the init record; every later command extends, then appends its record
+% (internals/measurement-register.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    lifeline/.style={draw=fig-line, thin, dash pattern=on 2.25bp off 3bp}]
+  \useasboundingbox (0,0) rectangle (900,400);
+
+  \foreach \x in {90, 350, 570, 750}
+    \draw[box] (\x,10) rectangle ++(140,44);
+
+  \foreach \x in {160, 420, 640, 820}
+    \draw[lifeline] (\x,54) -- (\x,365);
+  \draw[lifeline] (10,262) -- (890,262);
+
+  \draw[flow] (160,100) -- (638,100);
+  \draw[flow] (160,145) -- (638,145);
+  \draw[flow] (160,190) -- (818,190);
+  \draw[flow] (160,235) -- (418,235);
+  \draw[flow] (160,305) -- (638,305);
+  \draw[flow] (160,350) -- (418,350);
+
+  \begin{scope}[every node/.append style={note, anchor=base}]
+    \node[title] at (160,37) {shirudo};
+    \node[title] at (420,30) {eventlog};
+    \node[mono] at (420,46) {/var/lib/shirudo};
+    \node[title] at (640,30) {TPM NV index};
+    \node[small] at (640,46) {the register};
+    \node[title] at (820,37) {TPM PCR 9};
+
+    \node at (400,92) {NV\_DefineSpace, write policy on PCRs 9 and 11};
+    \node[code] at (400,137) {NV\_Extend(init)};
+    \node at (490,182)
+      {PCR\_Extend(SHA-256(anchor)), the anchor names the index};
+    \node at (290,227) {init record, to eventlog.pending};
+
+    \node[code] at (400,297) {NV\_Extend(SHA-256(tag || fields))};
+    \node at (290,342) {append the record};
+  \end{scope}
+
+  \begin{scope}[every node/.append style={note, small, anchor=base west}]
+    \node at (10,88) {initrd, once};
+    \node at (10,103) {per TPM boot};
+    \node at (10,290) {every later};
+    \node at (10,305) {command};
+    \node at (160,388) {upatch\_load, upatch\_unload, tree\_op,
+      key\_revoke: extend, then append, under the register lock};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

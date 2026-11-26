@@ -1,0 +1,1 @@
+{"map":"exec","records":[{"pid":4242,"comm":"bash","argv":["/bin/sh","-c","id"],"ok":true,"ratio":0.5,"none":null}],"overflow":0}

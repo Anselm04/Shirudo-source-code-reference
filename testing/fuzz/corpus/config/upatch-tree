@@ -1,0 +1,3 @@
+# /etc/shirudo/upatch-tree.conf
+endpoint = "oci://registry.example:5000/shirudo/trees/prod"
+reference = latest

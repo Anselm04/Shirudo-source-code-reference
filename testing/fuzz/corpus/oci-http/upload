@@ -1,0 +1,5 @@
+HTTP/1.1 202 Accepted
+Location: /v2/shirudo/kernel-obs/blobs/uploads/4b8a?_state=Zm9v
+Docker-Upload-UUID: 4b8a
+Content-Length: 0
+

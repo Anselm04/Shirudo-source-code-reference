@@ -1,0 +1,75 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The look every figure of the documentation shares: IBM Plex Sans and
+% Mono, the pages' typefaces, and a color for each role. build.py turns
+% each role's color into the pages' variable for it, so a figure follows
+% the theme the reader picks.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{shirudo-figure}
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[sfdefault,semibold]{plex-sans}
+\RequirePackage[semibold]{plex-mono}
+\RequirePackage[protrusion=false,expansion=false]{microtype}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning,fit,backgrounds}
+
+% The light theme's values. build.py knows each role by its value, so a
+% figure takes colors from this list alone, never a mix of two: a lighter
+% shade is the same color with an opacity.
+\definecolor{fig-ink}{HTML}{171B22}
+\definecolor{fig-muted}{HTML}{5D6675}
+\definecolor{fig-line}{HTML}{8A93A0}
+\definecolor{fig-grid}{HTML}{E2E6EB}
+\definecolor{fig-axis}{HTML}{C3C9D1}
+\definecolor{fig-accent}{HTML}{8B1E3F}
+\definecolor{fig-s1}{HTML}{2A78D6}
+\definecolor{fig-s2}{HTML}{EB6834}
+\definecolor{fig-s3}{HTML}{1BAF7A}
+\definecolor{fig-s4}{HTML}{EDA100}
+\definecolor{fig-free}{HTML}{DDE2E8}
+\definecolor{fig-on}{HTML}{FFFFFF}
+
+% The pages' text is 15 px; a figure's is 12.3, 13.3 or 14.3 px at full
+% width, as a figure wider than the text is shown smaller.
+\newcommand\figsmall{\fontsize{9.25bp}{11bp}\selectfont}
+\newcommand\figbody{\fontsize{10bp}{12bp}\selectfont}
+\newcommand\figlarge{\fontsize{10.75bp}{13bp}\selectfont}
+% A label is a line of SVG text: one width of space, after a colon too,
+% and an option's two hyphens stay two rather than a dash.
+\AtBeginDocument{\frenchspacing}
+\DisableLigatures[-]{encoding=*}
+
+% One unit is one pixel of the page at full width, in big points as SVG
+% counts them, and y grows downwards as on the page. A node is its text
+% alone, so that (x,y) with anchor=base west is where the text starts.
+\tikzset{
+  every picture/.style={
+    x=0.75bp, y=-0.75bp,
+    font=\figbody,
+    color=fig-ink,
+    line width=1.125bp,
+    >={Triangle[length=7.875bp,width=7.875bp]},
+  },
+  every node/.style={inner sep=0pt, outer sep=0pt},
+  thin/.style={line width=0.75bp},
+  % A part of the system: a tinted box with its line.
+  box/.style={draw=fig-line, fill=fig-line, fill opacity=0.08,
+    text opacity=1, rounded corners=4.5bp},
+  % A boundary around parts, as a machine or a trust domain.
+  frame/.style={draw=fig-line, dash pattern=on 4.5bp off 3bp,
+    rounded corners=4.5bp},
+  flow/.style={draw=fig-line, ->},
+  link/.style={draw=fig-line},
+  small/.style={font=\figsmall},
+  large/.style={font=\figlarge},
+  title/.style={font=\figlarge\bfseries},
+  note/.style={color=fig-muted},
+  mono/.style={font=\figsmall\ttfamily},
+  code/.style={font=\figbody\ttfamily},
+  % Charts.
+  grid/.style={draw=fig-grid, line width=0.75bp},
+  axis/.style={draw=fig-axis, line width=0.75bp},
+  bar/.style={rounded corners=3bp, draw=none},
+}

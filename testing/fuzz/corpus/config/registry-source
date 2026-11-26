@@ -1,0 +1,2 @@
+endpoint = oci://registry.example:5000
+key_file = /etc/shirudo/bpm/keys/vendor.pem

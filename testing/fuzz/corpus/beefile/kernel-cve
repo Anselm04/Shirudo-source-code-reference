@@ -1,0 +1,531 @@
+[package]
+name = "kernel-cve-upatches"
+description = "Exported shirudo kernel CVE upatch sources"
+license = "GPL-2.0 OR BSD-2-Clause"
+authors = ["shirudo Campaign Export"]
+
+[[upatches]]
+source = "sources/cve-2025-71093-e1000-oob-e1000-tbi-should-accept/observability/cve-2025-71093-e1000-tbi-detector.bpf.c"
+load_target = "upatches/cve-2025-71093-e1000-oob-e1000-tbi-should-accept.upatch"
+
+[upatches.tree]
+id = "cve-2025-71093-e1000-oob-e1000-tbi-should-accept"
+load_artifact = "upatches/cve-2025-71093-e1000-oob-e1000-tbi-should-accept.upatch"
+unload_artifact = "upatches/cve-2025-71093-e1000-oob-e1000-tbi-should-accept.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_E1000 = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2025-71116-libceph-make-decode-pool-more-resilient-against-corrupted/observability/cve_2025_71116-offset-predicate.bpf.c"
+load_target = "upatches/cve-2025-71116-libceph-make-decode-pool-more-resilient-against-corrupted.upatch"
+
+[upatches.tree]
+id = "cve-2025-71116-libceph-make-decode-pool-more-resilient-against-corrupted"
+load_artifact = "upatches/cve-2025-71116-libceph-make-decode-pool-more-resilient-against-corrupted.upatch"
+unload_artifact = "upatches/cve-2025-71116-libceph-make-decode-pool-more-resilient-against-corrupted.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_CEPH_LIB = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-23003-ip6-tunnel-skb-vlan-inet-prepare-ip6-tnl/observability/cve-2026-23003-caller-offset.bpf.c"
+load_target = "upatches/cve-2026-23003-ip6-tunnel-skb-vlan-inet-prepare-ip6-tnl.upatch"
+
+[upatches.tree]
+id = "cve-2026-23003-ip6-tunnel-skb-vlan-inet-prepare-ip6-tnl"
+load_artifact = "upatches/cve-2026-23003-ip6-tunnel-skb-vlan-inet-prepare-ip6-tnl.upatch"
+unload_artifact = "upatches/cve-2026-23003-ip6-tunnel-skb-vlan-inet-prepare-ip6-tnl.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_IPV6_TUNNEL = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-23315-wifi-mt76-oob-access-mt76-connac2-mac-write/observability/cve-2026-23315-caller-predicate.bpf.c"
+load_target = "upatches/cve-2026-23315-wifi-mt76-oob-access-mt76-connac2-mac-write.upatch"
+
+[upatches.tree]
+id = "cve-2026-23315-wifi-mt76-oob-access-mt76-connac2-mac-write"
+load_artifact = "upatches/cve-2026-23315-wifi-mt76-oob-access-mt76-connac2-mac-write.upatch"
+unload_artifact = "upatches/cve-2026-23315-wifi-mt76-oob-access-mt76-connac2-mac-write.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_MT76_CORE = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-31393-bluetooth-l2cap-validate-l2cap-info-rsp-payload-length/observability/cve-2026-31393-caller-predicate.bpf.c"
+load_target = "upatches/cve-2026-31393-bluetooth-l2cap-validate-l2cap-info-rsp-payload-length.upatch"
+
+[upatches.tree]
+id = "cve-2026-31393-bluetooth-l2cap-validate-l2cap-info-rsp-payload-length"
+load_artifact = "upatches/cve-2026-31393-bluetooth-l2cap-validate-l2cap-info-rsp-payload-length.upatch"
+unload_artifact = "upatches/cve-2026-31393-bluetooth-l2cap-validate-l2cap-info-rsp-payload-length.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_BT = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-31674-netfilter-ip6t-rt-reject-oversized-addrnr-rt-mt6/observability/cve-2026-31674-rt-mt6-detector.bpf.c"
+load_target = "upatches/cve-2026-31674-netfilter-ip6t-rt-reject-oversized-addrnr-rt-mt6.upatch"
+
+[upatches.tree]
+id = "cve-2026-31674-netfilter-ip6t-rt-reject-oversized-addrnr-rt-mt6"
+load_artifact = "upatches/cve-2026-31674-netfilter-ip6t-rt-reject-oversized-addrnr-rt-mt6.upatch"
+unload_artifact = "upatches/cve-2026-31674-netfilter-ip6t-rt-reject-oversized-addrnr-rt-mt6.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_IP6_NF_MATCH_RT = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-31675-net-sched-sch-netem-oob-access-packet-corruption/observability/cve-2026-31675-netem-detector.bpf.c"
+load_target = "upatches/cve-2026-31675-net-sched-sch-netem-oob-access-packet-corruption.upatch"
+
+[upatches.tree]
+id = "cve-2026-31675-net-sched-sch-netem-oob-access-packet-corruption"
+load_artifact = "upatches/cve-2026-31675-net-sched-sch-netem-oob-access-packet-corruption.upatch"
+unload_artifact = "upatches/cve-2026-31675-net-sched-sch-netem-oob-access-packet-corruption.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_NET_SCH_NETEM = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-31682-bridge-br-nd-send-linearize-skb-parsing-nd/observability/cve_2026_31682-offset-predicate.bpf.c"
+load_target = "upatches/cve-2026-31682-bridge-br-nd-send-linearize-skb-parsing-nd.upatch"
+
+[upatches.tree]
+id = "cve-2026-31682-bridge-br-nd-send-linearize-skb-parsing-nd"
+load_artifact = "upatches/cve-2026-31682-bridge-br-nd-send-linearize-skb-parsing-nd.upatch"
+unload_artifact = "upatches/cve-2026-31682-bridge-br-nd-send-linearize-skb-parsing-nd.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_BRIDGE = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-31685-netfilter-ip6t-eui64-reject-invalid-mac-header-all/observability/cve-2026-31685-eui64-detector.bpf.c"
+load_target = "upatches/cve-2026-31685-netfilter-ip6t-eui64-reject-invalid-mac-header-all.upatch"
+
+[upatches.tree]
+id = "cve-2026-31685-netfilter-ip6t-eui64-reject-invalid-mac-header-all"
+load_artifact = "upatches/cve-2026-31685-netfilter-ip6t-eui64-reject-invalid-mac-header-all.upatch"
+unload_artifact = "upatches/cve-2026-31685-netfilter-ip6t-eui64-reject-invalid-mac-header-all.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_IP6_NF_MATCH_EUI64 = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-31694-fuse-reject-oversized-dirents-page-cache/observability/cve-2026-31694-fuse-emit-detector.bpf.c"
+load_target = "upatches/cve-2026-31694-fuse-reject-oversized-dirents-page-cache.upatch"
+
+[upatches.tree]
+id = "cve-2026-31694-fuse-reject-oversized-dirents-page-cache"
+load_artifact = "upatches/cve-2026-31694-fuse-reject-oversized-dirents-page-cache.upatch"
+unload_artifact = "upatches/cve-2026-31694-fuse-reject-oversized-dirents-page-cache.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_FUSE_FS = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-43062-bluetooth-l2cap-type-confusion-l2cap-ecred-reconf-rsp/observability/cve-2026-43062-caller-predicate.bpf.c"
+load_target = "upatches/cve-2026-43062-bluetooth-l2cap-type-confusion-l2cap-ecred-reconf-rsp.upatch"
+
+[upatches.tree]
+id = "cve-2026-43062-bluetooth-l2cap-type-confusion-l2cap-ecred-reconf-rsp"
+load_artifact = "upatches/cve-2026-43062-bluetooth-l2cap-type-confusion-l2cap-ecred-reconf-rsp.upatch"
+unload_artifact = "upatches/cve-2026-43062-bluetooth-l2cap-type-confusion-l2cap-ecred-reconf-rsp.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_BT = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-43281-mailbox-oob-access-fw-mbox-index-xlate/observability/cve-2026-43281-mailbox-detector.bpf.c"
+load_target = "upatches/cve-2026-43281-mailbox-oob-access-fw-mbox-index-xlate.upatch"
+
+[upatches.tree]
+id = "cve-2026-43281-mailbox-oob-access-fw-mbox-index-xlate"
+load_artifact = "upatches/cve-2026-43281-mailbox-oob-access-fw-mbox-index-xlate.upatch"
+unload_artifact = "upatches/cve-2026-43281-mailbox-oob-access-fw-mbox-index-xlate.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_MAILBOX = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-52906-9p-access-mode-flags-being-ored-instead-replaced/observability/cve_2026_52906-offset-predicate.bpf.c"
+load_target = "upatches/cve-2026-52906-9p-access-mode-flags-being-ored-instead-replaced.upatch"
+
+[upatches.tree]
+id = "cve-2026-52906-9p-access-mode-flags-being-ored-instead-replaced"
+load_artifact = "upatches/cve-2026-52906-9p-access-mode-flags-being-ored-instead-replaced.upatch"
+unload_artifact = "upatches/cve-2026-52906-9p-access-mode-flags-being-ored-instead-replaced.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_9P_FS = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-52915-netfilter-ip6t-hbh-reject-oversized-option-lists/observability/cve-2026-52915-hbh-check-detector.bpf.c"
+load_target = "upatches/cve-2026-52915-netfilter-ip6t-hbh-reject-oversized-option-lists.upatch"
+
+[upatches.tree]
+id = "cve-2026-52915-netfilter-ip6t-hbh-reject-oversized-option-lists"
+load_artifact = "upatches/cve-2026-52915-netfilter-ip6t-hbh-reject-oversized-option-lists.upatch"
+unload_artifact = "upatches/cve-2026-52915-netfilter-ip6t-hbh-reject-oversized-option-lists.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_IP6_NF_MATCH_OPTS = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-52942-netfilter-nf-log-validate-mac-header-was-set/observability/cve-2026-52942-mac-header-detector.bpf.c"
+load_target = "upatches/cve-2026-52942-netfilter-nf-log-validate-mac-header-was-set.upatch"
+
+[upatches.tree]
+id = "cve-2026-52942-netfilter-nf-log-validate-mac-header-was-set"
+load_artifact = "upatches/cve-2026-52942-netfilter-nf-log-validate-mac-header-was-set.upatch"
+unload_artifact = "upatches/cve-2026-52942-netfilter-nf-log-validate-mac-header-was-set.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_NF_LOG_SYSLOG = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-52974-net-tls-strparser-anchor-skb-leak-offload-rx/observability/cve-2026-52974-caller-predicate.bpf.c"
+load_target = "upatches/cve-2026-52974-net-tls-strparser-anchor-skb-leak-offload-rx.upatch"
+
+[upatches.tree]
+id = "cve-2026-52974-net-tls-strparser-anchor-skb-leak-offload-rx"
+load_artifact = "upatches/cve-2026-52974-net-tls-strparser-anchor-skb-leak-offload-rx.upatch"
+unload_artifact = "upatches/cve-2026-52974-net-tls-strparser-anchor-skb-leak-offload-rx.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_TLS = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-53043-ocfs2-dlm-validate-qr-numregions-dlm-match-regions/observability/cve-2026-53043-caller-predicate.bpf.c"
+load_target = "upatches/cve-2026-53043-ocfs2-dlm-validate-qr-numregions-dlm-match-regions.upatch"
+
+[upatches.tree]
+id = "cve-2026-53043-ocfs2-dlm-validate-qr-numregions-dlm-match-regions"
+load_artifact = "upatches/cve-2026-53043-ocfs2-dlm-validate-qr-numregions-dlm-match-regions.upatch"
+unload_artifact = "upatches/cve-2026-53043-ocfs2-dlm-validate-qr-numregions-dlm-match-regions.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_OCFS2_FS_O2CB = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-53078-bpf-same-register-dst-src-oob-read-pointer/observability/cve-2026-53078-caller-predicate.bpf.c"
+load_target = "upatches/cve-2026-53078-bpf-same-register-dst-src-oob-read-pointer.upatch"
+
+[upatches.tree]
+id = "cve-2026-53078-bpf-same-register-dst-src-oob-read-pointer"
+load_artifact = "upatches/cve-2026-53078-bpf-same-register-dst-src-oob-read-pointer.upatch"
+unload_artifact = "upatches/cve-2026-53078-bpf-same-register-dst-src-oob-read-pointer.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_BPF_SYSCALL = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-53092-bpf-linked-reg-delta-tracking-src-reg-dst/observability/cve-2026-53092-caller-predicate.bpf.c"
+load_target = "upatches/cve-2026-53092-bpf-linked-reg-delta-tracking-src-reg-dst.upatch"
+
+[upatches.tree]
+id = "cve-2026-53092-bpf-linked-reg-delta-tracking-src-reg-dst"
+load_artifact = "upatches/cve-2026-53092-bpf-linked-reg-delta-tracking-src-reg-dst.upatch"
+unload_artifact = "upatches/cve-2026-53092-bpf-linked-reg-delta-tracking-src-reg-dst.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_BPF_SYSCALL = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-53194-usb-serial-kl5kusb105-bulk-out-buffer-overflow/observability/cve-2026-53194-candidate.bpf.c"
+load_target = "upatches/cve-2026-53194-usb-serial-kl5kusb105-bulk-out-buffer-overflow.upatch"
+
+[upatches.tree]
+id = "cve-2026-53194-usb-serial-kl5kusb105-bulk-out-buffer-overflow"
+load_artifact = "upatches/cve-2026-53194-usb-serial-kl5kusb105-bulk-out-buffer-overflow.upatch"
+unload_artifact = "upatches/cve-2026-53194-usb-serial-kl5kusb105-bulk-out-buffer-overflow.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_USB_SERIAL_KLSI = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-53255-bluetooth-mgmt-validate-advertising-tlv-type-checks/observability/cve-2026-53255-tlv-detector.bpf.c"
+load_target = "upatches/cve-2026-53255-bluetooth-mgmt-validate-advertising-tlv-type-checks.upatch"
+
+[upatches.tree]
+id = "cve-2026-53255-bluetooth-mgmt-validate-advertising-tlv-type-checks"
+load_artifact = "upatches/cve-2026-53255-bluetooth-mgmt-validate-advertising-tlv-type-checks.upatch"
+unload_artifact = "upatches/cve-2026-53255-bluetooth-mgmt-validate-advertising-tlv-type-checks.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_BT = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-63915-nfc-hci-oob-read-hcp-header-parsing/observability/cve-2026-63915-hcp-detector.bpf.c"
+load_target = "upatches/cve-2026-63915-nfc-hci-oob-read-hcp-header-parsing.upatch"
+
+[upatches.tree]
+id = "cve-2026-63915-nfc-hci-oob-read-hcp-header-parsing"
+load_artifact = "upatches/cve-2026-63915-nfc-hci-oob-read-hcp-header-parsing.upatch"
+unload_artifact = "upatches/cve-2026-63915-nfc-hci-oob-read-hcp-header-parsing.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_NFC = ["y", "m"]
+CONFIG_NFC_DIGITAL = ["y", "m"]
+CONFIG_NFC_HCI = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-63947-bluetooth-hidp-missing-length-checks-hidp-input-report/observability/cve-2026-63947-candidate.bpf.c"
+load_target = "upatches/cve-2026-63947-bluetooth-hidp-missing-length-checks-hidp-input-report.upatch"
+
+[upatches.tree]
+id = "cve-2026-63947-bluetooth-hidp-missing-length-checks-hidp-input-report"
+load_artifact = "upatches/cve-2026-63947-bluetooth-hidp-missing-length-checks-hidp-input-report.upatch"
+unload_artifact = "upatches/cve-2026-63947-bluetooth-hidp-missing-length-checks-hidp-input-report.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_BT = ["y", "m"]
+CONFIG_BT_HIDP = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-63976-bluetooth-l2cap-clear-chan-ident-ecred-reconfiguration-success/observability/cve-2026-63976-caller-predicate.bpf.c"
+load_target = "upatches/cve-2026-63976-bluetooth-l2cap-clear-chan-ident-ecred-reconfiguration-success.upatch"
+
+[upatches.tree]
+id = "cve-2026-63976-bluetooth-l2cap-clear-chan-ident-ecred-reconfiguration-success"
+load_artifact = "upatches/cve-2026-63976-bluetooth-l2cap-clear-chan-ident-ecred-reconfiguration-success.upatch"
+unload_artifact = "upatches/cve-2026-63976-bluetooth-l2cap-clear-chan-ident-ecred-reconfiguration-success.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_BT = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-63984-ipv6-rpl-hdrlen-overflow-ipv6-rpl-srh-decompress/observability/cve-2026-63984-rpl-detector.bpf.c"
+load_target = "upatches/cve-2026-63984-ipv6-rpl-hdrlen-overflow-ipv6-rpl-srh-decompress.upatch"
+
+[upatches.tree]
+id = "cve-2026-63984-ipv6-rpl-hdrlen-overflow-ipv6-rpl-srh-decompress"
+load_artifact = "upatches/cve-2026-63984-ipv6-rpl-hdrlen-overflow-ipv6-rpl-srh-decompress.upatch"
+unload_artifact = "upatches/cve-2026-63984-ipv6-rpl-hdrlen-overflow-ipv6-rpl-srh-decompress.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_IPV6 = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-63992-tunnels-not-assume-transport-header-iptunnel-pmtud-check/observability/cve-2026-63992-caller-predicate.bpf.c"
+load_target = "upatches/cve-2026-63992-tunnels-not-assume-transport-header-iptunnel-pmtud-check.upatch"
+
+[upatches.tree]
+id = "cve-2026-63992-tunnels-not-assume-transport-header-iptunnel-pmtud-check"
+load_artifact = "upatches/cve-2026-63992-tunnels-not-assume-transport-header-iptunnel-pmtud-check.upatch"
+unload_artifact = "upatches/cve-2026-63992-tunnels-not-assume-transport-header-iptunnel-pmtud-check.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_INET = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-64036-cgroup-rstat-validate-cpu-css-rstat-cpu-access/observability/cve-2026-64036-caller-predicate.bpf.c"
+load_target = "upatches/cve-2026-64036-cgroup-rstat-validate-cpu-css-rstat-cpu-access.upatch"
+
+[upatches.tree]
+id = "cve-2026-64036-cgroup-rstat-validate-cpu-css-rstat-cpu-access"
+load_artifact = "upatches/cve-2026-64036-cgroup-rstat-validate-cpu-css-rstat-cpu-access.upatch"
+unload_artifact = "upatches/cve-2026-64036-cgroup-rstat-validate-cpu-css-rstat-cpu-access.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_CGROUPS = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-64116-ipv6-ioam-add-null-check-idev-ipv6-hop/observability/cve_2026_64116-offset-predicate.bpf.c"
+load_target = "upatches/cve-2026-64116-ipv6-ioam-add-null-check-idev-ipv6-hop.upatch"
+
+[upatches.tree]
+id = "cve-2026-64116-ipv6-ioam-add-null-check-idev-ipv6-hop"
+load_artifact = "upatches/cve-2026-64116-ipv6-ioam-add-null-check-idev-ipv6-hop.upatch"
+unload_artifact = "upatches/cve-2026-64116-ipv6-ioam-add-null-check-idev-ipv6-hop.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_IPV6 = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-64133-alsa-asihpi-oob-array-access-at-reading-cache/observability/cve-2026-64133-caller-predicate.bpf.c"
+load_target = "upatches/cve-2026-64133-alsa-asihpi-oob-array-access-at-reading-cache.upatch"
+
+[upatches.tree]
+id = "cve-2026-64133-alsa-asihpi-oob-array-access-at-reading-cache"
+load_artifact = "upatches/cve-2026-64133-alsa-asihpi-oob-array-access-at-reading-cache.upatch"
+unload_artifact = "upatches/cve-2026-64133-alsa-asihpi-oob-array-access-at-reading-cache.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_SND_ASIHPI = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-80725-net-gro-properly-validate-big-tcp-aggregation-criteria/observability/cve-2026-80725-big-tcp-gro-observe.bpf.c"
+load_target = "upatches/cve-2026-80725-net-gro-properly-validate-big-tcp-aggregation-criteria.upatch"
+
+[upatches.tree]
+id = "cve-2026-80725-net-gro-properly-validate-big-tcp-aggregation-criteria"
+load_artifact = "upatches/cve-2026-80725-net-gro-properly-validate-big-tcp-aggregation-criteria.upatch"
+unload_artifact = "upatches/cve-2026-80725-net-gro-properly-validate-big-tcp-aggregation-criteria.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["7.2"]
+kernel_build_id = ["534043106db415bc0a983a3393e06c81b431bd39"]
+architecture = ["x86_64"]
+
+[upatches.tree.selector.kconfig]
+CONFIG_NET = ["y", "m"]
+
+[[upatches]]
+source = "sources/cve-2026-68118-tcp-challenge-ack-non-exact-rst-syn-received/observability/cve_2026_68118-6.1-offset-predicate.bpf.c"
+load_target = "upatches/cve-2026-68118-tcp-challenge-ack-non-exact-rst-syn-received.upatch"
+
+[upatches.tree]
+id = "cve-2026-68118-tcp-challenge-ack-non-exact-rst-syn-received"
+load_artifact = "upatches/cve-2026-68118-tcp-challenge-ack-non-exact-rst-syn-received.upatch"
+unload_artifact = "upatches/cve-2026-68118-tcp-challenge-ack-non-exact-rst-syn-received.unload.upatch"
+
+[upatches.tree.selector]
+kernel_release_prefix = ["6.1"]
+architecture = ["x86_64"]

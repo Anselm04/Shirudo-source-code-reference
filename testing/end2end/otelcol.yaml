@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# Copyright (c) 2026 Authors of shirudo
+#
+# The collector of the end-to-end test: OTLP over HTTPS in, every request
+# written to a file and ClickHouse for the host to compare.
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+        tls:
+          cert_file: /certs/server.pem
+          key_file: /certs/server.key
+exporters:
+  file:
+    path: /out/otlp.json
+  clickhouse:
+    endpoint: tcp://clickhouse:9000
+    database: shirudo
+    create_schema: true
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      exporters: [file, clickhouse]
+    metrics:
+      receivers: [otlp]
+      exporters: [file, clickhouse]

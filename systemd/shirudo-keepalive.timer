@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# Copyright (c) 2026 Authors of shirudo
+
+[Unit]
+Description=shirudo: periodically export target status keepalive
+
+[Timer]
+OnBootSec=5s
+OnUnitInactiveSec=60s
+AccuracySec=1s
+Unit=shirudo-keepalive.service
+
+[Install]
+WantedBy=timers.target

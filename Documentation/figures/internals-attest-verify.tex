@@ -1,0 +1,56 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The four comparisons of attest verify, what the TPM signed or the
+% operator computed on the left against what the target wrote on the
+% right: replay, binding, anchor and expected init event
+% (internals/measurement-register.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (900,450);
+
+  \node[anchor=base west, note, small] at (20,24)
+    {Signed by the TPM or computed by the operator};
+  \node[anchor=base east, note, small] at (880,24) {Written by the target};
+
+  \foreach \y in {40, 140, 240, 340} {
+    \draw[box] (20,\y) rectangle ++(300,60);
+    \draw[box] (580,\y) rectangle ++(300,60);
+    \draw[link, rounded corners=13.5bp] (390,\y+12) rectangle ++(120,36);
+    \draw[flow] (320,\y+30) -- (388,\y+30);
+    \draw[flow] (580,\y+30) -- (512,\y+30);
+  }
+
+  \foreach \y/\l/\c/\r in {
+      64/{NV\_Certify: value}/replay/{This boot's eventlog},
+      164/{NV\_Certify: name}/binding/init record,
+      264/{Quote: PCR 9}/anchor/init record,
+      364/{attest predict: init event}/expected/init event} {
+    \node[anchor=base west, note, title] at (34,\y) {\l};
+    \node[anchor=base west, note, title] at (594,\y) {\r};
+    \node[anchor=base, note, title] at (450,\y+11) {\c};
+  }
+
+  \begin{scope}[note, small]
+    \node[anchor=base west] at (34,86) {the register's 32 bytes};
+    \node[anchor=base west] at (594,86)
+      {every digest folded from 32 zero bytes};
+    \node[anchor=base west] at (34,186)
+      {the index's attributes and write policy};
+    \node[anchor=base west] at (594,186)
+      {name from pcr\_before, phase\_before, writer key};
+    \node[anchor=base west] at (34,286) {quoted between register readings};
+    \node[anchor=base west] at (594,286)
+      {pcr\_before extended by the anchor digest};
+    \node[anchor=base west] at (34,386) {--cert, --upatch, --tree-root};
+    \node[anchor=base west] at (594,386)
+      {cert\_sha256, set\_digest, tree\_root};
+    \node[anchor=base] at (450,432) {A mismatch in any row fails verify.
+      Events after init are judged by --expect-chain or
+      --allow-runtime-events.};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

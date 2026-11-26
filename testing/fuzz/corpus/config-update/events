@@ -1,0 +1,2 @@
+{"schema":1,"sequence":1,"reset_count":3,"restart_count":0,"pcr":14,"kind":1,"root_hash":"abababababababababababababababababababababababababababababababab","initial_pcr":"0000000000000000000000000000000000000000000000000000000000000000"}
+{"schema":1,"sequence":2,"reset_count":3,"restart_count":0,"pcr":14,"kind":2,"root_hash":"abababababababababababababababababababababababababababababababab","initial_pcr":"0000000000000000000000000000000000000000000000000000000000000000"}

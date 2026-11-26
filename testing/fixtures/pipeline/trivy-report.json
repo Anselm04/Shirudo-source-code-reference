@@ -1,0 +1,1 @@
+{"SchemaVersion":2,"ArtifactName":"sbom.cdx.json","ArtifactType":"cyclonedx","Results":[{"Target":"sbom.cdx.json","Class":"os-pkgs","Type":"ubuntu","Vulnerabilities":[{"VulnerabilityID":"EXAMPLE-0202","PkgName":"openssl","InstalledVersion":"3.0.13-0ubuntu3","FixedVersion":"3.0.13-0ubuntu3.1","Severity":"HIGH"}]}]}

@@ -1,0 +1,80 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The kernel's keyrings, which links which, and which keyrings each
+% signature check searches, in order: module signatures, kexec images,
+% BPF_PROG_LOAD and dm-verity root hashes (concepts/background/keyrings.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    ring/.style={box, rounded corners=3bp},
+    ours/.style={draw=fig-accent, fill=fig-accent, fill opacity=0.08,
+      text opacity=1, rounded corners=3bp},
+    order/.style={circle, fill=fig-s1, text=fig-on, font=\figsmall,
+      minimum size=17bp},
+    pill/.style={fill=fig-s1, rounded corners=6.5bp}]
+  \useasboundingbox (0,0) rectangle (840,370);
+
+  % Keyrings: x centers 290, 420, 550, 670, 780.
+  \draw[ring] (234,14) rectangle ++(112,46);
+  \draw[ring] (364,14) rectangle ++(112,46);
+  \draw[ring] (364,92) rectangle ++(112,30);
+  \draw[ring] (494,14) rectangle ++(112,46);
+  \draw[ours] (620,14) rectangle ++(100,46);
+  \draw[ours] (730,14) rectangle ++(100,46);
+  \draw[flow, thin] (364,37) -- (348,37);
+  \draw[flow, thin] (420,60) -- (420,90);
+
+  % Rows.
+  \foreach \y in {140,186,232,294}
+    \draw[grid] (10,\y) -- (830,\y);
+  \draw[grid] (10,360) -- (830,360);
+
+  \node[order] at (420,163) {1};
+  \node[order] at (420,209) {1};
+  \node[order] at (550,209) {2};
+  \fill[pill] (268,315) rectangle (442,332);
+  \node[order] at (550,323) {2};
+  \draw[ours, rounded corners=6.5bp] (642,240) rectangle ++(56,22);
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node[mono] at (290,33) {.builtin\_};
+    \node[mono] at (290,49) {trusted\_keys};
+    \node[mono] at (420,33) {.secondary\_};
+    \node[mono] at (420,49) {trusted\_keys};
+    \node[mono] at (420,111) {.machine};
+    \node[mono] at (550,33) {.platform};
+    \node[small, note] at (550,49) {firmware keys};
+    \node[mono] at (670,33) {.bpf};
+    \node[small, color=fig-accent] at (670,49) {sealed by init};
+    \node[mono] at (780,33) {.dm-verity};
+    \node[small, color=fig-accent] at (780,49) {sealed by init};
+    \node[small, note, anchor=base west] at (426,80) {links};
+
+    \node[small, color=fig-on] at (355,328) {1: builtin, or secondary};
+    \node[small, note] at (550,349) {if configured};
+    \node[order, anchor=center] at (780,323) {3};
+    \node[small, note] at (780,349) {once sealed};
+
+    \node[mono, note] at (290,255) {id 0};
+    \node[mono, note] at (420,255) {id 1};
+    \node[mono, note] at (550,255) {id 2};
+    \node[mono, color=fig-accent] at (670,255) {id -9};
+    \node[small, note] at (420,280) {each refused by lsm/bpf\_prog\_load};
+    \node[small, color=fig-accent] at (670,280) {admitted};
+  \end{scope}
+
+  \begin{scope}[every node/.append style={anchor=base west}]
+    \node at (10,168) {module signature};
+    \node at (10,214) {kexec image};
+    \node at (10,256) {BPF\_PROG\_LOAD};
+    \node[small, note] at (10,274) {keyring\_id names one};
+    \node at (10,318) {dm-verity root hash};
+    \node[small, note] at (10,336) {after shirudo's own check};
+    \node[small, note] at (10,104) {Numbers give the search order.};
+    \node[small, note] at (10,120) {Arrows are links, which a search enters.};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,11 @@
+[package]
+name = "net-guard"
+description = "The upatch of the backward-walk end-to-end test that every node applies"
+license = "GPL-2.0 OR BSD-2-Clause"
+authors = ["Authors of shirudo"]
+
+[[upatches]]
+source = "net-guard.bpf.c"
+
+[upatches.tree]
+id = "net-guard"

@@ -1,0 +1,49 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The telemetry export path from a target to a collector: upatch maps
+% through their serializers and signed decoders, and the TPM-quoted
+% keepalive, each as OTLP JSON (concepts/background/opentelemetry.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (760,270);
+
+  \draw[frame] (10,10) rectangle (545,260);
+  \begin{scope}[box/.append style={rounded corners=3bp}]
+    \foreach \x/\w in {25/110, 155/110, 285/110, 415/115}
+      \draw[box] (\x,60) rectangle ++(\w,64);
+    \draw[box] (25,170) rectangle ++(370,64);
+    \draw[box] (415,170) rectangle ++(115,64);
+    \draw[box] (600,105) rectangle ++(145,84);
+  \end{scope}
+
+  \foreach \x in {135, 265, 395}
+    \draw[flow] (\x,92) -- (\x+18,92);
+  \draw[flow] (395,202) -- (413,202);
+  \draw[flow] (530,92) -- (565,92) -- (565,135) -- (598,135);
+  \draw[flow] (530,202) -- (565,202) -- (565,160) -- (598,160);
+
+  \begin{scope}[every node/.append style={note}]
+    \node[anchor=base west] at (22,32)
+      {target: one-shot commands started by systemd timers};
+    \node[anchor=base west, small] at (22,52) {shirudo upatch map --all};
+    \node[anchor=base west, small] at (22,162) {shirudo status --otel};
+
+    \foreach \x/\y/\t in {80/85/BPF map, 210/85/serializer,
+        340/85/signed decoder, 472/85/OTLP JSON,
+        210/198/keepalive body, 472/198/OTLP JSON, 672/135/collector}
+      \node[anchor=base, large] at (\x,\y) {\t};
+
+    \foreach \x/\y/\t in {80/102/{arena, hash,}, 80/116/per-CPU,
+        210/102/or direct read, 340/102/Lua in LuaJIT,
+        472/102/log record or, 472/116/metrics,
+        210/216/quoted by the TPM, 472/216/keepalive log,
+        672/153/OTLP receiver, 672/168/then backends,
+        672/212/HTTPS POST to, 672/226/{/v1/logs, /v1/metrics}}
+      \node[anchor=base, small] at (\x,\y) {\t};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

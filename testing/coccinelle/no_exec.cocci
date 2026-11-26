@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// Copyright (c) 2026 Authors of shirudo
+//
+// The target runs no other program: only the operator helper in
+// tools/shirudo-build, the command that hands work to it and the tests
+// fork or execute one.
+
+virtual report
+
+@r@
+attribute name SEC;
+identifier f = {fork, vfork, clone, clone3, execv, execve, execvp, execvpe,
+		execl, execle, execlp, fexecve, execveat, system, popen,
+		posix_spawn, posix_spawnp};
+position p;
+@@
+  f@p(...)
+
+@script:python depends on report@
+p << r.p;
+f << r.f;
+@@
+if not p[0].file.startswith(("tools/shirudo-build/", "testing/")) and \
+   p[0].file != "builtin-build.c":
+    coccilib.report.print_report(p[0], "%s() runs a program on the target" % f)

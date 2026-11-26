@@ -1,0 +1,110 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The .upatch file as one strip: the unsigned header, then the two signed
+% regions with the signature between them, and inside data the loader's
+% bytes, the signed sections, their directory and the trailer
+% (reference/formats/upatch-format.rst, upatches/learn/concepts.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    signed/.style={draw=fig-s1, fill=fig-s1, fill opacity=0.12,
+      text opacity=1, rounded corners=3bp},
+    optional/.style={signed, dash pattern=on 3bp off 2.25bp},
+    plain/.style={box, rounded corners=3bp},
+    pad/.style={fill=fig-free, draw=none},
+    brace/.style={draw=fig-s1, thin},
+    fan/.style={draw=fig-line, thin, dash pattern=on 2.25bp off 3bp}]
+  \useasboundingbox (0,0) rectangle (840,372);
+
+  % The file, not to scale.
+  \draw[plain] (20,70) rectangle (140,114);
+  \draw[signed] (140,70) rectangle (330,114);
+  \draw[plain] (330,70) rectangle (480,114);
+  \draw[signed] (480,70) rectangle (820,114);
+
+  % What the signature and payload_sha256 cover.
+  \draw[brace] (142,62) -- (142,54) -- (328,54) -- (328,62);
+  \draw[brace] (482,62) -- (482,54) -- (818,54) -- (818,62);
+  \draw[brace] (235,54) -- (235,40) -- (650,40) -- (650,54);
+
+  % data drawn wider.
+  \draw[fan] (480,114) -- (20,200);
+  \draw[fan] (820,114) -- (820,200);
+
+  \draw[signed] (20,200) rectangle (270,244);
+  \fill[pad] (270,200) rectangle (280,244);
+  \draw[signed] (280,200) rectangle (350,244);
+  \fill[pad] (350,200) rectangle (360,244);
+  \draw[signed] (360,200) rectangle (480,244);
+  \fill[pad] (480,200) rectangle (490,244);
+  \draw[optional] (490,200) rectangle (560,244);
+  \fill[pad] (560,200) rectangle (570,244);
+  \draw[optional] (570,200) rectangle (640,244);
+  \fill[pad] (640,200) rectangle (650,244);
+  \draw[signed] (650,200) rectangle (750,244);
+  \draw[signed] (750,200) rectangle (820,244);
+
+  % The loader's prefix.
+  \draw[brace] (22,252) -- (22,260) -- (268,260) -- (268,252);
+
+  % trailer -> directory -> sections.
+  \draw[flow] (790,246) -- (790,272) -- (725,272) -- (725,248);
+  \draw[link] (680,246) -- (680,298) -- (315,298);
+  \foreach \x in {315, 420, 525, 605}
+    \draw[flow] (\x,298) -- (\x,248);
+
+  % Legend.
+  \fill[pad] (20,334) rectangle (30,348);
+  \draw[optional] (20,356) rectangle (30,370);
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node at (442,30) {signed bytes: \texttt{loader\_insns} followed by
+      \texttt{data}, the input of the signature and of
+      \texttt{payload\_sha256}};
+
+    \node at (80,89) {header};
+    \node[small, note] at (80,105) {360 bytes};
+    \node[code] at (235,89) {loader\_insns};
+    \node[small, note] at (235,105) {the loader program};
+    \node[code] at (405,89) {signature};
+    \node[small, note] at (405,105) {CMS, ML-DSA-87};
+    \node[code] at (650,89) {data};
+    \node[small, note] at (650,105) {loader data, then signed sections};
+
+    \node[small, note, anchor=base west] at (20,134)
+      {not signed: the target checks};
+    \node[small, note, anchor=base west] at (20,150)
+      {it against the signed bytes};
+    \node[small, note] at (530,166)
+      {on the target, the frozen value of \texttt{\_\_loader.map}};
+
+    \node at (145,219) {loader data};
+    \node[small, note] at (145,235) {BTF, programs, map values};
+    \node[code] at (315,219) {NAME};
+    \node[small, note] at (315,235) {name};
+    \node[code] at (420,219) {UPGM or UNLD};
+    \node[small, note] at (420,235) {attach or target};
+    \node[code] at (525,219) {DCDB};
+    \node[small, note] at (525,235) {decoders};
+    \node[code] at (605,219) {SHPL};
+    \node[small, note] at (605,235) {labels};
+    \node at (700,219) {directory};
+    \node[small, note] at (700,235) {16 B per entry};
+    \node at (785,219) {trailer};
+    \node[small, note] at (785,235) {last 16 B};
+
+    \node[small, note] at (145,278) {the loader addresses only this prefix};
+    \node[small, note] at (757,288) {\texttt{dir\_off}};
+    \node[small, note] at (500,316) {each entry: tag, \texttt{off}, \texttt{len}};
+
+    \node[small, note, anchor=base west] at (40,345)
+      {zeros up to the next 8-byte boundary};
+    \node[small, note, anchor=base west] at (40,367)
+      {only when the programs declare decoders or policy labels; an
+      unload directive carries \texttt{NAME} and \texttt{UNLD} alone};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

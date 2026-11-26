@@ -1,0 +1,93 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% How the shipped objects refer to one another: a signed index names
+% packages, which hold signed load artifacts and unload directives, and
+% each tree generation names its parent and holds operations that name
+% one artifact each (concepts/upatches-and-packages.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    obj/.style={box, rounded corners=3bp},
+    signed/.style={draw=fig-accent, fill=fig-accent, fill opacity=0.08,
+      text opacity=1, rounded corners=3bp}]
+  \useasboundingbox (0,0) rectangle (840,380);
+
+  % Repository path, x 10..290; tree path, x 440..832.
+  \draw[signed] (10,44) rectangle (290,104);
+  \foreach \x in {10,160} {
+    \draw[obj] (\x,140) rectangle ++(130,120);
+    \draw[signed] (\x+10,186) rectangle ++(110,26);
+    \draw[signed] (\x+10,222) rectangle ++(110,26);
+  }
+
+  \foreach \x in {440,586,732}
+    \draw[signed] (\x,44) rectangle ++(100,60);
+  \draw[obj] (440,140) rectangle (680,260);
+  \foreach \y in {150,186,222}
+    \draw[signed] (712,\y) rectangle ++(120,26);
+
+  \draw[obj] (10,300) rectangle (832,336);
+
+  \draw[flow] (110,104) -- (75,138);
+  \draw[flow] (190,104) -- (225,138);
+  \draw[flow] (586,80) -- (542,80);
+  \draw[flow] (732,80) -- (688,80);
+  \draw[link] (490,104) -- (490,140);
+  \foreach \y in {163,199,235}
+    \draw[flow] (680,\y) -- (710,\y);
+  \foreach \x in {75,225}
+    \draw[flow] (\x,260) -- (\x,298);
+  \draw[flow] (772,248) -- (772,298);
+
+  \node[anchor=base, title] at (150,24) {Repository};
+  \node[anchor=base, title] at (636,24) {upatch tree};
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node at (150,66) {signed index};
+    \node[mono] at (150,82) {<namespace>/bpm-index:stable};
+    \node[small, note] at (150,97) {a digest per package version};
+
+    \foreach \x in {75,225} {
+      \node at (\x,160) {.bee package};
+      \node[small, note] at (\x,176) {not signed};
+      \node[small] at (\x,204) {load artifact};
+      \node[small] at (\x,240) {unload directive};
+    }
+
+    \foreach \x/\n in {490/3,636/2,782/1} {
+      \node at (\x,66) {generation \n};
+      \node[small, note] at (\x,83) {a signed};
+      \node[small, note] at (\x,97) {publication};
+    }
+    \node[mono] at (490,38) {stable};
+
+    \node[small, note, anchor=base west] at (496,128) {holds operations 1 to 3};
+    \node[mono] at (560,167) {1 add foo};
+    \node[mono] at (560,203) {2 add bar};
+    \node[mono] at (560,239) {3 delete foo};
+    \node[small] at (772,167) {load artifact};
+    \node[small] at (772,203) {load artifact};
+    \node[small] at (772,239) {unload directive};
+
+    \node at (421,323) {The target loads each artifact and directive
+      through BPF\_PROG\_LOAD, which verifies its signature against the
+      .bpf keyring};
+  \end{scope}
+
+  \begin{scope}[small, note, every node/.append style={anchor=base}]
+    \node at (564,72) {parent};
+    \node at (710,72) {parent};
+  \end{scope}
+
+  % Legend.
+  \draw[flow] (10,366) -- (44,366);
+  \draw[signed] (196,357) rectangle ++(24,14);
+  \begin{scope}[small, note, every node/.append style={anchor=base west}]
+    \node at (52,370) {names by digest};
+    \node at (228,370) {signed};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

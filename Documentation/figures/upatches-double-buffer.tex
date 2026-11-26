@@ -1,0 +1,42 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% A double-buffered arena table: kernel hooks write the active buffer, an
+% export swaps the two, and a serializer renders the drained buffer page
+% by page into the shirudo_ser chunks that upatch map reads
+% (upatches/write/maps-arenas-serializers.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (760,250);
+
+  \foreach \x/\y/\w in {20/40/130, 200/40/160, 200/160/160, 410/160/130,
+      590/160/150}
+    \draw[box, fill opacity=0.06, rounded corners=3bp]
+      (\x,\y) rectangle ++(\w,50);
+  \draw[link, dash pattern=on 3.75bp off 3bp, rounded corners=4.5bp]
+    (185,20) rectangle ++(190,210);
+
+  \draw[flow] (150,65) -- (196,65);
+  \draw[flow] (360,185) -- (406,185);
+  \draw[flow] (540,185) -- (586,185);
+  \draw[flow] (330,94) .. controls (350,120) and (350,130) .. (330,156);
+  \draw[flow] (230,156) .. controls (210,130) and (210,120) .. (230,94);
+
+  \begin{scope}[note, large]
+    \foreach \x/\y/\a/\b in {85/62/kernel hooks/append records,
+        280/62/active buffer/this interval,
+        280/182/drain buffer/previous interval,
+        475/182/serializer/one page per run,
+        665/182/shirudo\_ser chunks/read by upatch map} {
+      \node[anchor=base] at (\x,\y) {\a};
+      \node[anchor=base] at (\x,\y+16) {\b};
+    }
+    \node[anchor=base west] at (388,130) {swap at the start};
+    \node[anchor=base west] at (388,146) {of an export};
+    \node[anchor=base] at (280,246) {one BPF arena};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

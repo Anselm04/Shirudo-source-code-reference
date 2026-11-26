@@ -1,0 +1,498 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='760.0' height='270.0' viewBox='-72 -72 569.996 202.499' class='fig fig-f-ink' role='img'><!-- Documentation/figures/background-telemetry-export.tex, sha256 c765c783d39b5af4be31bd8aba962452d45981553f11cc184accf7328c5f5b75 --><style>.fig-f-ink{fill:var(--fig-ink,#171b22)}.fig-s-ink{stroke:var(--fig-ink,#171b22)}.fig-f-muted{fill:var(--fig-muted,#5d6675)}.fig-s-muted{stroke:var(--fig-muted,#5d6675)}.fig-f-line{fill:var(--fig-line,#8a93a0)}.fig-s-line{stroke:var(--fig-line,#8a93a0)}.fig-f-grid{fill:var(--fig-grid,#e2e6eb)}.fig-s-grid{stroke:var(--fig-grid,#e2e6eb)}.fig-f-axis{fill:var(--fig-axis,#c3c9d1)}.fig-s-axis{stroke:var(--fig-axis,#c3c9d1)}.fig-f-accent{fill:var(--fig-accent,#8b1e3f)}.fig-s-accent{stroke:var(--fig-accent,#8b1e3f)}.fig-f-s1{fill:var(--fig-s1,#2a78d6)}.fig-s-s1{stroke:var(--fig-s1,#2a78d6)}.fig-f-s2{fill:var(--fig-s2,#eb6834)}.fig-s-s2{stroke:var(--fig-s2,#eb6834)}.fig-f-s3{fill:var(--fig-s3,#1baf7a)}.fig-s-s3{stroke:var(--fig-s3,#1baf7a)}.fig-f-s4{fill:var(--fig-s4,#eda100)}.fig-s-s4{stroke:var(--fig-s4,#eda100)}.fig-f-free{fill:var(--fig-free,#dde2e8)}.fig-s-free{stroke:var(--fig-free,#dde2e8)}.fig-f-on{fill:var(--fig-on,#ffffff)}.fig-s-on{stroke:var(--fig-on,#ffffff)}@media (prefers-color-scheme:dark){.fig-f-ink{fill:var(--fig-ink,#e4e8ee)}.fig-s-ink{stroke:var(--fig-ink,#e4e8ee)}.fig-f-muted{fill:var(--fig-muted,#9ba5b3)}.fig-s-muted{stroke:var(--fig-muted,#9ba5b3)}.fig-f-line{fill:var(--fig-line,#8a93a0)}.fig-s-line{stroke:var(--fig-line,#8a93a0)}.fig-f-grid{fill:var(--fig-grid,#262d37)}.fig-s-grid{stroke:var(--fig-grid,#262d37)}.fig-f-axis{fill:var(--fig-axis,#39414c)}.fig-s-axis{stroke:var(--fig-axis,#39414c)}.fig-f-accent{fill:var(--fig-accent,#e8899f)}.fig-s-accent{stroke:var(--fig-accent,#e8899f)}.fig-f-s1{fill:var(--fig-s1,#3987e5)}.fig-s-s1{stroke:var(--fig-s1,#3987e5)}.fig-f-s2{fill:var(--fig-s2,#d95926)}.fig-s-s2{stroke:var(--fig-s2,#d95926)}.fig-f-s3{fill:var(--fig-s3,#199e70)}.fig-s-s3{stroke:var(--fig-s3,#199e70)}.fig-f-s4{fill:var(--fig-s4,#c98500)}.fig-s-s4{stroke:var(--fig-s4,#c98500)}.fig-f-free{fill:var(--fig-free,#2f3640)}.fig-s-free{stroke:var(--fig-free,#2f3640)}.fig-f-on{fill:var(--fig-on,#ffffff)}.fig-s-on{stroke:var(--fig-on,#ffffff)}}</style>
+<defs>
+<use id='background-telemetry-export-g5-45' href='#background-telemetry-export-g1-45' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-58' href='#background-telemetry-export-g1-58' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-97' href='#background-telemetry-export-g1-97' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-98' href='#background-telemetry-export-g1-98' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-99' href='#background-telemetry-export-g1-99' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-100' href='#background-telemetry-export-g1-100' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-101' href='#background-telemetry-export-g1-101' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-103' href='#background-telemetry-export-g1-103' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-104' href='#background-telemetry-export-g1-104' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-105' href='#background-telemetry-export-g1-105' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-109' href='#background-telemetry-export-g1-109' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-110' href='#background-telemetry-export-g1-110' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-111' href='#background-telemetry-export-g1-111' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-114' href='#background-telemetry-export-g1-114' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-115' href='#background-telemetry-export-g1-115' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-116' href='#background-telemetry-export-g1-116' transform='scale(.93)'/>
+<use id='background-telemetry-export-g5-121' href='#background-telemetry-export-g1-121' transform='scale(.93)'/>
+<use id='background-telemetry-export-g3-44' href='#background-telemetry-export-g1-44' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-45' href='#background-telemetry-export-g1-45' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-47' href='#background-telemetry-export-g1-47' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-49' href='#background-telemetry-export-g1-49' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-67' href='#background-telemetry-export-g1-67' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-72' href='#background-telemetry-export-g1-72' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-73' href='#background-telemetry-export-g1-73' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-74' href='#background-telemetry-export-g1-74' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-76' href='#background-telemetry-export-g1-76' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-77' href='#background-telemetry-export-g1-77' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-79' href='#background-telemetry-export-g1-79' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-80' href='#background-telemetry-export-g1-80' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-83' href='#background-telemetry-export-g1-83' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-84' href='#background-telemetry-export-g1-84' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-85' href='#background-telemetry-export-g1-85' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-97' href='#background-telemetry-export-g1-97' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-98' href='#background-telemetry-export-g1-98' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-99' href='#background-telemetry-export-g1-99' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-100' href='#background-telemetry-export-g1-100' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-101' href='#background-telemetry-export-g1-101' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-103' href='#background-telemetry-export-g1-103' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-104' href='#background-telemetry-export-g1-104' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-105' href='#background-telemetry-export-g1-105' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-107' href='#background-telemetry-export-g1-107' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-108' href='#background-telemetry-export-g1-108' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-109' href='#background-telemetry-export-g1-109' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-110' href='#background-telemetry-export-g1-110' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-111' href='#background-telemetry-export-g1-111' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-112' href='#background-telemetry-export-g1-112' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-113' href='#background-telemetry-export-g1-113' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-114' href='#background-telemetry-export-g1-114' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-115' href='#background-telemetry-export-g1-115' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-116' href='#background-telemetry-export-g1-116' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-117' href='#background-telemetry-export-g1-117' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-118' href='#background-telemetry-export-g1-118' transform='scale(.86)'/>
+<use id='background-telemetry-export-g3-121' href='#background-telemetry-export-g1-121' transform='scale(.86)'/>
+<path id='background-telemetry-export-g1-44' d='M1.457-1.253C1.007-1.253 .803-.996 .803-.621V-.471C.803-.182 .932 .032 1.221 .096C1.103 .6 .846 .975 .418 1.424H1.135C1.746 .9 2.11 .107 2.11-.471V-.621C2.11-.996 1.906-1.253 1.457-1.253Z'/>
+<path id='background-telemetry-export-g1-45' d='M3.534-2.795V-3.716H.739V-2.795H3.534Z'/>
+<path id='background-telemetry-export-g1-47' d='M.867 1.617L3.663-7.925H2.892L.096 1.617H.867Z'/>
+<path id='background-telemetry-export-g1-49' d='M5.858 0V-.793H3.931V-7.475H2.528L.546-5.623L1.071-5.055L2.956-6.811H3.031V-.793H.942V0H5.858Z'/>
+<path id='background-telemetry-export-g1-58' d='M1.564 .129C2.013 .129 2.217-.129 2.217-.493V-.632C2.217-.996 2.013-1.253 1.564-1.253S.91-.996 .91-.632V-.493C.91-.129 1.114 .129 1.564 .129ZM1.564-4.273C2.013-4.273 2.217-4.53 2.217-4.894V-5.034C2.217-5.398 2.013-5.655 1.564-5.655S.91-5.398 .91-5.034V-4.894C.91-4.53 1.114-4.273 1.564-4.273Z'/>
+<path id='background-telemetry-export-g1-66' d='M.996 0H4.391C5.494 0 6.319-.932 6.319-2.163C6.319-3.406 5.387-3.866 4.852-3.898V-3.963C5.344-4.038 6.062-4.434 6.062-5.548C6.062-6.715 5.301-7.475 4.07-7.475H.996V0ZM1.896-3.47H4.113C4.884-3.47 5.355-3.063 5.355-2.313V-1.949C5.355-1.2 4.884-.793 4.113-.793H1.896V-3.47ZM1.896-6.683H3.963C4.669-6.683 5.098-6.308 5.098-5.644V-5.28C5.098-4.616 4.669-4.241 3.963-4.241H1.896V-6.683Z'/>
+<path id='background-telemetry-export-g1-67' d='M3.631 .129C4.873 .129 5.783-.525 6.255-1.574L5.537-2.024C5.237-1.21 4.584-.675 3.631-.675C2.345-.675 1.585-1.606 1.585-3.138V-4.252C1.585-5.783 2.345-6.801 3.631-6.801C4.552-6.801 5.173-6.297 5.473-5.526L6.201-5.965C5.73-7.004 4.873-7.604 3.631-7.604C1.746-7.604 .621-6.19 .621-3.695S1.746 .129 3.631 .129Z'/>
+<path id='background-telemetry-export-g1-70' d='M1.896 0V-3.384H5.141V-4.177H1.896V-6.683H5.451V-7.475H.996V0H1.896Z'/>
+<path id='background-telemetry-export-g1-72' d='M5.676 0H6.576V-7.475H5.676V-4.177H1.896V-7.475H.996V0H1.896V-3.384H5.676V0Z'/>
+<path id='background-telemetry-export-g1-73' d='M3.641 0V-.75H2.592V-6.726H3.641V-7.475H.643V-6.726H1.692V-.75H.643V0H3.641Z'/>
+<path id='background-telemetry-export-g1-74' d='M1.05-7.475V-6.683H3.62V-2.099C3.62-1.146 3.17-.675 2.399-.675C1.639-.675 1.253-1.125 1.114-1.767L.3-1.574C.503-.557 1.221 .129 2.378 .129C3.641 .129 4.52-.675 4.52-1.938V-7.475H1.05Z'/>
+<path id='background-telemetry-export-g1-76' d='M5.076 0V-.793H1.896V-7.475H.996V0H5.076Z'/>
+<path id='background-telemetry-export-g1-77' d='M.996 0H1.874V-6.297H1.928L2.56-5.044L4.348-1.789L6.137-5.044L6.769-6.297H6.822V0H7.7V-7.475H6.544L4.391-3.449H4.337L2.196-7.475H.996V0Z'/>
+<path id='background-telemetry-export-g1-78' d='M5.537 0H6.576V-7.475H5.698V-1.253H5.665L4.766-2.913L2.035-7.475H.996V0H1.874V-6.222H1.906L2.806-4.562L5.537 0Z'/>
+<path id='background-telemetry-export-g1-79' d='M3.791 .129C5.719 .129 6.961-1.232 6.961-3.738S5.719-7.604 3.791-7.604S.621-6.244 .621-3.738S1.864 .129 3.791 .129ZM3.791-.675C2.495-.675 1.585-1.639 1.585-3.117V-4.359C1.585-5.837 2.495-6.801 3.791-6.801S5.998-5.837 5.998-4.359V-3.117C5.998-1.639 5.087-.675 3.791-.675Z'/>
+<path id='background-telemetry-export-g1-80' d='M1.896 0V-3.192H3.973C5.312-3.192 6.062-4.016 6.062-5.333S5.312-7.475 3.973-7.475H.996V0H1.896ZM1.896-6.683H3.973C4.68-6.683 5.098-6.297 5.098-5.612V-5.055C5.098-4.37 4.68-3.984 3.973-3.984H1.896V-6.683Z'/>
+<path id='background-telemetry-export-g1-83' d='M3.095 .129C4.702 .129 5.665-.75 5.665-2.121C5.665-3.234 5.034-3.877 3.577-4.209L2.967-4.348C2.024-4.562 1.564-4.884 1.564-5.591C1.564-6.394 2.153-6.811 3.106-6.811C3.973-6.811 4.541-6.458 4.948-5.89L5.623-6.383C5.066-7.176 4.273-7.604 3.149-7.604C1.681-7.604 .675-6.886 .675-5.558C.675-4.412 1.424-3.813 2.785-3.502L3.395-3.363C4.38-3.138 4.777-2.785 4.777-2.078C4.777-1.221 4.198-.664 3.127-.664C2.26-.664 1.639-1.039 1.114-1.735L.45-1.178C1.05-.364 1.896 .129 3.095 .129Z'/>
+<path id='background-telemetry-export-g1-84' d='M5.89-6.683V-7.475H.236V-6.683H2.613V0H3.513V-6.683H5.89Z'/>
+<path id='background-telemetry-export-g1-85' d='M.942-7.475V-3.063C.942-.889 1.606 .129 3.599 .129S6.319-.889 6.319-3.063V-7.475H5.419V-2.849C5.419-1.424 4.959-.675 3.631-.675S1.842-1.424 1.842-2.849V-7.475H.942Z'/>
+<path id='background-telemetry-export-g1-97' d='M5.408 0V-.75H4.777V-3.791C4.777-4.959 3.984-5.655 2.656-5.655C1.66-5.655 .996-5.162 .696-4.573L1.21-4.091C1.51-4.595 1.949-4.916 2.613-4.916C3.491-4.916 3.92-4.487 3.92-3.706V-3.159H2.827C1.221-3.159 .471-2.581 .471-1.542C.471-.514 1.157 .129 2.324 .129C3.095 .129 3.684-.225 3.92-.9H3.973C4.038-.386 4.295 0 4.927 0H5.408ZM2.463-.6C1.799-.6 1.371-.91 1.371-1.457V-1.681C1.371-2.217 1.81-2.517 2.785-2.517H3.92V-1.606C3.92-1.039 3.309-.6 2.463-.6Z'/>
+<path id='background-telemetry-export-g1-98' d='M.91 0H1.767V-.9H1.81C2.142-.214 2.667 .129 3.427 .129C4.809 .129 5.676-.996 5.676-2.763S4.809-5.655 3.427-5.655C2.667-5.655 2.099-5.323 1.81-4.627H1.767V-7.925H.91V0ZM3.192-.643C2.41-.643 1.767-1.05 1.767-1.767V-3.823C1.767-4.434 2.41-4.884 3.192-4.884C4.155-4.884 4.755-4.22 4.755-3.234V-2.292C4.755-1.307 4.155-.643 3.192-.643Z'/>
+<path id='background-telemetry-export-g1-99' d='M2.967 .129C4.016 .129 4.734-.386 5.087-1.178L4.466-1.596C4.166-.964 3.663-.632 2.967-.632C1.949-.632 1.424-1.328 1.424-2.292V-3.234C1.424-4.198 1.949-4.894 2.967-4.894C3.641-4.894 4.113-4.562 4.316-3.995L5.034-4.359C4.712-5.119 4.059-5.655 2.967-5.655C1.414-5.655 .503-4.53 .503-2.763S1.414 .129 2.967 .129Z'/>
+<path id='background-telemetry-export-g1-100' d='M4.445 0H5.301V-7.925H4.445V-4.627H4.402C4.113-5.323 3.545-5.655 2.785-5.655C1.403-5.655 .535-4.53 .535-2.763S1.403 .129 2.785 .129C3.545 .129 4.07-.214 4.402-.9H4.445V0ZM3.02-.643C2.056-.643 1.457-1.307 1.457-2.292V-3.234C1.457-4.22 2.056-4.884 3.02-4.884C3.802-4.884 4.445-4.434 4.445-3.823V-1.767C4.445-1.05 3.802-.643 3.02-.643Z'/>
+<path id='background-telemetry-export-g1-101' d='M2.988 .129C4.027 .129 4.819-.386 5.173-1.135L4.562-1.574C4.273-.964 3.738-.621 3.042-.621C2.013-.621 1.403-1.339 1.403-2.292V-2.549H5.376V-2.956C5.376-4.52 4.466-5.655 2.988-5.655C1.489-5.655 .503-4.52 .503-2.763S1.489 .129 2.988 .129ZM2.988-4.937C3.866-4.937 4.455-4.284 4.455-3.309V-3.192H1.403V-3.266C1.403-4.23 2.056-4.937 2.988-4.937Z'/>
+<path id='background-telemetry-export-g1-103' d='M5.569 .61C5.569-.3 4.98-.857 3.609-.857H2.431C1.928-.857 1.585-.942 1.585-1.274C1.585-1.617 1.949-1.799 2.313-1.896C2.474-1.864 2.667-1.842 2.849-1.842C4.113-1.842 4.937-2.624 4.937-3.748C4.937-4.337 4.702-4.83 4.305-5.173V-5.526H5.355V-6.276H4.53C4.07-6.276 3.888-5.965 3.888-5.537V-5.441C3.588-5.58 3.234-5.655 2.838-5.655C1.585-5.655 .76-4.873 .76-3.748C.76-2.977 1.146-2.367 1.799-2.056V-2.013C1.242-1.874 .846-1.606 .846-1.05C.846-.675 1.028-.428 1.339-.278V-.161C.793-.011 .461 .311 .461 .91C.461 1.778 1.167 2.27 2.892 2.27C4.669 2.27 5.569 1.746 5.569 .61ZM4.766 .675C4.766 1.274 4.209 1.574 3.256 1.574H2.463C1.596 1.574 1.264 1.178 1.264 .696C1.264 .353 1.424 .107 1.778-.054H3.62C4.477-.054 4.766 .236 4.766 .675ZM2.849-2.528C2.121-2.528 1.66-2.87 1.66-3.599V-3.898C1.66-4.627 2.121-4.969 2.849-4.969S4.038-4.627 4.038-3.898V-3.599C4.038-2.87 3.577-2.528 2.849-2.528Z'/>
+<path id='background-telemetry-export-g1-104' d='M.91 0H1.767V-3.834C1.767-4.541 2.431-4.884 3.117-4.884C3.941-4.884 4.37-4.38 4.37-3.395V0H5.226V-3.545C5.226-4.884 4.509-5.655 3.374-5.655C2.549-5.655 2.078-5.248 1.81-4.627H1.767V-7.925H.91V0Z'/>
+<path id='background-telemetry-export-g1-105' d='M1.339-6.822C1.703-6.822 1.864-7.015 1.864-7.304V-7.443C1.864-7.732 1.703-7.925 1.339-7.925S.814-7.732 .814-7.443V-7.304C.814-7.015 .975-6.822 1.339-6.822ZM.91 0H1.767V-5.526H.91V0Z'/>
+<path id='background-telemetry-export-g1-107' d='M.91 0H1.767V-1.971L2.592-2.817L4.423 0H5.462L3.213-3.341L5.259-5.526H4.22L2.656-3.845L1.81-2.902H1.767V-7.925H.91V0Z'/>
+<path id='background-telemetry-export-g1-108' d='M2.581 0V-.75H1.767V-7.925H.91V-.889C.91-.375 1.232 0 1.821 0H2.581Z'/>
+<path id='background-telemetry-export-g1-109' d='M1.767 0V-3.834C1.767-4.541 2.41-4.884 3.084-4.884C3.898-4.884 4.273-4.38 4.273-3.395V0H5.13V-3.834C5.13-4.541 5.751-4.884 6.426-4.884C7.261-4.884 7.636-4.37 7.636-3.395V0H8.493V-3.545C8.493-4.884 7.818-5.655 6.694-5.655C5.751-5.655 5.216-5.13 5.012-4.53H4.991C4.691-5.323 4.027-5.655 3.299-5.655C2.442-5.655 2.056-5.194 1.81-4.627H1.767V-5.526H.91V0H1.767Z'/>
+<path id='background-telemetry-export-g1-110' d='M1.767 0V-3.834C1.767-4.541 2.431-4.884 3.117-4.884C3.941-4.884 4.37-4.38 4.37-3.395V0H5.226V-3.545C5.226-4.884 4.509-5.655 3.374-5.655C2.549-5.655 2.078-5.248 1.81-4.627H1.767V-5.526H.91V0H1.767Z'/>
+<path id='background-telemetry-export-g1-111' d='M2.999 .129C4.477 .129 5.494-1.007 5.494-2.763S4.477-5.655 2.999-5.655S.503-4.52 .503-2.763S1.521 .129 2.999 .129ZM2.999-.632C2.078-.632 1.424-1.2 1.424-2.367V-3.159C1.424-4.327 2.078-4.894 2.999-4.894S4.573-4.327 4.573-3.159V-2.367C4.573-1.2 3.92-.632 2.999-.632Z'/>
+<path id='background-telemetry-export-g1-112' d='M.91 2.142H1.767V-.9H1.81C2.142-.214 2.667 .129 3.427 .129C4.809 .129 5.676-.996 5.676-2.763S4.809-5.655 3.427-5.655C2.667-5.655 2.099-5.323 1.81-4.627H1.767V-5.526H.91V2.142ZM3.192-.643C2.41-.643 1.767-1.05 1.767-1.767V-3.823C1.767-4.434 2.41-4.884 3.192-4.884C4.155-4.884 4.755-4.22 4.755-3.234V-2.292C4.755-1.307 4.155-.643 3.192-.643Z'/>
+<path id='background-telemetry-export-g1-113' d='M4.445 2.142H5.301V-5.526H4.445V-4.627H4.402C4.113-5.323 3.545-5.655 2.785-5.655C1.403-5.655 .535-4.53 .535-2.763S1.403 .129 2.785 .129C3.545 .129 4.07-.214 4.402-.9H4.445V2.142ZM3.02-.643C2.056-.643 1.457-1.307 1.457-2.292V-3.234C1.457-4.22 2.056-4.884 3.02-4.884C3.802-4.884 4.445-4.434 4.445-3.823V-1.767C4.445-1.05 3.802-.643 3.02-.643Z'/>
+<path id='background-telemetry-export-g1-114' d='M1.767 0V-3.748C1.767-4.273 2.324-4.669 3.245-4.669H3.748V-5.526H3.416C2.517-5.526 2.013-5.034 1.821-4.509H1.767V-5.526H.91V0H1.767Z'/>
+<path id='background-telemetry-export-g1-115' d='M2.57 .129C3.834 .129 4.616-.525 4.616-1.596C4.616-2.431 4.145-2.967 2.924-3.149L2.495-3.213C1.81-3.32 1.435-3.534 1.435-4.07C1.435-4.595 1.81-4.927 2.517-4.927S3.695-4.595 3.941-4.252L4.509-4.766C4.059-5.323 3.47-5.655 2.581-5.655C1.457-5.655 .61-5.119 .61-4.027C.61-2.999 1.371-2.581 2.388-2.431L2.827-2.367C3.556-2.26 3.791-1.928 3.791-1.499C3.791-.932 3.363-.6 2.635-.6C1.938-.6 1.424-.91 .996-1.446L.386-.953C.878-.3 1.553 .129 2.57 .129Z'/>
+<path id='background-telemetry-export-g1-116' d='M3.202 0V-.75H2.078V-4.777H3.288V-5.526H2.078V-7.058H1.307V-6.03C1.307-5.655 1.189-5.526 .825-5.526H.311V-4.777H1.221V-.91C1.221-.375 1.542 0 2.131 0H3.202Z'/>
+<path id='background-telemetry-export-g1-117' d='M4.316 0H5.173V-5.526H4.316V-1.703C4.316-.975 3.652-.643 2.977-.643C2.153-.643 1.714-1.146 1.714-2.131V-5.526H.857V-1.981C.857-.643 1.585 .129 2.72 .129C3.641 .129 4.059-.375 4.273-.9H4.316V0Z'/>
+<path id='background-telemetry-export-g1-118' d='M3.127 0L5.076-5.526H4.252L3.266-2.785L2.667-.9H2.613L2.013-2.785L1.05-5.526H.193L2.131 0H3.127Z'/>
+<path id='background-telemetry-export-g1-121' d='M2.977-1.767L2.677-.867H2.624L2.367-1.767L1.039-5.526H.182L2.249 .214L1.831 1.392H.964V2.142H1.403C2.217 2.142 2.442 1.949 2.688 1.285L5.162-5.526H4.316L2.977-1.767Z'/>
+<path id='background-telemetry-export-g1-122' d='M4.616 0V-.75H1.328L4.53-4.884V-5.526H.45V-4.777H3.491L.353-.718V0H4.616Z'/>
+</defs>
+<g id='background-telemetry-export-page1'>
+<g stroke-miterlimit='10' transform='matrix(.996 0 0 -.996 -72 -72)' stroke-width='1.12921' class='fig-f-ink fig-s-ink'>
+<g stroke-dasharray='4.51686,3.01125' stroke-dashoffset='0.0' class='fig-s-line'>
+<path d='M7.528-12.045V-191.213C7.528-193.708 9.55-195.73 12.045-195.73H405.763C408.258-195.73 410.28-193.708 410.28-191.213V-12.045C410.28-9.55 408.258-7.528 405.763-7.528H12.045C9.55-7.528 7.528-9.55 7.528-12.045ZM410.28-195.73' fill='none'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M18.82-48.18V-90.337C18.82-92 20.168-93.348 21.831-93.348H98.618C100.281-93.348 101.629-92 101.629-90.337V-48.18C101.629-46.517 100.281-45.168 98.618-45.168H21.831C20.168-45.168 18.82-46.517 18.82-48.18ZM101.629-93.348'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M116.685-48.18V-90.337C116.685-92 118.033-93.348 119.696-93.348H196.483C198.146-93.348 199.494-92 199.494-90.337V-48.18C199.494-46.517 198.146-45.168 196.483-45.168H119.696C118.033-45.168 116.685-46.517 116.685-48.18ZM199.494-93.348'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M214.55-48.18V-90.337C214.55-92 215.898-93.348 217.561-93.348H294.348C296.011-93.348 297.359-92 297.359-90.337V-48.18C297.359-46.517 296.011-45.168 294.348-45.168H217.561C215.898-45.168 214.55-46.517 214.55-48.18ZM297.359-93.348'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M312.415-48.18V-90.337C312.415-92 313.763-93.348 315.426-93.348H395.977C397.64-93.348 398.988-92 398.988-90.337V-48.18C398.988-46.517 397.64-45.168 395.977-45.168H315.426C313.763-45.168 312.415-46.517 312.415-48.18ZM398.988-93.348'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M18.82-130.989V-173.146C18.82-174.809 20.168-176.157 21.831-176.157H294.348C296.011-176.157 297.359-174.809 297.359-173.146V-130.989C297.359-129.325 296.011-127.977 294.348-127.977H21.831C20.168-127.977 18.82-129.325 18.82-130.989ZM297.359-176.157'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M312.415-130.989V-173.146C312.415-174.809 313.763-176.157 315.426-176.157H395.977C397.64-176.157 398.988-174.809 398.988-173.146V-130.989C398.988-129.325 397.64-127.977 395.977-127.977H315.426C313.763-127.977 312.415-129.325 312.415-130.989ZM398.988-176.157'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M451.685-82.056V-139.269C451.685-140.932 453.033-142.281 454.696-142.281H557.83C559.494-142.281 560.842-140.932 560.842-139.269V-82.056C560.842-80.393 559.494-79.045 557.83-79.045H454.696C453.033-79.045 451.685-80.393 451.685-82.056ZM560.842-142.281'/>
+</g>
+<g class='fig-s-line'>
+<path d='M101.629-69.258H107.557' fill='none'/>
+<g transform='translate(107.275 -69.258)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g class='fig-s-line'>
+<path d='M199.494-69.258H205.422' fill='none'/>
+<g transform='translate(205.14 -69.258)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g class='fig-s-line'>
+<path d='M297.359-69.258H303.287' fill='none'/>
+<g transform='translate(303.005 -69.258)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g class='fig-s-line'>
+<path d='M297.359-152.067H303.287' fill='none'/>
+<g transform='translate(303.005 -152.067)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g class='fig-s-line'>
+<path d='M398.988-69.258H425.336V-101.629H442.557' fill='none'/>
+<g transform='translate(442.274 -101.629)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g class='fig-s-line'>
+<path d='M398.988-152.067H425.336V-120.449H442.557' fill='none'/>
+<g transform='translate(442.274 -120.449)' stroke-dasharray='none' stroke-dashoffset='0.0' stroke-linejoin='miter' class='fig-f-line'>
+ <path d='M6.642 0L.565 3.175V0V-3.175Z'/>
+ </g>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 88.832 -96.36)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g5-116'/>
+<use x='-68.49' y='-72' href='#background-telemetry-export-g5-97'/>
+<use x='-63.15' y='-72' href='#background-telemetry-export-g5-114'/>
+<use x='-59.71' y='-72' href='#background-telemetry-export-g5-103'/>
+<use x='-54.49' y='-72' href='#background-telemetry-export-g5-101'/>
+<use x='-49' y='-72' href='#background-telemetry-export-g5-116'/>
+<use x='-45.49' y='-72' href='#background-telemetry-export-g5-58'/>
+<use x='-40.21' y='-72' href='#background-telemetry-export-g5-111'/>
+<use x='-34.61' y='-72' href='#background-telemetry-export-g5-110'/>
+<use x='-28.93' y='-72' href='#background-telemetry-export-g5-101'/>
+<use x='-23.34' y='-72' href='#background-telemetry-export-g5-45'/>
+<use x='-19.35' y='-72' href='#background-telemetry-export-g5-115'/>
+<use x='-14.48' y='-72' href='#background-telemetry-export-g5-104'/>
+<use x='-8.8' y='-72' href='#background-telemetry-export-g5-111'/>
+<use x='-3.2' y='-72' href='#background-telemetry-export-g5-116'/>
+<use x='2.67' y='-72' href='#background-telemetry-export-g5-99'/>
+<use x='7.64' y='-72' href='#background-telemetry-export-g5-111'/>
+<use x='13.24' y='-72' href='#background-telemetry-export-g5-109'/>
+<use x='21.97' y='-72' href='#background-telemetry-export-g5-109'/>
+<use x='30.7' y='-72' href='#background-telemetry-export-g5-97'/>
+<use x='36.04' y='-72' href='#background-telemetry-export-g5-110'/>
+<use x='41.72' y='-72' href='#background-telemetry-export-g5-100'/>
+<use x='47.52' y='-72' href='#background-telemetry-export-g5-115'/>
+<use x='54.75' y='-72' href='#background-telemetry-export-g5-115'/>
+<use x='59.55' y='-72' href='#background-telemetry-export-g5-116'/>
+<use x='63.06' y='-72' href='#background-telemetry-export-g5-97'/>
+<use x='68.4' y='-72' href='#background-telemetry-export-g5-114'/>
+<use x='72.11' y='-72' href='#background-telemetry-export-g5-116'/>
+<use x='75.58' y='-72' href='#background-telemetry-export-g5-101'/>
+<use x='81.07' y='-72' href='#background-telemetry-export-g5-100'/>
+<use x='89.23' y='-72' href='#background-telemetry-export-g5-98'/>
+<use x='94.98' y='-72' href='#background-telemetry-export-g5-121'/>
+<use x='102.33' y='-72' href='#background-telemetry-export-g5-115'/>
+<use x='107.02' y='-72' href='#background-telemetry-export-g5-121'/>
+<use x='111.97' y='-72' href='#background-telemetry-export-g5-115'/>
+<use x='116.77' y='-72' href='#background-telemetry-export-g5-116'/>
+<use x='120.24' y='-72' href='#background-telemetry-export-g5-101'/>
+<use x='125.73' y='-72' href='#background-telemetry-export-g5-109'/>
+<use x='134.46' y='-72' href='#background-telemetry-export-g5-100'/>
+<use x='142.62' y='-72' href='#background-telemetry-export-g5-116'/>
+<use x='146.13' y='-72' href='#background-telemetry-export-g5-105'/>
+<use x='148.63' y='-72' href='#background-telemetry-export-g5-109'/>
+<use x='157.36' y='-72' href='#background-telemetry-export-g5-101'/>
+<use x='162.85' y='-72' href='#background-telemetry-export-g5-114'/>
+<use x='166.52' y='-72' href='#background-telemetry-export-g5-115'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 88.832 -111.416)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-115'/>
+<use x='-67.495' y='-72' href='#background-telemetry-export-g3-104'/>
+<use x='-62.241' y='-72' href='#background-telemetry-export-g3-105'/>
+<use x='-59.929' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='-56.534' y='-72' href='#background-telemetry-export-g3-117'/>
+<use x='-51.28' y='-72' href='#background-telemetry-export-g3-100'/>
+<use x='-45.915' y='-72' href='#background-telemetry-export-g3-111'/>
+<use x='-38.552' y='-72' href='#background-telemetry-export-g3-117'/>
+<use x='-33.298' y='-72' href='#background-telemetry-export-g3-112'/>
+<use x='-27.933' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='-22.994' y='-72' href='#background-telemetry-export-g3-116'/>
+<use x='-19.784' y='-72' href='#background-telemetry-export-g3-99'/>
+<use x='-15.131' y='-72' href='#background-telemetry-export-g3-104'/>
+<use x='-7.694' y='-72' href='#background-telemetry-export-g3-109'/>
+<use x='.381' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='5.321' y='-72' href='#background-telemetry-export-g3-112'/>
+<use x='12.869' y='-72' href='#background-telemetry-export-g3-45'/>
+<use x='16.559' y='-72' href='#background-telemetry-export-g3-45'/>
+<use x='20.25' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='25.19' y='-72' href='#background-telemetry-export-g3-108'/>
+<use x='27.659' y='-72' href='#background-telemetry-export-g3-108'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 88.832 -194.225)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-115'/>
+<use x='-67.495' y='-72' href='#background-telemetry-export-g3-104'/>
+<use x='-62.241' y='-72' href='#background-telemetry-export-g3-105'/>
+<use x='-59.929' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='-56.534' y='-72' href='#background-telemetry-export-g3-117'/>
+<use x='-51.28' y='-72' href='#background-telemetry-export-g3-100'/>
+<use x='-45.915' y='-72' href='#background-telemetry-export-g3-111'/>
+<use x='-38.552' y='-72' href='#background-telemetry-export-g3-115'/>
+<use x='-34.112' y='-72' href='#background-telemetry-export-g3-116'/>
+<use x='-30.865' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='-25.926' y='-72' href='#background-telemetry-export-g3-116'/>
+<use x='-22.679' y='-72' href='#background-telemetry-export-g3-117'/>
+<use x='-17.425' y='-72' href='#background-telemetry-export-g3-115'/>
+<use x='-10.737' y='-72' href='#background-telemetry-export-g3-45'/>
+<use x='-7.047' y='-72' href='#background-telemetry-export-g3-45'/>
+<use x='-3.356' y='-72' href='#background-telemetry-export-g3-111'/>
+<use x='1.824' y='-72' href='#background-telemetry-export-g3-116'/>
+<use x='5.034' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='10.112' y='-72' href='#background-telemetry-export-g3-108'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 110.693 -136.259)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g1-66'/>
+<use x='-64.98' y='-72' href='#background-telemetry-export-g1-80'/>
+<use x='-58.466' y='-72' href='#background-telemetry-export-g1-70'/>
+<use x='-49.92' y='-72' href='#background-telemetry-export-g1-109'/>
+<use x='-40.535' y='-72' href='#background-telemetry-export-g1-97'/>
+<use x='-34.794' y='-72' href='#background-telemetry-export-g1-112'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 208.353 -136.259)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g1-115'/>
+<use x='-66.765' y='-72' href='#background-telemetry-export-g1-101'/>
+<use x='-60.863' y='-72' href='#background-telemetry-export-g1-114'/>
+<use x='-56.918' y='-72' href='#background-telemetry-export-g1-105'/>
+<use x='-54.23' y='-72' href='#background-telemetry-export-g1-97'/>
+<use x='-48.49' y='-72' href='#background-telemetry-export-g1-108'/>
+<use x='-45.566' y='-72' href='#background-telemetry-export-g1-105'/>
+<use x='-42.878' y='-72' href='#background-telemetry-export-g1-122'/>
+<use x='-37.998' y='-72' href='#background-telemetry-export-g1-101'/>
+<use x='-32.096' y='-72' href='#background-telemetry-export-g1-114'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 291.106 -136.259)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g1-115'/>
+<use x='-66.765' y='-72' href='#background-telemetry-export-g1-105'/>
+<use x='-64.077' y='-72' href='#background-telemetry-export-g1-103'/>
+<use x='-58.401' y='-72' href='#background-telemetry-export-g1-110'/>
+<use x='-52.295' y='-72' href='#background-telemetry-export-g1-101'/>
+<use x='-46.394' y='-72' href='#background-telemetry-export-g1-100'/>
+<use x='-37.622' y='-72' href='#background-telemetry-export-g1-100'/>
+<use x='-31.387' y='-72' href='#background-telemetry-export-g1-101'/>
+<use x='-25.485' y='-72' href='#background-telemetry-export-g1-99'/>
+<use x='-20.142' y='-72' href='#background-telemetry-export-g1-111'/>
+<use x='-14.122' y='-72' href='#background-telemetry-export-g1-100'/>
+<use x='-7.887' y='-72' href='#background-telemetry-export-g1-101'/>
+<use x='-1.985' y='-72' href='#background-telemetry-export-g1-114'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 400.031 -136.259)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g1-79'/>
+<use x='-64.604' y='-72' href='#background-telemetry-export-g1-84'/>
+<use x='-58.455' y='-72' href='#background-telemetry-export-g1-76'/>
+<use x='-53.069' y='-72' href='#background-telemetry-export-g1-80'/>
+<use x='-44.018' y='-72' href='#background-telemetry-export-g1-74'/>
+<use x='-38.535' y='-72' href='#background-telemetry-export-g1-83'/>
+<use x='-32.29' y='-72' href='#background-telemetry-export-g1-79'/>
+<use x='-24.679' y='-72' href='#background-telemetry-export-g1-78'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 194.04 -221.326)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g1-107'/>
+<use x='-66.518' y='-72' href='#background-telemetry-export-g1-101'/>
+<use x='-60.616' y='-72' href='#background-telemetry-export-g1-101'/>
+<use x='-54.714' y='-72' href='#background-telemetry-export-g1-112'/>
+<use x='-48.479' y='-72' href='#background-telemetry-export-g1-97'/>
+<use x='-42.739' y='-72' href='#background-telemetry-export-g1-108'/>
+<use x='-39.815' y='-72' href='#background-telemetry-export-g1-105'/>
+<use x='-37.127' y='-72' href='#background-telemetry-export-g1-118'/>
+<use x='-31.924' y='-72' href='#background-telemetry-export-g1-101'/>
+<use x='-23.485' y='-72' href='#background-telemetry-export-g1-98'/>
+<use x='-17.25' y='-72' href='#background-telemetry-export-g1-111'/>
+<use x='-11.23' y='-72' href='#background-telemetry-export-g1-100'/>
+<use x='-4.995' y='-72' href='#background-telemetry-export-g1-121'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 400.031 -221.326)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g1-79'/>
+<use x='-64.604' y='-72' href='#background-telemetry-export-g1-84'/>
+<use x='-58.455' y='-72' href='#background-telemetry-export-g1-76'/>
+<use x='-53.069' y='-72' href='#background-telemetry-export-g1-80'/>
+<use x='-44.018' y='-72' href='#background-telemetry-export-g1-74'/>
+<use x='-38.535' y='-72' href='#background-telemetry-export-g1-83'/>
+<use x='-32.29' y='-72' href='#background-telemetry-export-g1-79'/>
+<use x='-24.679' y='-72' href='#background-telemetry-export-g1-78'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 556.997 -173.899)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g1-99'/>
+<use x='-66.657' y='-72' href='#background-telemetry-export-g1-111'/>
+<use x='-60.637' y='-72' href='#background-telemetry-export-g1-108'/>
+<use x='-57.767' y='-72' href='#background-telemetry-export-g1-108'/>
+<use x='-54.843' y='-72' href='#background-telemetry-export-g1-101'/>
+<use x='-48.941' y='-72' href='#background-telemetry-export-g1-99'/>
+<use x='-43.534' y='-72' href='#background-telemetry-export-g1-116'/>
+<use x='-39.804' y='-72' href='#background-telemetry-export-g1-111'/>
+<use x='-33.784' y='-72' href='#background-telemetry-export-g1-114'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 106.99 -149.056)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='-67.061' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='-63.712' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-58.634' y='-72' href='#background-telemetry-export-g3-110'/>
+<use x='-53.38' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='-48.348' y='-72' href='#background-telemetry-export-g3-44'/>
+<use x='-43.649' y='-72' href='#background-telemetry-export-g3-104'/>
+<use x='-38.395' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='-33.455' y='-72' href='#background-telemetry-export-g3-115'/>
+<use x='-28.951' y='-72' href='#background-telemetry-export-g3-104'/>
+<use x='-23.697' y='-72' href='#background-telemetry-export-g3-44'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 114.947 -159.596)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-112'/>
+<use x='-66.635' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-61.557' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='-58.347' y='-72' href='#background-telemetry-export-g3-45'/>
+<use x='-54.656' y='-72' href='#background-telemetry-export-g3-67'/>
+<use x='-48.912' y='-72' href='#background-telemetry-export-g3-80'/>
+<use x='-43.307' y='-72' href='#background-telemetry-export-g3-85'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 202.417 -149.056)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-111'/>
+<use x='-66.82' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='-61.242' y='-72' href='#background-telemetry-export-g3-100'/>
+<use x='-55.877' y='-72' href='#background-telemetry-export-g3-105'/>
+<use x='-53.565' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='-50.216' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-45.138' y='-72' href='#background-telemetry-export-g3-99'/>
+<use x='-40.485' y='-72' href='#background-telemetry-export-g3-116'/>
+<use x='-35.056' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='-31.707' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-26.629' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='-21.689' y='-72' href='#background-telemetry-export-g3-100'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 300.598 -149.056)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-76'/>
+<use x='-67.458' y='-72' href='#background-telemetry-export-g3-117'/>
+<use x='-62.204' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='-55.082' y='-72' href='#background-telemetry-export-g3-105'/>
+<use x='-52.769' y='-72' href='#background-telemetry-export-g3-110'/>
+<use x='-45.332' y='-72' href='#background-telemetry-export-g3-76'/>
+<use x='-40.791' y='-72' href='#background-telemetry-export-g3-117'/>
+<use x='-35.537' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='-30.597' y='-72' href='#background-telemetry-export-g3-74'/>
+<use x='-25.88' y='-72' href='#background-telemetry-export-g3-73'/>
+<use x='-22.244' y='-72' href='#background-telemetry-export-g3-84'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 401.282 -149.056)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-108'/>
+<use x='-69.484' y='-72' href='#background-telemetry-export-g3-111'/>
+<use x='-64.304' y='-72' href='#background-telemetry-export-g3-103'/>
+<use x='-57.237' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='-53.889' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-48.81' y='-72' href='#background-telemetry-export-g3-99'/>
+<use x='-44.213' y='-72' href='#background-telemetry-export-g3-111'/>
+<use x='-39.033' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='-35.694' y='-72' href='#background-telemetry-export-g3-100'/>
+<use x='-28.146' y='-72' href='#background-telemetry-export-g3-111'/>
+<use x='-22.966' y='-72' href='#background-telemetry-export-g3-114'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 411.904 -159.596)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-109'/>
+<use x='-63.925' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-58.847' y='-72' href='#background-telemetry-export-g3-116'/>
+<use x='-55.6' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='-52.205' y='-72' href='#background-telemetry-export-g3-105'/>
+<use x='-49.893' y='-72' href='#background-telemetry-export-g3-99'/>
+<use x='-45.24' y='-72' href='#background-telemetry-export-g3-115'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 191.253 -234.876)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-113'/>
+<use x='-66.635' y='-72' href='#background-telemetry-export-g3-117'/>
+<use x='-61.381' y='-72' href='#background-telemetry-export-g3-111'/>
+<use x='-56.201' y='-72' href='#background-telemetry-export-g3-116'/>
+<use x='-52.991' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-47.913' y='-72' href='#background-telemetry-export-g3-100'/>
+<use x='-40.365' y='-72' href='#background-telemetry-export-g3-98'/>
+<use x='-35.046' y='-72' href='#background-telemetry-export-g3-121'/>
+<use x='-28.248' y='-72' href='#background-telemetry-export-g3-116'/>
+<use x='-25.001' y='-72' href='#background-telemetry-export-g3-104'/>
+<use x='-19.747' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-12.486' y='-72' href='#background-telemetry-export-g3-84'/>
+<use x='-7.195' y='-72' href='#background-telemetry-export-g3-80'/>
+<use x='-1.589' y='-72' href='#background-telemetry-export-g3-77'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 400.331 -234.876)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-107'/>
+<use x='-67.283' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-62.204' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-57.126' y='-72' href='#background-telemetry-export-g3-112'/>
+<use x='-51.761' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='-46.822' y='-72' href='#background-telemetry-export-g3-108'/>
+<use x='-44.306' y='-72' href='#background-telemetry-export-g3-105'/>
+<use x='-41.993' y='-72' href='#background-telemetry-export-g3-118'/>
+<use x='-37.516' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-30.255' y='-72' href='#background-telemetry-export-g3-108'/>
+<use x='-27.739' y='-72' href='#background-telemetry-export-g3-111'/>
+<use x='-22.559' y='-72' href='#background-telemetry-export-g3-103'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 549.328 -187.45)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-79'/>
+<use x='-65.636' y='-72' href='#background-telemetry-export-g3-84'/>
+<use x='-60.345' y='-72' href='#background-telemetry-export-g3-76'/>
+<use x='-55.711' y='-72' href='#background-telemetry-export-g3-80'/>
+<use x='-47.922' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='-44.574' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-39.496' y='-72' href='#background-telemetry-export-g3-99'/>
+<use x='-34.898' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-29.82' y='-72' href='#background-telemetry-export-g3-105'/>
+<use x='-27.508' y='-72' href='#background-telemetry-export-g3-118'/>
+<use x='-23.031' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-17.952' y='-72' href='#background-telemetry-export-g3-114'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 547.596 -198.742)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-116'/>
+<use x='-68.753' y='-72' href='#background-telemetry-export-g3-104'/>
+<use x='-63.499' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-58.421' y='-72' href='#background-telemetry-export-g3-110'/>
+<use x='-50.984' y='-72' href='#background-telemetry-export-g3-98'/>
+<use x='-45.619' y='-72' href='#background-telemetry-export-g3-97'/>
+<use x='-40.68' y='-72' href='#background-telemetry-export-g3-99'/>
+<use x='-36.027' y='-72' href='#background-telemetry-export-g3-107'/>
+<use x='-31.309' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-26.231' y='-72' href='#background-telemetry-export-g3-110'/>
+<use x='-20.977' y='-72' href='#background-telemetry-export-g3-100'/>
+<use x='-15.612' y='-72' href='#background-telemetry-export-g3-115'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 546.152 -231.865)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-72'/>
+<use x='-65.46' y='-72' href='#background-telemetry-export-g3-84'/>
+<use x='-59.957' y='-72' href='#background-telemetry-export-g3-84'/>
+<use x='-54.666' y='-72' href='#background-telemetry-export-g3-80'/>
+<use x='-49.06' y='-72' href='#background-telemetry-export-g3-83'/>
+<use x='-41.503' y='-72' href='#background-telemetry-export-g3-80'/>
+<use x='-35.897' y='-72' href='#background-telemetry-export-g3-79'/>
+<use x='-29.348' y='-72' href='#background-telemetry-export-g3-83'/>
+<use x='-24.094' y='-72' href='#background-telemetry-export-g3-84'/>
+<use x='-16.62' y='-72' href='#background-telemetry-export-g3-116'/>
+<use x='-13.411' y='-72' href='#background-telemetry-export-g3-111'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 534.305 -242.405)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#background-telemetry-export-g3-47'/>
+<use x='-68.457' y='-72' href='#background-telemetry-export-g3-118'/>
+<use x='-63.906' y='-72' href='#background-telemetry-export-g3-49'/>
+<use x='-58.356' y='-72' href='#background-telemetry-export-g3-47'/>
+<use x='-54.814' y='-72' href='#background-telemetry-export-g3-108'/>
+<use x='-52.298' y='-72' href='#background-telemetry-export-g3-111'/>
+<use x='-47.118' y='-72' href='#background-telemetry-export-g3-103'/>
+<use x='-42.234' y='-72' href='#background-telemetry-export-g3-115'/>
+<use x='-37.775' y='-72' href='#background-telemetry-export-g3-44'/>
+<use x='-33.076' y='-72' href='#background-telemetry-export-g3-47'/>
+<use x='-29.533' y='-72' href='#background-telemetry-export-g3-118'/>
+<use x='-24.982' y='-72' href='#background-telemetry-export-g3-49'/>
+<use x='-19.432' y='-72' href='#background-telemetry-export-g3-47'/>
+<use x='-15.89' y='-72' href='#background-telemetry-export-g3-109'/>
+<use x='-7.814' y='-72' href='#background-telemetry-export-g3-101'/>
+<use x='-2.736' y='-72' href='#background-telemetry-export-g3-116'/>
+<use x='.511' y='-72' href='#background-telemetry-export-g3-114'/>
+<use x='3.905' y='-72' href='#background-telemetry-export-g3-105'/>
+<use x='6.218' y='-72' href='#background-telemetry-export-g3-99'/>
+<use x='10.871' y='-72' href='#background-telemetry-export-g3-115'/>
+</g>
+</g>
+</g>
+</svg>

@@ -1,0 +1,91 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The steps of a upatch load, a upatch unload and a revocation's purge
+% of one upatch, the span each holds the register lock, and what a
+% failure or a stop between two steps leaves
+% (internals/measurement-register.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+% A step: column, lane top, first and second line.
+\newcommand\figstep[4]{%
+  \draw[box, rounded corners=3bp] (40+88*#1,#2) rectangle ++(82,44);
+  \node[small, anchor=base] at (81+88*#1,#2+19) {#3};
+  \node[small, anchor=base] at (81+88*#1,#2+35) {#4};}
+% A numbered marker centered at a point.
+\newcommand\figmark[3]{%
+  \fill[fig-accent] (#1,#2) circle (8.5);
+  \node[anchor=center, text=fig-on, font=\figsmall\bfseries]
+    at (#1,#2) {#3};}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (840,500);
+
+  \foreach \y in {130,250}
+    \draw[grid] (10,\y) -- (830,\y);
+
+  \fill[fig-s3, opacity=0.10, rounded corners=3bp]
+    (475,12) rectangle (655,362);
+  \node[small, note, anchor=base] at (565,28) {measure};
+
+  \fill[fig-s2, rounded corners=1.5bp] (124,104) rectangle (654,110);
+  \fill[fig-s2, rounded corners=1.5bp] (124,224) rectangle (830,230);
+  \fill[fig-s2, rounded corners=1.5bp] (212,344) rectangle (830,350);
+
+  \figstep{1}{50}{undo}{unmeasured}
+  \figstep{2}{50}{load and}{attach}
+  \figstep{3}{50}{pin links}{and maps}
+  \figstep{4}{50}{archive}{the artifact}
+  \figstep{5}{50}{extend the}{register}
+  \figstep{6}{50}{append to}{the eventlog}
+
+  \figstep{1}{170}{undo}{unmeasured}
+  \figstep{2}{170}{verify the}{directive}
+  \figstep{3}{170}{compare the}{payload}
+  \figstep{5}{170}{extend the}{register}
+  \figstep{6}{170}{append to}{the eventlog}
+  \figstep{7}{170}{remove}{the pins}
+  \figstep{8}{170}{remove the}{archive}
+
+  \figstep{2}{290}{read the}{archive}
+  \figstep{3}{290}{check}{its signer}
+  \figstep{5}{290}{extend the}{register}
+  \figstep{6}{290}{append to}{the eventlog}
+  \figstep{7}{290}{remove}{the pins}
+  \figstep{8}{290}{remove the}{archive}
+
+  \begin{scope}[every node/.append style={anchor=base west}]
+    \node[title] at (10,68) {upatch load};
+    \node[small, note] at (10,86) {bpm install};
+    \node[title] at (10,188) {upatch unload};
+    \node[small, note] at (10,206) {bpm remove};
+    \node[title] at (10,308) {revocation};
+    \node[small, note] at (10,326) {purge of one upatch};
+    \node[small, note] at (128,124) {register lock held};
+  \end{scope}
+
+  \figmark{389}{44}{1}
+  \figmark{477}{44}{2}
+  \figmark{653}{44}{3}
+  \figmark{653}{164}{4}
+
+  \figmark{18}{392}{1}
+  \figmark{18}{432}{2}
+  \figmark{18}{452}{3}
+  \figmark{18}{472}{4}
+  \begin{scope}[every node/.append style={small, note, anchor=base west}]
+    \node at (34,397) {Stopped after the pins, before the extend: pins and
+      an archive the register does not cover. status reports};
+    \node at (34,413) {UpatchesMeasured, and the next load or unload undoes
+      them before it acts.};
+    \node at (34,437) {The archive copy or the extend fails: the load is
+      undone, pins and archive, and nothing runs unmeasured.};
+    \node at (34,457) {Stopped or failed between the extend and the append:
+      a desync. Every later load and unload refuses until the next reboot.};
+    \node at (34,477) {Stopped after the append: the register records the
+      unload, and the next command's undo removes the pins.};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

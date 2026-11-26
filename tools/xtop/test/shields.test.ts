@@ -1,0 +1,226 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// Copyright (c) 2026 Authors of shirudo
+//
+// The rows of sql/shields.sql as tools/backend/test/xtop-shields.expected
+// has them, turned into shields.
+
+import { operatorFromEnv } from "../src/lib/operator.ts";
+import { describe, expect, test } from "bun:test";
+import { toAvailableShield, toShield, type AvailableRow, type ShieldRow } from "../src/lib/backend.ts";
+import {
+  appendCommand,
+  createTreeCommands,
+  mostExposed,
+  severityRank,
+  shieldStatus,
+  shieldTarget,
+  targeted,
+  worstSeverity,
+} from "../src/lib/shields.ts";
+
+function row(over: Partial<ShieldRow>): ShieldRow {
+  return {
+    tree_id: "fleet-base",
+    id: "xfs-fix",
+    seq: 3,
+    op: "add",
+    add_seq: 3,
+    ops: 3,
+    manifest_digest: "b25c835b353ba101d51c4473d602764c2f8746a6e60342bcf49d510a868cb62a",
+    repository: "oci://registry.example.com/shirudo/fleet-base",
+    selector: '{"labels":{"role":["edge"]}}',
+    published_ms: 1_795_053_774_291,
+    advisories: [["EXAMPLE-0101", "CRITICAL", "linux", "kernel", 2, 2]],
+    images: ["fleet-os 2026.11.1"],
+    nodes: 4,
+    applied: 2,
+    not_selected: 2,
+    no_target: 0,
+    pending: 0,
+    ...over,
+  };
+}
+
+const SSL_FIX = row({
+  id: "ssl-fix",
+  seq: 4,
+  add_seq: 4,
+  ops: 1,
+  selector: "{}",
+  advisories: [["EXAMPLE-0202", "HIGH", "openssl", "sbom", 0, 4]],
+  applied: 0,
+  not_selected: 0,
+  pending: 4,
+});
+
+describe("toShield", () => {
+  test("maps a deployed kernel shield", () => {
+    const s = toShield(row({}));
+    expect(s.status).toBe("deployed");
+    expect(s.severity).toBe("CRITICAL");
+    expect(shieldTarget(s.advisories)).toBe("kernel");
+    expect(s.rollout).toEqual({ nodes: 4, applied: 2, notSelected: 2, noTarget: 0, pending: 0 });
+    expect(targeted(s.rollout)).toBe(2);
+    expect(s.advisories[0]).toEqual({
+      id: "EXAMPLE-0101",
+      severity: "CRITICAL",
+      package: "linux",
+      source: "kernel",
+      shielded: 2,
+      exposed: 2,
+    });
+    expect(s.publishedAt?.getTime()).toBe(1_795_053_774_291);
+  });
+
+  test("maps a pending package shield", () => {
+    const s = toShield(SSL_FIX);
+    expect(s.status).toBe("pending");
+    expect(s.severity).toBe("HIGH");
+    expect(shieldTarget(s.advisories)).toBe("openssl");
+    expect(targeted(s.rollout)).toBe(4);
+  });
+
+  test("a delete withdraws it, whatever the rollout", () => {
+    expect(toShield(row({ op: "delete", seq: 5, pending: 3 })).status).toBe("withdrawn");
+  });
+
+  test("an upatch without fixes or a publication", () => {
+    const s = toShield(row({ advisories: [], images: [], published_ms: 0 }));
+    expect(s.severity).toBe("");
+    expect(shieldTarget(s.advisories)).toBe("");
+    expect(s.publishedAt).toBeNull();
+  });
+
+  test("refuses an operation or source it does not know", () => {
+    expect(() => toShield(row({ op: "move" }))).toThrow(/unknown operation/);
+    expect(() => toShield(row({ advisories: [["X", "LOW", "p", "rpm", 0, 0]] }))).toThrow(/unknown advisory source/);
+  });
+});
+
+describe("helpers", () => {
+  test("severity ranks worst first and unknown last", () => {
+    expect(severityRank("CRITICAL")).toBeLessThan(severityRank("HIGH"));
+    expect(severityRank("low")).toBe(3);
+    expect(severityRank("NEGLIGIBLE")).toBe(4);
+  });
+
+  test("the worst severity of several advisories", () => {
+    expect(worstSeverity([{ severity: "LOW" }, { severity: "" }, { severity: "HIGH" }])).toBe("HIGH");
+    expect(worstSeverity([])).toBe("");
+  });
+
+  test("the target names each package once, the kernel as kernel", () => {
+    expect(
+      shieldTarget([
+        { package: "openssl", source: "sbom" },
+        { package: "linux", source: "kernel" },
+        { package: "openssl", source: "sbom" },
+      ]),
+    ).toBe("kernel, openssl");
+  });
+
+  test("status follows the newest operation and the nodes not reached", () => {
+    const r = { nodes: 2, applied: 1, notSelected: 0, noTarget: 0, pending: 1 };
+    expect(shieldStatus("add", r)).toBe("pending");
+    expect(shieldStatus("add", { ...r, pending: 0 })).toBe("deployed");
+    expect(shieldStatus("delete", r)).toBe("withdrawn");
+  });
+});
+
+function available(over: Partial<AvailableRow>): AvailableRow {
+  return {
+    id: "cve-2026-63984-rpl-detector",
+    package: "cve-2026-63984-rpl-detector",
+    version: "1.0.1795148004",
+    reference: "oci://127.0.0.1:15444/shields/cve-2026-63984-rpl-detector:1.0.1795148004",
+    manifest_digest: "23c4a6dcd8b4796af1e250257037dfbc65ecc6c8fb1dffe8b6491c4937add434",
+    selector: '{"architecture":["x86_64"],"kernel_release_prefix":["7.2"]}',
+    description: "Counts RPL source routing headers whose n + 1 exceeds 127, CVE-2026-63984",
+    put_ms: 1_795_148_004_000,
+    versions: 2,
+    advisories: [["CVE-2026-63984", "HIGH", "linux", "kernel", 3]],
+    trees: [],
+    ...over,
+  };
+}
+
+describe("toAvailableShield", () => {
+  test("keeps where the shield is and what it fixes", () => {
+    const s = toAvailableShield(available({}));
+    expect(s.reference).toBe("oci://127.0.0.1:15444/shields/cve-2026-63984-rpl-detector:1.0.1795148004");
+    expect(s.manifestDigest).toHaveLength(64);
+    expect(s.putAt).toEqual(new Date(1_795_148_004_000));
+    expect(s.versions).toBe(2);
+    expect(s.advisories).toEqual([
+      { id: "CVE-2026-63984", severity: "HIGH", package: "linux", source: "kernel", exposed: 3 },
+    ]);
+    expect(s.severity).toBe("HIGH");
+    expect(s.exposed).toBe(3);
+    expect(s.trees).toEqual([]);
+  });
+
+  test("an unknown advisory has no severity and exposes nobody", () => {
+    const s = toAvailableShield(available({ advisories: [["CVE-1", "", "", "", 0]], trees: ["fleet-base"] }));
+    expect(s.severity).toBe("");
+    expect(s.exposed).toBe(0);
+    expect(s.trees).toEqual(["fleet-base"]);
+  });
+
+  test("a put time that did not join reads as none", () => {
+    expect(toAvailableShield(available({ put_ms: 0 })).putAt).toBeNull();
+  });
+
+  test("refuses an advisory source it does not know", () => {
+    expect(() => toAvailableShield(available({ advisories: [["CVE-1", "HIGH", "x", "nvd", 0]] }))).toThrow(
+      'unknown advisory source "nvd"',
+    );
+  });
+});
+
+describe("mostExposed", () => {
+  test("a node exposed to two advisories counts once", () => {
+    expect(mostExposed([{ exposed: 3 }, { exposed: 5 }, { exposed: 0 }])).toBe(5);
+    expect(mostExposed([])).toBe(0);
+  });
+});
+
+describe("appendCommand", () => {
+  test("names the package by reference and digest, the tree left to fill in", () => {
+    expect(appendCommand(toAvailableShield(available({})))).toBe(
+      "shirudo bpm tree append oci://127.0.0.1:15444/shields/cve-2026-63984-rpl-detector:1.0.1795148004 " +
+        "--package-digest sha256:23c4a6dcd8b4796af1e250257037dfbc65ecc6c8fb1dffe8b6491c4937add434 " +
+        "oci://<registry>/<tree> --tree-id <tree-id>",
+    );
+  });
+});
+
+describe("createTreeCommands", () => {
+  const shield = { reference: "oci://registry.example.com/shields/rpl-detector:1.0.2", manifestDigest: "ab".repeat(32) };
+  const tree = "oci://registry.example.com/shirudo/fleet-base";
+
+  test("appends each shield to the tree under the shields' registry, then loads it", () => {
+    expect(createTreeCommands("/shirudo/fleet-base/", [shield], null).map((c) => c.join(" "))).toEqual([
+      `shirudo bpm tree append ${shield.reference} --package-digest sha256:${shield.manifestDigest} ` +
+        `${tree} --tree-id fleet-base --keys-dir <keys>`,
+      `tools/backend/jobs/tree-ingest --cert <keys>/cert.der ${tree}`,
+    ]);
+  });
+
+  test("leaves the tree to fill in while it has no repository", () => {
+    expect(createTreeCommands("", [shield], null)[0]!.slice(7)).toEqual([
+      "oci://registry.example.com/<tree>", "--tree-id", "<tree-id>", "--keys-dir", "<keys>",
+    ]);
+  });
+
+  test("names the operator's keys and programs", () => {
+    const operator = operatorFromEnv({ XTOP_KEYS_DIR: "/keys", SHIRUDO: "/bin/shirudo", XTOP_TREE_INGEST: "/jobs/tree-ingest" });
+    const [append, ingest] = createTreeCommands("shirudo/fleet-base", [shield], operator);
+    expect(append!.slice(0, 2)).toEqual(["/bin/shirudo", "bpm"]);
+    expect(append!.slice(-2)).toEqual(["--keys-dir", "/keys"]);
+    expect(ingest).toEqual(["/jobs/tree-ingest", "--shirudo", "/bin/shirudo", "--cert", "/keys/cert.der", tree]);
+  });
+
+  test("xtop runs nothing without XTOP_KEYS_DIR", () => {
+    expect(operatorFromEnv({ SHIRUDO: "/bin/shirudo" })).toBeNull();
+  });
+});

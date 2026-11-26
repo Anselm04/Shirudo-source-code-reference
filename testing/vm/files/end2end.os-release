@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# Copyright (c) 2026 Authors of shirudo
+IMAGE_ID=fleet-os
+IMAGE_VERSION=end2end-1

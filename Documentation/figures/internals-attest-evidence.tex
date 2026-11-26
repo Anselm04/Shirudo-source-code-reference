@@ -1,0 +1,67 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% Collecting evidence: the operator predicts the register and sends a
+% nonce, the target has the TPM create the attestation key, activate the
+% credential, quote the PCRs and certify the register, and returns the
+% evidence the operator verifies (internals/measurement-register.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (900,580);
+
+  % Lifelines, broken where a box sits on them.
+  \begin{scope}[link, thin, dash pattern=on 2.25bp off 3bp]
+    \draw (130,54) -- (130,74);
+    \draw (130,118) -- (130,534);
+    \draw (450,54) -- (450,462);
+    \draw (450,498) -- (450,570);
+    \draw (770,54) -- (770,570);
+  \end{scope}
+
+  \foreach \x in {50,370,690}
+    \draw[box] (\x,10) rectangle ++(160,44);
+  \draw[box] (30,74) rectangle ++(200,44);
+  \draw[box] (320,462) rectangle ++(260,36);
+  \draw[box] (30,534) rectangle ++(200,34);
+
+  \draw[flow] (130,150) -- (448,150);
+  \draw[flow] (450,205) -- (768,205);
+  \foreach \y in {250,310,370,430} {
+    \draw[flow] (450,\y) -- (768,\y);
+    \draw[flow, dash pattern=on 3.75bp off 3bp] (770,\y+20) -- (452,\y+20);
+  }
+  \draw[flow] (450,522) -- (132,522);
+
+  \begin{scope}[note, every node/.append style={anchor=base}]
+    \node[title] at (130,30) {Operator};
+    \node[small] at (130,46) {no TPM};
+    \node[title] at (450,30) {Target};
+    \node[mono] at (450,46) {shirudo attest};
+    \node[title] at (770,37) {TPM};
+
+    \node[code] at (130,93) {attest predict};
+    \node[small] at (130,109) {certificates, artifacts, tree root};
+
+    \node at (290,142) {nonce, and a challenge at enrollment};
+    \node[small] at (290,168) {attest challenge, bound to the AK name};
+
+    \node at (610,197) {CreatePrimary: AK};
+    \node[small] at (610,223) {fixed template, endorsement hierarchy};
+    \node at (610,242) {ActivateCredential, with a challenge};
+    \node[small] at (610,285) {the credential, only for that AK};
+    \node at (610,302) {Certify registers with the nonce};
+    \node[small] at (610,345) {opening signatures};
+    \node at (610,362) {Quote PCRs over opening signatures};
+    \node[small] at (610,405) {signed PCR digest};
+    \node at (610,422) {Certify registers over the quote signature};
+    \node[small] at (610,465) {same register names and values};
+
+    \node[small] at (450,485) {with this boot's eventlog, the EK, logs};
+    \node at (290,514) {evidence document};
+    \node[code] at (130,556) {attest verify};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

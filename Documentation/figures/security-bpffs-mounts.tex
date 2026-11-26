@@ -1,0 +1,77 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% Why an unmount or a removal far from the private bpffs reaches it: the
+% mount tree of init's namespace, a peer namespace whose unmount of /run
+% propagates, and a namespace without /run whose rmdir of the directory
+% detaches the mounts on it everywhere (security/threat-model.rst T2).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+% A mount: left, top, right, path, kind.
+\newcommand\figmount[5]{%
+  \draw[box, rounded corners=3bp] (#1,#2) rectangle (#3,#2+28);
+  \node[code, anchor=base west] at (#1+8,#2+19) {#4};
+  \node[small, note, anchor=base east] at (#3-8,#2+19) {#5};}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (840,400);
+
+  \draw[frame] (10,30) rectangle (270,262);
+  \draw[frame] (290,30) rectangle (550,262);
+  \draw[frame] (570,30) rectangle (830,262);
+
+  \figmount{30}{76}{250}{/}{shared}
+  \figmount{50}{124}{250}{/run}{copy}
+  \figmount{310}{76}{530}{/}{shared}
+  \figmount{330}{124}{530}{/run}{tmpfs}
+  \figmount{350}{172}{530}{shirudo}{tmpfs}
+  \draw[box, draw=fig-accent, line width=1.5bp, rounded corners=3bp]
+    (370,220) rectangle (530,248);
+  \node[code, anchor=base west] at (378,239) {bpffs};
+  \node[small, text=fig-accent, anchor=base east] at (522,239) {recorded};
+  \figmount{590}{76}{810}{/}{root fs}
+  \draw[box, rounded corners=3bp, dash pattern=on 3bp off 2bp]
+    (610,124) rectangle (810,152);
+  \node[code, anchor=base west] at (618,143) {/run};
+  \node[small, note, anchor=base east] at (802,143) {a directory};
+
+  \begin{scope}[link, thin]
+    \draw (40,104) -- (40,138) -- (50,138);
+    \draw (320,104) -- (320,138) -- (330,138);
+    \draw (340,152) -- (340,186) -- (350,186);
+    \draw (360,200) -- (360,234) -- (370,234);
+    \draw (600,104) -- (600,138) -- (610,138);
+  \end{scope}
+  \draw[draw=fig-accent, dash pattern=on 3.75bp off 3bp]
+    (250,90) -- (310,90);
+  \draw[draw=fig-line, dash pattern=on 1.5bp off 2.25bp]
+    (530,128) -- (610,128);
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node[title] at (140,54) {a peer namespace};
+    \node[title] at (420,54) {init's namespace};
+    \node[title] at (700,54) {without /run mounted};
+    \node[small, text=fig-accent] at (280,84) {peers};
+    \node[small, note] at (570,120) {same dentry};
+  \end{scope}
+
+  \begin{scope}[every node/.append style={note, small, anchor=base west}]
+    \node[code] at (20,292) {umount /run};
+    \node at (20,312) {propagates to the /run on every};
+    \node at (20,328) {peer of its parent, init's too,};
+    \node at (20,344) {whose subtree holds the bpffs:};
+    \node at (20,360) {lsm/sb\_umount, BpffsUmountAbove};
+    \node[code] at (300,292) {umount the bpffs};
+    \node at (300,312) {lsm/sb\_umount, BpffsUmount};
+    \node[code] at (300,336) {umount /run};
+    \node at (300,356) {its subtree reaches the bpffs:};
+    \node at (300,372) {lsm/sb\_umount, BpffsUmountAbove};
+    \node[code] at (580,292) {rmdir /run};
+    \node at (580,312) {detaches the mounts on the dentry};
+    \node at (580,328) {in every namespace:};
+    \node at (580,344) {lsm/inode\_rmdir, BpffsUmountAbove};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,198 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// Copyright (c) 2026 Authors of shirudo
+//
+// The nodes as the backend's shirudo.node_status judges them, and their
+// roll-up by the image they booted.
+
+/** node_status.status, worst first in STATUS_RANK. */
+export type NodeStatus = "unhealthy" | "stale" | "healthy";
+export type Trust = "untrusted" | "enrolled";
+/** The name a label set was put under, most specific first. */
+export type LabelSource = "ak_name" | "node_id" | "config_root";
+
+/** A key whose sets give the node different values, and the value it took. */
+export type LabelConflict = {
+  key: string;
+  value: string;
+  by: LabelSource;
+  /** Every value given, most specific name first. */
+  given: { by: LabelSource; value: string }[];
+};
+
+/** The builder's record of the node's key, from jobs/enroll-put. */
+export type Enrollment = {
+  /** The endorsement key's name the builder saw, null when it gave none. */
+  ekName: string | null;
+  source: string;
+  at: Date;
+};
+
+export const STATUS_RANK: Record<NodeStatus, number> = { unhealthy: 0, stale: 1, healthy: 2 };
+export const STATUSES = ["unhealthy", "stale", "healthy"] as const;
+export const TRUSTS = ["untrusted", "enrolled"] as const;
+export const LABEL_SOURCES = ["ak_name", "node_id", "config_root"] as const;
+
+export type Shields = {
+  /** Upatches loaded that shield a finding of the node. */
+  applied: number;
+  /** Upatches published for a finding the node has not reached yet. */
+  pending: number;
+  /** Upatches published for a finding that do nothing on the node. */
+  idle: number;
+};
+
+export type FleetNode = {
+  name: string;
+  akName: string;
+  hostName: string;
+  status: NodeStatus;
+  trust: Trust;
+  /** 0 when every check passed, 2 for stale, 3 to 7 for unhealthy. */
+  failedCheck: number;
+  /** One line per check, in order. */
+  log: string[];
+  lastSeen: Date;
+  kernel: string;
+  version: string;
+  imageId: string | null;
+  imageVersion: string | null;
+  tree: { generation: number | null; lastSeq: number | null; headSeq: number | null };
+  loaded: number;
+  shields: Shields;
+  /** Findings no loaded upatch shields. */
+  exposed: number;
+  /** Findings the backend cannot place: no image, no SBOM. */
+  unknown: number;
+  /**
+   * What jobs/labels-put gave the node, not its own node.labels: the union
+   * of its sets, the most specific name's value where they disagree.
+   */
+  labels: Record<string, string>;
+  /** Per key, the name its value was put under. */
+  labelSources: Record<string, LabelSource>;
+  labelConflicts: LabelConflict[];
+  /** null for a key no builder enrolled, enrolled by hand or untrusted. */
+  enrollment: Enrollment | null;
+};
+
+export type FleetReport = {
+  /** When node_status was last computed. */
+  generatedAt: Date;
+  nodes: FleetNode[];
+};
+
+export type ImageGroup = {
+  /** Image id and version, the drill-down query. */
+  key: string;
+  imageId: string | null;
+  imageVersion: string | null;
+  nodes: number;
+  statuses: Record<NodeStatus, number>;
+  /** The worst member's status. */
+  status: NodeStatus;
+  health: number;
+  /** Shared by every member, null when members differ. */
+  kernel: string | null;
+  /** The tree position of the member furthest behind its own tree. */
+  tree: { lastSeq: number | null; headSeq: number | null };
+  shields: Shields;
+  /** Exposed findings of the worst member. */
+  exposed: number;
+  unknown: number;
+  /** The members' role labels, each once; "?" for a member without one. */
+  roles: string[];
+  lastSeen: Date;
+};
+
+export const NO_IMAGE = "—";
+
+/** key=value, in key order: how the labels show and are searched. */
+export const labelPairs = (labels: Record<string, string>) =>
+  Object.keys(labels)
+    .sort()
+    .map((k) => `${k}=${labels[k]}`);
+
+export const imageLabel = (id: string | null, version: string | null) =>
+  id === null ? NO_IMAGE : version ? `${id} ${version}` : id;
+
+/** The check a node failed, as its log line names it: "3 reported". */
+export function failedCheckName(n: Pick<FleetNode, "failedCheck" | "log">): string {
+  if (!n.failedCheck) return "";
+  const m = /^(\d+ [a-z]+):/.exec(n.log[n.failedCheck - 1] ?? "");
+  return m ? m[1]! : String(n.failedCheck);
+}
+
+/** The fleet's scorecard: percent of nodes healthy, null with no nodes. */
+export function healthPercent(nodes: readonly Pick<FleetNode, "status">[]): number | null {
+  if (!nodes.length) return null;
+  return Math.round((100 * nodes.filter((n) => n.status === "healthy").length) / nodes.length);
+}
+
+/**
+ * Where a member with no known head ranks: after every member known to
+ * be behind, which is a whole step or more, and before one caught up.
+ */
+const UNKNOWN_LAG = 0.5;
+
+/**
+ * head − last: how far behind its own tree a member is. One past the
+ * head is at it, as check 5 of node_status has it.
+ */
+const lagOf = (t: ImageGroup["tree"]) =>
+  t.headSeq === null ? UNKNOWN_LAG : Math.max(0, t.headSeq - t.lastSeq!);
+
+/**
+ * The tree position of the member furthest behind its own tree, all-null
+ * when none follows one. Members of an image can follow independent
+ * trees, so their positions never mix into one pair. A member whose
+ * head is unknown counts ahead of the caught-up ones, so that the group
+ * never reports a head every member reached while one may not have.
+ */
+function behindTree(members: readonly FleetNode[]): ImageGroup["tree"] {
+  const worst = members
+    .filter((m) => m.tree.lastSeq !== null)
+    .sort((a, b) => lagOf(b.tree) - lagOf(a.tree) || a.tree.lastSeq! - b.tree.lastSeq!)[0];
+  return { lastSeq: worst?.tree.lastSeq ?? null, headSeq: worst?.tree.headSeq ?? null };
+}
+
+/**
+ * What the TREE column sorts by: the lag turned around, so the row
+ * furthest behind comes first, a row whose head is unknown between
+ * those behind and those caught up, as in an image's roll-up, and
+ * before them all the rows that follow no tree, whose key is below any
+ * distance a row can be behind.
+ */
+export const treeSortKey = (t: ImageGroup["tree"]) => (t.lastSeq === null ? -Infinity : 0 - lagOf(t));
+
+export function groupByImage(nodes: readonly FleetNode[]): ImageGroup[] {
+  const byImage = new Map<string, FleetNode[]>();
+  for (const n of nodes) {
+    const key = imageLabel(n.imageId, n.imageVersion);
+    byImage.set(key, [...(byImage.get(key) ?? []), n]);
+  }
+  return [...byImage].map(([key, members]) => {
+    const first = members[0]!;
+    const statuses: Record<NodeStatus, number> = { unhealthy: 0, stale: 0, healthy: 0 };
+    for (const m of members) statuses[m.status]++;
+    const sum = (k: keyof Shields) => members.reduce((t, m) => t + m.shields[k], 0);
+    return {
+      key,
+      imageId: first.imageId,
+      imageVersion: first.imageVersion,
+      nodes: members.length,
+      statuses,
+      status: members.reduce<NodeStatus>(
+        (w, m) => (STATUS_RANK[m.status] < STATUS_RANK[w] ? m.status : w),
+        "healthy",
+      ),
+      health: healthPercent(members) ?? 0,
+      kernel: members.every((m) => m.kernel === first.kernel) ? first.kernel : null,
+      tree: behindTree(members),
+      shields: { applied: sum("applied"), pending: sum("pending"), idle: sum("idle") },
+      exposed: Math.max(...members.map((m) => m.exposed)),
+      unknown: members.reduce((t, m) => t + m.unknown, 0),
+      roles: [...new Set(members.map((m) => m.labels.role ?? "?"))].sort(),
+      lastSeen: new Date(Math.max(...members.map((m) => m.lastSeen.getTime()))),
+    };
+  });
+}

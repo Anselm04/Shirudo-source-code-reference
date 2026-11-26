@@ -1,0 +1,26 @@
+[package]
+name = "fixes"
+
+[[upatches]]
+source = "xfs-fix.bpf.c"
+
+[upatches.tree]
+id = "xfs-fix"
+fixes = ["EXAMPLE-0101"]
+
+[upatches.tree.selector]
+architecture = ["x86_64"]
+
+[[upatches]]
+source = "ext4-fix.bpf.c"
+
+[upatches.tree]
+fixes = ['GHSA-xxxx-0000-zzzz', "CVE-2026-0002", "vendor:advisory_7.1"]
+id = "ext4-fix"
+
+[[upatches]]
+source = "net-fix.bpf.c"
+
+[upatches.tree]
+id = "net-fix"
+fixes = ["EXAMPLE-0116", "EXAMPLE-0115", "EXAMPLE-0114", "EXAMPLE-0113", "EXAMPLE-0112", "EXAMPLE-0111", "EXAMPLE-0110", "EXAMPLE-0109", "EXAMPLE-0108", "EXAMPLE-0107", "EXAMPLE-0106", "EXAMPLE-0105", "EXAMPLE-0104", "EXAMPLE-0103", "EXAMPLE-0102", "EXAMPLE-0101"]

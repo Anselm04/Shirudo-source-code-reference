@@ -1,0 +1,92 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% How the register and the eventlog advance together: each event's
+% digest extends the register in the TPM and is appended as a line, and
+% attest verify folds the lines from zero to the value the TPM certified
+% (concepts/measurement-register.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    val/.style={box, rounded corners=3bp},
+    ev/.style={draw=fig-s1, fill=fig-s1, fill opacity=0.08,
+      text opacity=1, rounded corners=3bp}]
+  \useasboundingbox (0,0) rectangle (840,360);
+
+  % The register in the TPM.
+  \draw[frame] (4,30) rectangle (616,104);
+  \foreach \x in {8,170,332,494}
+    \draw[val] (\x,50) rectangle ++(116,40);
+  \foreach \x in {124,286,448}
+    \draw[flow] (\x,70) -- (\x+44,70);
+
+  % The events.
+  \foreach \x in {71,233,395}
+    \draw[ev] (\x,134) rectangle ++(150,58);
+  \foreach \x in {146,308,470} {
+    \draw[flow] (\x,134) -- (\x,74);
+    \draw[flow] (\x,192) -- (\x,226);
+  }
+
+  % The eventlog.
+  \draw[box] (4,228) rectangle (616,330);
+
+  % attest verify.
+  \draw[box] (640,30) rectangle (836,330);
+  \draw[flow] (610,70) -- (638,70);
+  \draw[flow] (616,285) -- (638,285);
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node[small, note, anchor=base west] at (12,22)
+      {TPM: NV extend index 0x01818E00, cleared at every TPM reset};
+    \node[small, note, anchor=base west] at (14,248)
+      {/var/lib/shirudo/eventlog: one line per extend, appended after it};
+
+    \node[code] at (66,68) {v0};
+    \node[small, note] at (66,84) {32 zero bytes};
+    \foreach \x/\n in {228/1,390/2,552/3} {
+      \node[code] at (\x,68) {v\n};
+      \node[small, note] at (\x,84) {SHA-256(v\the\numexpr\n-1\relax\ || d\n)};
+    }
+    \foreach \x/\n in {146/1,308/2,470/3}
+      \node[small, note, anchor=base east] at (\x-5,124) {d\n};
+
+    \node[mono] at (146,154) {init};
+    \node[small] at (146,170) {certificates, restored};
+    \node[small] at (146,185) {set, tree root};
+    \node[mono] at (308,154) {upatch\_load};
+    \node[small] at (308,170) {payload digest,};
+    \node[small] at (308,185) {name foo};
+    \node[mono] at (470,154) {upatch\_unload};
+    \node[small] at (470,170) {payload digest,};
+    \node[small] at (470,185) {name foo};
+  \end{scope}
+
+  \begin{scope}[mono, every node/.append style={anchor=base west}]
+    \node at (14,272) {\{"type":"init",...,"digest":"d1","chain":"v1"\}};
+    \node at (14,294) {\{"type":"upatch\_load","name":"foo",...,"digest":"d2",...\}};
+    \node at (14,316) {\{"type":"upatch\_unload","name":"foo",...,"digest":"d3",...\}};
+  \end{scope}
+
+  \begin{scope}[every node/.append style={anchor=base west}]
+    \node[title] at (652,56) {attest verify};
+    \node[small, note] at (652,84) {v3, certified by the TPM};
+    \node[small, note] at (652,98) {for the operator's nonce};
+    \node[small] at (652,132) {1 derive d2 and d3 from};
+    \node[small] at (666,147) {their lines' fields};
+    \node[small] at (652,172) {2 fold d1, d2, d3 from};
+    \node[small] at (666,187) {32 zero bytes};
+    \node[small] at (652,212) {3 compare the result};
+    \node[small] at (666,227) {with v3};
+    \node[small, note] at (652,274) {this boot's lines};
+    \node[small, note] at (652,302) {An edited line fails 1,};
+    \node[small, note] at (652,317) {or 3 if its digest changed.};
+  \end{scope}
+
+  \node[small, note, anchor=base west] at (4,352) {The init line's
+    digest is not derived from its fields: verify compares it with the
+    one the operator computes from its certificates and artifacts.};
+\end{tikzpicture}
+\end{document}

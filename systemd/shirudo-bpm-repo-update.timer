@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# Copyright (c) 2026 Authors of shirudo
+
+[Unit]
+Description=shirudo: periodically refresh BPM OCI repositories
+
+[Timer]
+OnBootSec=0s
+OnUnitInactiveSec=60s
+AccuracySec=1s
+Unit=shirudo-bpm-repo-update.service
+
+[Install]
+WantedBy=timers.target

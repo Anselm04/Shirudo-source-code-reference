@@ -1,0 +1,109 @@
+# Source indexes (make tags, make cscope)
+/tags
+/cscope.files
+/cscope.out
+/cscope.in.out
+/cscope.po.out
+
+# Build artefacts
+/build/
+/shirudo
+/shirudo-target
+/shirudo-build
+/shirudo.tar.gz
+/shirudo-static.tar.gz
+/shirudo-target_*.deb
+/shirudo-operator_*.deb
+/shirudo-target-*.rpm
+/shirudo-operator-*.rpm
+/*.spdx.json
+/tools/shirudo-build/shirudo-build
+/tools/quote-check/shirudo-quote-check
+*.o
+*.d
+*.a
+*.so
+*.so.*
+*.upatch
+*.upatch.json
+
+# Local bpf-next kernel and userspace dependency artifacts
+/artifacts
+/infra/aws/packer/packer-manifest.json
+/infra/aws/packer/.shirudo-image-assets.tar.gz
+/infra/aws/packer/.shirudo-image-assets.lock/
+
+# Generated headers
+/vmlinux.h
+/vendor/linux/
+*.skel.h
+
+# Generated systemd units (from systemd/*.service.in)
+/systemd/shirudo.service
+/systemd/shirudo-initrd.service
+/systemd/shirudo-map-export.service
+/systemd/shirudo-keepalive.service
+/systemd/shirudo-xdp-reconcile.service
+/systemd/shirudo-bpm-repo-update.service
+/systemd/shirudo-bpm-tree-sync.service
+
+# Vendored bpf-next build state (do not commit)
+
+# Test results
+/testing/test-results/
+/testing/trash directory.*
+*.tap
+
+# Compiled test helpers (sources are tracked)
+/testing/helper/*
+/testing/end2end/exec-paths
+/testing/end2end/policy-exec
+!/testing/helper/*.c
+!/testing/helper/*.h
+!/testing/helper/otel-mock.py
+!/testing/helper/otel-s3-mock.py
+!/testing/helper/test-bpm-key.py
+!/testing/helper/test-bpm-info.py
+!/testing/helper/test-seal-seccomp.py
+!/testing/helper/capture-keepalive-quotes.sh
+
+# libFuzzer targets and the inputs that crashed them
+/testing/fuzz/fuzz-*
+!/testing/fuzz/fuzz-*.c
+/testing/fuzz/.fuzz-flags
+/testing/fuzz/crash-*
+
+# Local config (PLAN.md "Build system": Makefile.config is a committed
+# probe file that writes the cached config.mk; util/version_id.c is
+# regenerated every build).
+.config
+config.mk
+config-target.mk
+util/version_id.c
+
+# Editor / OS noise
+*.swp
+*.swo
+*~
+.DS_Store
+
+# The CamelCase cache checkpatch.pl writes where it runs
+.checkpatch-camelcase.*
+
+# Coverage / sanitisers
+*.gcda
+*.gcno
+/coverage/
+
+# vendored libbpf build outputs and the build-time vmlinux.h generator
+/vendor/libbpf/bpf/*.o
+/vendor/libbpf/bpf/*.d
+/vendor/libbpf/libbpf.a
+/tools/gen-vmlinux-h/gen-vmlinux-h
+
+# rendered documentation from make docs and make -C Documentation html
+/Documentation/output*/
+__pycache__/
+
+# Lean 4 build output
+/testing/proofs/lean4/.lake/

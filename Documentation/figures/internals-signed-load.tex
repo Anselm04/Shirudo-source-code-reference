@@ -1,0 +1,110 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The bpf() calls of a signed load: the metadata map, the loader's
+% BPF_PROG_LOAD with the kernel's checks in their order, the test run
+% whose nested calls the hooks see with kernel true, then the links and
+% the pins (internals/signed-loader.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+% A numbered marker centered at a point.
+\newcommand\figmark[3]{%
+  \fill[fig-accent] (#1,#2) circle (8.5);
+  \node[anchor=center, text=fig-on, font=\figsmall\bfseries]
+    at (#1,#2) {#3};}
+
+\begin{document}
+\begin{tikzpicture}[
+    lifeline/.style={draw=fig-line, thin, dash pattern=on 2.25bp off 3bp},
+    reply/.style={flow, dash pattern=on 3.75bp off 3bp},
+    nested/.style={draw=fig-accent, ->}]
+  \useasboundingbox (0,0) rectangle (840,830);
+
+  \foreach \x in {60,320,560,770}
+    \draw[box] (\x-58,10) rectangle (\x+58,58);
+  \foreach \x in {60,320,560,770}
+    \draw[lifeline] (\x,58) -- (\x,820);
+
+  \draw[box] (313,230) rectangle (327,262);
+  \draw[box] (553,262) rectangle (567,430);
+  \draw[box] (763,490) rectangle (777,620);
+
+  \draw[flow] (60,110) -- (318,110);
+  \draw[flow] (60,165) -- (318,165);
+  \draw[flow] (60,230) -- (311,230);
+  \draw[flow] (327,262) -- (551,262);
+  \draw[reply] (553,440) -- (62,440);
+  \draw[flow] (60,490) -- (318,490);
+  \draw[flow] (322,490) -- (761,490);
+  \draw[nested] (763,530) -- (322,530);
+  \draw[nested] (763,565) -- (322,565);
+  \draw[nested] (322,590) -- (551,590);
+  \draw[reply] (763,630) -- (62,630);
+  \draw[flow] (60,680) -- (318,680);
+  \draw[flow] (60,770) -- (318,770);
+
+  \begin{scope}[every node/.append style={note, anchor=base}]
+    \node[title] at (60,32) {shirudo};
+    \node[small] at (60,48) {upatch load};
+    \node[title] at (320,32) {bpf()};
+    \node[small] at (320,48) {lsm/bpf at entry};
+    \node[title] at (560,32) {bpf\_check()};
+    \node[small] at (560,48) {verifier, .bpf keyring};
+    \node[title] at (770,32) {loader};
+    \node[small] at (770,48) {SYSCALL program};
+
+    \node[mono] at (190,88) {MAP\_CREATE \_\_loader.map,};
+    \node[mono] at (190,102) {excl\_prog\_hash = SHA-256(insns)};
+    \node[small] at (190,126) {lsm/bpf: authority, MapCreate};
+    \node[mono] at (190,157) {MAP\_UPDATE, MAP\_FREEZE};
+    \node[small] at (190,181) {lsm/bpf: authority, MapWrite};
+    \node[mono] at (190,208) {PROG\_LOAD: insns, signature,};
+    \node[mono] at (190,222) {fd\_array = [map], .bpf};
+    \node[small] at (190,432) {the loader's descriptor};
+    \node[mono] at (190,482) {PROG\_TEST\_RUN};
+    \node[small] at (190,506) {lsm/bpf: authority, ProgRun};
+    \node[small] at (665,482) {runs the loader};
+    \node[mono, text=fig-accent, anchor=base west] at (572,508)
+      {MAP\_CREATE, MAP\_UPDATE,};
+    \node[mono, text=fig-accent, anchor=base west] at (572,522)
+      {MAP\_FREEZE};
+    \node[mono, text=fig-accent, anchor=base west] at (572,557)
+      {PROG\_LOAD, each program};
+    \node[small, text=fig-accent] at (436,582) {verified as usual};
+    \node[small] at (190,608) {map and program descriptors,};
+    \node[small] at (190,622) {in the loader's context};
+    \node[mono] at (190,672) {LINK\_CREATE, per program};
+    \node[small] at (190,696) {lsm/bpf: authority, ProgAttach};
+    \node[mono] at (190,762) {OBJ\_PIN links and maps};
+    \node[small] at (190,786) {lsm/bpf: authority, ObjPin};
+  \end{scope}
+
+  \begin{scope}[every node/.append style={note, small, anchor=base west}]
+    \node at (350,242) {lsm/bpf: a SYSCALL program};
+    \node at (350,256) {with a signature size};
+    \node at (598,289) {bind the map in fd\_array};
+    \node at (598,313) {verify the signature against .bpf};
+    \node at (598,327) {over the insns and the map's value;};
+    \node at (598,341) {the map: array, frozen, exclusive};
+    \node at (598,365) {lsm/bpf\_prog\_load: verified,};
+    \node at (598,379) {keyring kind .bpf};
+    \node at (598,403) {analysis: the map's hash equals};
+    \node at (598,417) {the instructions' hash};
+    \node at (68,722) {link checked against the signed};
+    \node at (68,736) {metadata, or attach\_scope\_mismatch};
+    \node at (68,816) {payload xattr, then archive, extend, append};
+  \end{scope}
+  \begin{scope}[every node/.append style={small, text=fig-accent,
+      anchor=base east}]
+    \node at (312,545) {kernel true:};
+    \node at (312,559) {allowed};
+  \end{scope}
+
+  \figmark{336}{246}{1}
+  \figmark{584}{285}{2}
+  \figmark{584}{323}{3}
+  \figmark{584}{368}{4}
+  \figmark{584}{407}{5}
+\end{tikzpicture}
+\end{document}

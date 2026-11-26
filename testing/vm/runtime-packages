@@ -1,0 +1,17 @@
+ca-certificates
+default-jre-headless
+e2fsprogs
+keyutils
+libelf1t64
+libjson-c5
+libluajit-5.1-2
+libtpms0
+libtss2-esys-3.0.2-0t64
+libtss2-tcti-cmd0t64
+libtss2-tctildr0t64
+netperf
+openssh-server
+python3
+ripgrep
+rsync
+tpm2-tools

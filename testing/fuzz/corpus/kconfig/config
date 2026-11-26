@@ -1,0 +1,10 @@
+#
+# Automatically generated file; DO NOT EDIT.
+# Linux/x86 7.4.0 Kernel Configuration
+#
+CONFIG_LOCALVERSION="-shirudo"
+CONFIG_MODULES=y
+CONFIG_BPF_LSM=y
+CONFIG_LSM="landlock,lockdown,yama,integrity,bpf"
+# CONFIG_DEBUG_INFO_BTF is not set
+CONFIG_NR_CPUS=8192

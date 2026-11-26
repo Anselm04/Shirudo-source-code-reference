@@ -1,0 +1,5 @@
+runtime.image = /run/shirudo/runtime/image
+runtime.root_hash = abababababababababababababababababababababababababababababababab
+config.verification_key = /run/shirudo/runtime/etc/shirudo/config-cert.der
+config.pcr = 14
+config.image = /var/lib/shirudo/images/config

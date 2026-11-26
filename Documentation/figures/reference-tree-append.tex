@@ -1,0 +1,85 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% What bpm tree append does with n operations: a segment with room takes
+% them in a new generation that names the old one as its parent, a full
+% one is tagged segment-<k> and the new operations start the next segment
+% (reference/cli/bpm.rst, reference/formats/upatch-tree.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    seg/.style={box, rounded corners=3bp},
+    gone/.style={draw=fig-line, dash pattern=on 3bp off 3bp,
+      rounded corners=3bp}]
+  \useasboundingbox (0,0) rectangle (840,292);
+
+  \draw[axis] (420,8) -- (420,284);
+
+  % Room in the segment: a new generation of it.
+  \draw[seg] (0,74) rectangle ++(110,56);
+  \draw[seg] (150,74) rectangle ++(112,56);
+  \draw[flow] (149,102) -- (112,102);
+  \draw[seg] (0,186) rectangle ++(110,56);
+  \draw[gone] (150,186) rectangle ++(112,56);
+  \draw[seg] (312,186) rectangle ++(96,56);
+  \draw[flow] (311,214) -- (264,214);
+  \draw[flow] (360,242) -- (360,262) -- (55,262) -- (55,244);
+
+  % A full segment: sealed, and a new one started.
+  \draw[seg] (432,74) rectangle ++(106,56);
+  \draw[seg] (582,74) rectangle ++(106,56);
+  \draw[flow] (581,102) -- (540,102);
+  \draw[seg] (432,186) rectangle ++(106,56);
+  \draw[seg] (582,186) rectangle ++(106,56);
+  \draw[seg] (738,186) rectangle ++(100,56);
+  \draw[flow] (581,214) -- (540,214);
+  \draw[flow] (737,206) -- (690,206);
+  \draw[flow] (737,226) -- (690,226);
+
+  \begin{scope}[every node/.append style={anchor=base west}]
+    \node[title] at (0,20) {The segment has room};
+    \node[note, small] at (0,38)
+      {it holds c operations, c below --segment-ops, c + n at most 512};
+    \node[title] at (432,20) {The segment is full};
+    \node[note, small] at (432,38)
+      {c at least --segment-ops, or c + n above 512};
+    \node[note, small] at (0,64) {before};
+    \node[note, small] at (432,64) {before};
+    \node[note, small] at (0,176) {after appending n = 3 operations};
+    \node[note, small] at (432,176) {after appending n = 3 operations};
+
+    \foreach \x/\y/\t/\s/\g in {
+        0/74/:segment-2/65\textendash 128/,
+        150/74/:stable/129\textendash 150/generation g,
+        0/186/:segment-2/65\textendash 128/,
+        150/186//129\textendash 150/generation g,
+        312/186/:stable/129\textendash 153/generation g+1,
+        432/74/:segment-2/65\textendash 128/,
+        582/74/:stable/129\textendash 192/generation g,
+        432/186/:segment-2/65\textendash 128/,
+        582/186/:segment-3/129\textendash 192/generation g,
+        738/186/:stable/193\textendash 195/generation g+1} {
+      \node[code] at (\x+8,\y+19) {\t};
+      \node at (\x+8,\y+36) {seq \s};
+      \node[note, small] at (\x+8,\y+51) {\g};
+    }
+
+    \node[note] at (158,205) {untagged};
+    \node[note, small] at (0,284)
+      {the new generation holds every operation of the segment};
+    \node[note, small] at (432,284)
+      {the new segment holds only the n new operations};
+  \end{scope}
+  \begin{scope}[every node/.append style={anchor=base, note, small}]
+    \node at (130,96) {base};
+    \node at (130,257) {base};
+    \node at (287,208) {parent};
+    \node at (560,96) {base};
+    \node at (560,208) {base};
+    \node at (713,200) {base};
+    \node at (713,220) {parent};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

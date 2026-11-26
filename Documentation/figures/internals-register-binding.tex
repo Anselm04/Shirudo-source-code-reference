@@ -1,0 +1,84 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% How init binds the measurement register in the initrd: the keys it
+% freezes, the reset count, PCRs 9 and 11, the index defined under a
+% policy over their values, the first write through the init branch,
+% the anchor in PCR 9 and leave-initrd (internals/measurement-register.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}[
+    lifeline/.style={draw=fig-line, thin, dash pattern=on 2.25bp off 3bp},
+    reply/.style={flow, dash pattern=on 3.75bp off 3bp}]
+  \useasboundingbox (0,0) rectangle (840,680);
+
+  \draw[box] (10,10) rectangle (170,54);
+  \draw[box] (390,10) rectangle (550,54);
+  \draw[lifeline] (90,54) -- (90,318);
+  \draw[lifeline] (90,362) -- (90,670);
+  \draw[lifeline] (470,54) -- (470,670);
+  \draw[box] (20,318) rectangle (330,362);
+  \draw[grid] (10,152) -- (830,152);
+
+  % The window in which the init branch can be satisfied.
+  \fill[fig-s3, opacity=0.12, rounded corners=3bp]
+    (490,384) rectangle (830,614);
+
+  \foreach \y in {95,200,270,400} {
+    \draw[flow] (90,\y) -- (468,\y);
+    \draw[reply] (470,\y+28) -- (92,\y+28);
+  }
+  \foreach \y in {494,540,585}
+    \draw[flow] (90,\y) -- (468,\y);
+  \draw[flow, dash pattern=on 3.75bp off 3bp] (300,660) -- (468,660);
+
+  \begin{scope}[every node/.append style={note, anchor=base}]
+    \node[title] at (90,30) {init};
+    \node[small] at (90,46) {in the initrd};
+    \node[title] at (470,30) {TPM};
+    \node[small] at (470,46) {through /dev/tpmrm0};
+
+    \node[code] at (280,87) {CreatePrimary: EK, NV writer};
+    \node[small] at (280,117) {EK name, writer public key};
+    \node[code] at (280,192) {ReadClock};
+    \node[small] at (280,222) {reset count};
+    \node[code] at (280,262) {PCR\_Read(9, 11)};
+    \node[small] at (280,292) {the values of PCRs 9 and 11};
+
+    \node[small] at (175,336) {in software: the policy over those values,};
+    \node[small] at (175,354) {the index's two names and the anchor};
+
+    \node[code] at (280,392) {NV\_DefineSpace(policy)};
+    \node[small] at (280,422) {name before the first write, compared};
+    \node[mono] at (280,452) {PolicyNvWritten(NO), PolicyPCR(9, 11),};
+    \node[mono] at (280,468) {PolicyOR, CreatePrimary and Sign: writer,};
+    \node[mono] at (280,484) {PolicySigned, PolicyCommandCode};
+    \node[code] at (280,532) {NV\_Extend(init event)};
+    \node[code] at (280,577) {PCR\_Extend(9, SHA-256(anchor))};
+    \node[small] at (385,652) {systemd: leave-initrd};
+  \end{scope}
+
+  \begin{scope}[every node/.append style={note, small, anchor=base west}]
+    \node at (100,146) {later in init, after the restore};
+    \node at (100,612) {init record to eventlog.pending};
+
+    \node at (500,100) {seed, modulus and EK name frozen in};
+    \node at (500,116) {the identity map, before the guards attach};
+    \node at (500,205) {an init record for this count in the};
+    \node at (500,221) {eventlog: reuse the index, or tampered};
+    \node at (500,275) {what the init branch will require};
+    \node at (500,405) {index defined, unwritten,};
+    \node at (500,421) {with the owner authorization};
+    \node[anchor=base east, font=\figsmall\bfseries] at (820,405)
+      {init branch open};
+    \node at (500,474) {the writer key signs this one};
+    \node at (500,490) {extension, in this session};
+    \node at (500,545) {index written: the written name};
+    \node at (500,590) {PCR 9 moved: the init branch};
+    \node at (500,606) {cannot be satisfied again};
+    \node at (500,665) {PCR 11 moved as well};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

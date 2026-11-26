@@ -1,0 +1,7 @@
+{
+	"auths": {
+		"registry.example:5000": {
+			"auth": "c2hpcnVkbzpzM2NyM3Q="
+		}
+	}
+}

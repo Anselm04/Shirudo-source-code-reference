@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# Copyright (c) 2026 Authors of shirudo
+
+[Unit]
+Description=shirudo: export target status keepalive
+After=shirudo.service
+
+[Service]
+Type=oneshot
+SyslogIdentifier=shirudo
+LimitMEMLOCK=infinity
+TimeoutStartSec=2min
+EnvironmentFile=-/etc/shirudo/map-export.env
+ExecStart=@bindir@/shirudo status --otel

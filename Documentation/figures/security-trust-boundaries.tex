@@ -1,0 +1,86 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% The trust boundaries of a deployment: the operator host and the
+% verifier, the untrusted network with its registry and collector, the
+% target with its TCB, and the evidence that crosses to the verifier
+% (security/threat-model.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (780,490);
+
+  \draw[box, rounded corners=3bp] (10,40) rectangle ++(200,120);
+  \draw[box, rounded corners=3bp] (10,340) rectangle ++(200,100);
+  \begin{scope}[note, large]
+    \node[anchor=base west, title] at (20,32) {Operator host};
+    \foreach \y/\t in {66/ML-DSA-87 signing key, 88/{shirudo-build, clang},
+        110/{signs upatches, indexes,}, 130/{trees, configs, vouches}}
+      \node[anchor=base west] at (22,\y) {\t};
+    \node[anchor=base west, title] at (20,332) {Verifier};
+    \foreach \y/\t in {366/{attest verify, offline}, 388/pinned AK name,
+        430/{expected state, PCRs}}
+      \node[anchor=base west] at (22,\y) {\t};
+  \end{scope}
+
+  \draw[frame] (230,10) rectangle ++(170,290);
+  \draw[box, rounded corners=3bp] (245,50) rectangle ++(140,70);
+  \draw[box, rounded corners=3bp] (245,200) rectangle ++(140,70);
+  \draw[box, rounded corners=3bp] (230,320) rectangle ++(170,160);
+  \draw[link, dash pattern=on 2.25bp off 2.25bp] (230,392) -- (400,392);
+  \begin{scope}[note, large]
+    \node[anchor=base west, title] at (240,32) {Network, untrusted};
+    \node[anchor=base west, title] at (255,74) {OCI registry};
+    \node[anchor=base west] at (255,94) {packages, indexes,};
+    \node[anchor=base west] at (255,112) {tree publications};
+    \node[anchor=base west, title] at (255,224) {Collector};
+    \node[anchor=base west] at (255,244) {keepalives, map};
+    \node[anchor=base west] at (255,262) {snapshots};
+    \node[anchor=base west, title] at (240,342) {Evidence};
+  \end{scope}
+  \begin{scope}[note, small]
+    \foreach \y/\t in {362/TPM-signed:, 379/{quote, NV certification},
+        412/target's own account:, 429/{eventlog, config history,},
+        446/init record fields, 463/{(bound\_in, ts, boot\_id)}}
+      \node[anchor=base west] at (240,\y) {\t};
+  \end{scope}
+
+  \draw[frame] (420,10) rectangle ++(350,470);
+  \draw[link, rounded corners=3bp] (435,40) rectangle ++(320,60);
+  \draw[box, rounded corners=3bp] (435,115) rectangle ++(320,55);
+  \draw[link, dash pattern=on 2.25bp off 2.25bp, rounded corners=4.5bp,
+    fill=fig-line, fill opacity=0.05] (430,190) rectangle ++(330,275);
+  \draw[box, rounded corners=3bp] (445,215) rectangle ++(300,75);
+  \draw[box, rounded corners=3bp] (445,310) rectangle ++(300,140);
+  \begin{scope}[note, large]
+    \node[anchor=base west, title] at (430,32) {Target};
+    \node[anchor=base west, title] at (445,62) {Root and other processes};
+    \node[anchor=base west] at (445,84) {constrained by the LSM, not trusted};
+    \node[anchor=base west, title] at (445,137) {Writable state};
+    \node[anchor=base west] at (445,157) {/var/lib/shirudo, sealed by label};
+    \node[anchor=base west, title] at (455,237) {Runtime tasks};
+    \node[anchor=base west] at (455,257) {exec from the dm-verity runtime};
+    \node[anchor=base west] at (455,277) {image grants the task mark};
+    \node[anchor=base west, title] at (455,332) {Kernel and TPM};
+    \foreach \y/\t in {354/{BPF LSM: bpf2 and seal objects},
+        374/.bpf and .dm-verity keyrings,
+        394/{private bpffs: pins and maps},
+        430/{TPM: register, AK, NV writer}}
+      \node[anchor=base west] at (455,\y) {\t};
+  \end{scope}
+  \node[anchor=base west, note, small] at (440,207) {target TCB};
+
+  \draw[flow] (210,85) -- (243,85);
+  \draw[flow] (385,100) -- (443,235);
+  \draw[flow] (443,270) -- (387,245);
+  \draw[flow] (445,410) -- (402,410);
+  \draw[flow] (230,410) -- (212,410);
+  \begin{scope}[note, small]
+    \node[anchor=base west] at (214,76) {push};
+    \node[anchor=base west] at (376,165) {pull};
+    \node[anchor=base west] at (392,282) {export};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

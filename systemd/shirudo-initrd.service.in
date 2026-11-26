@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# Copyright (c) 2026 Authors of shirudo
+#
+# shirudo initrd unit: the first half of bringing enforcement up.
+#
+# Runs `shirudo init` while the initrd still runs, with the root file
+# system mounted at /sysroot. From here init enrols the initrd's own,
+# measured copy of the certificate in the kernel's bpf keyring and
+# seals it, which needs the kernel booted with bpf.keyring_unsealed=1;
+# attaches the LSM with its pins in the private bpffs under /run, which
+# systemd carries into the root file system; restores the archived
+# upatches read from /sysroot; and binds the measurement register while
+# PCR 11 still holds the enter-initrd phase, which no later process can
+# bring back. The record of all that waits under /run until the root
+# file system's shirudo.service re-runs init and adopts it.
+#
+# dracut's shirudo module installs and enables this unit; it is never
+# started in the root file system. It requires writable state under
+# /sysroot/var/lib/shirudo for durable config recovery.
+
+[Unit]
+Description=shirudo: bring up the BPF LSM and bind the register from the initrd
+DefaultDependencies=no
+ConditionPathExists=/etc/initrd-release
+ConditionPathExists=/etc/shirudo/keys/cert.der
+After=initrd-root-fs.target tpm2.target systemd-pcrphase-initrd.service
+After=systemd-tpm2-setup-early.service
+Before=initrd.target initrd-switch-root.target shutdown.target
+Conflicts=shutdown.target
+RequiresMountsFor=/sysroot/var/lib/shirudo
+
+[Service]
+Type=oneshot
+SyslogIdentifier=shirudo
+LimitMEMLOCK=infinity
+RemainAfterExit=yes
+KeyringMode=inherit
+ExecStartPre=-mount -o remount,rw /sysroot
+ExecStart=@bindir@/shirudo init
+
+[Install]
+WantedBy=initrd.target

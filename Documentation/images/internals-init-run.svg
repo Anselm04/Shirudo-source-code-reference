@@ -1,0 +1,900 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='840.0' height='380.0' viewBox='-72 -72 629.996 284.998' class='fig fig-f-ink' role='img'><!-- Documentation/figures/internals-init-run.tex, sha256 6fc266f5d782eceab607d5bd29bf5afacde1463808daf02a35cf574014bbd33c --><style>.fig-f-ink{fill:var(--fig-ink,#171b22)}.fig-s-ink{stroke:var(--fig-ink,#171b22)}.fig-f-muted{fill:var(--fig-muted,#5d6675)}.fig-s-muted{stroke:var(--fig-muted,#5d6675)}.fig-f-line{fill:var(--fig-line,#8a93a0)}.fig-s-line{stroke:var(--fig-line,#8a93a0)}.fig-f-grid{fill:var(--fig-grid,#e2e6eb)}.fig-s-grid{stroke:var(--fig-grid,#e2e6eb)}.fig-f-axis{fill:var(--fig-axis,#c3c9d1)}.fig-s-axis{stroke:var(--fig-axis,#c3c9d1)}.fig-f-accent{fill:var(--fig-accent,#8b1e3f)}.fig-s-accent{stroke:var(--fig-accent,#8b1e3f)}.fig-f-s1{fill:var(--fig-s1,#2a78d6)}.fig-s-s1{stroke:var(--fig-s1,#2a78d6)}.fig-f-s2{fill:var(--fig-s2,#eb6834)}.fig-s-s2{stroke:var(--fig-s2,#eb6834)}.fig-f-s3{fill:var(--fig-s3,#1baf7a)}.fig-s-s3{stroke:var(--fig-s3,#1baf7a)}.fig-f-s4{fill:var(--fig-s4,#eda100)}.fig-s-s4{stroke:var(--fig-s4,#eda100)}.fig-f-free{fill:var(--fig-free,#dde2e8)}.fig-s-free{stroke:var(--fig-free,#dde2e8)}.fig-f-on{fill:var(--fig-on,#ffffff)}.fig-s-on{stroke:var(--fig-on,#ffffff)}@media (prefers-color-scheme:dark){.fig-f-ink{fill:var(--fig-ink,#e4e8ee)}.fig-s-ink{stroke:var(--fig-ink,#e4e8ee)}.fig-f-muted{fill:var(--fig-muted,#9ba5b3)}.fig-s-muted{stroke:var(--fig-muted,#9ba5b3)}.fig-f-line{fill:var(--fig-line,#8a93a0)}.fig-s-line{stroke:var(--fig-line,#8a93a0)}.fig-f-grid{fill:var(--fig-grid,#262d37)}.fig-s-grid{stroke:var(--fig-grid,#262d37)}.fig-f-axis{fill:var(--fig-axis,#39414c)}.fig-s-axis{stroke:var(--fig-axis,#39414c)}.fig-f-accent{fill:var(--fig-accent,#e8899f)}.fig-s-accent{stroke:var(--fig-accent,#e8899f)}.fig-f-s1{fill:var(--fig-s1,#3987e5)}.fig-s-s1{stroke:var(--fig-s1,#3987e5)}.fig-f-s2{fill:var(--fig-s2,#d95926)}.fig-s-s2{stroke:var(--fig-s2,#d95926)}.fig-f-s3{fill:var(--fig-s3,#199e70)}.fig-s-s3{stroke:var(--fig-s3,#199e70)}.fig-f-s4{fill:var(--fig-s4,#c98500)}.fig-s-s4{stroke:var(--fig-s4,#c98500)}.fig-f-free{fill:var(--fig-free,#2f3640)}.fig-s-free{stroke:var(--fig-free,#2f3640)}.fig-f-on{fill:var(--fig-on,#ffffff)}.fig-s-on{stroke:var(--fig-on,#ffffff)}}</style>
+<defs>
+<path id='internals-init-run-g1-44' d='M1.373-1.419C.866-1.419 .636-1.133 .636-.737V-.571C.636-.24 .802 .018 1.18 .083C1.032 .553 .746 .912 .332 1.318H1.17C1.733 .866 2.11 .101 2.11-.571V-.737C2.11-1.133 1.871-1.419 1.373-1.419Z'/>
+<path id='internals-init-run-g1-46' d='M1.373 .101C1.88 .101 2.11-.184 2.11-.571V-.737C2.11-1.133 1.88-1.419 1.373-1.419C.875-1.419 .636-1.133 .636-.737V-.571C.636-.184 .875 .101 1.373 .101Z'/>
+<path id='internals-init-run-g1-47' d='M1.032 1.392L3.677-6.819H2.691L.046 1.392H1.032Z'/>
+<path id='internals-init-run-g1-97' d='M1.871 .111C2.59 .111 3.115-.212 3.271-.829H3.327C3.4-.332 3.714 0 4.221 0H4.875V-.94H4.396V-3.207C4.396-4.304 3.705-4.921 2.405-4.921C1.438-4.921 .875-4.552 .525-4L1.226-3.373C1.456-3.705 1.769-3.981 2.322-3.981C2.949-3.981 3.216-3.668 3.216-3.133V-2.783H2.396C1.087-2.783 .341-2.295 .341-1.309C.341-.452 .894 .111 1.871 .111ZM2.267-.746C1.806-.746 1.539-.94 1.539-1.327V-1.484C1.539-1.862 1.843-2.073 2.461-2.073H3.216V-1.438C3.216-.986 2.792-.746 2.267-.746Z'/>
+<path id='internals-init-run-g1-99' d='M2.58 .111C3.511 .111 4.184-.313 4.497-1.161L3.594-1.594C3.419-1.161 3.142-.839 2.58-.839C1.926-.839 1.594-1.29 1.594-1.963V-2.838C1.594-3.511 1.926-3.972 2.58-3.972C3.087-3.972 3.391-3.677 3.502-3.271L4.469-3.705C4.184-4.46 3.548-4.921 2.58-4.921C1.161-4.921 .359-3.953 .359-2.414C.359-.866 1.161 .111 2.58 .111Z'/>
+<path id='internals-init-run-g1-100' d='M3.668 0H4.847V-6.819H3.668V-4.018H3.622C3.456-4.571 2.931-4.921 2.295-4.921C1.087-4.921 .415-4.018 .415-2.414C.415-.802 1.087 .111 2.295 .111C2.931 .111 3.447-.258 3.622-.802H3.668V0ZM2.672-.866C2.064-.866 1.65-1.309 1.65-1.991V-2.82C1.65-3.502 2.064-3.953 2.672-3.953C3.235-3.953 3.668-3.649 3.668-3.179V-1.65C3.668-1.152 3.235-.866 2.672-.866Z'/>
+<path id='internals-init-run-g1-101' d='M2.626 .111C3.52 .111 4.221-.23 4.617-.774L3.981-1.484C3.686-1.106 3.336-.829 2.755-.829C1.981-.829 1.585-1.299 1.585-1.991V-2.11H4.783V-2.497C4.783-3.815 4.092-4.921 2.59-4.921C1.18-4.921 .359-3.935 .359-2.414C.359-.875 1.207 .111 2.626 .111ZM2.608-4.036C3.216-4.036 3.557-3.585 3.557-2.921V-2.838H1.585V-2.912C1.585-3.576 1.991-4.036 2.608-4.036Z'/>
+<path id='internals-init-run-g1-102' d='M.922 0H2.101V-3.88H3.087V-4.81H2.101V-5.879H3.087V-6.819H2.249C1.382-6.819 .922-6.349 .922-5.502V-4.81H.212V-3.88H.922V0Z'/>
+<path id='internals-init-run-g1-103' d='M5.022 .405C5.022-.461 4.516-.968 3.336-.968H2.046C1.622-.968 1.419-1.087 1.419-1.327C1.419-1.539 1.576-1.677 1.76-1.76C1.972-1.705 2.221-1.677 2.497-1.677C3.806-1.677 4.488-2.322 4.488-3.29C4.488-3.88 4.239-4.35 3.741-4.626V-4.755H4.764V-5.658H4.018C3.576-5.658 3.336-5.428 3.336-4.958V-4.801C3.096-4.884 2.792-4.921 2.497-4.921C1.198-4.921 .507-4.267 .507-3.29C.507-2.654 .802-2.156 1.382-1.889V-1.852C.922-1.751 .498-1.502 .498-1.004C.498-.617 .719-.304 1.115-.203V-.101C.581-.018 .258 .286 .258 .82C.258 1.53 .875 1.954 2.497 1.954C4.34 1.954 5.022 1.41 5.022 .405ZM3.917 .544C3.917 .949 3.576 1.143 2.811 1.143H2.221C1.484 1.143 1.207 .922 1.207 .553C1.207 .359 1.281 .184 1.456 .055H3.096C3.695 .055 3.917 .24 3.917 .544ZM2.497-2.479C1.935-2.479 1.631-2.737 1.631-3.216V-3.373C1.631-3.861 1.935-4.11 2.497-4.11S3.364-3.861 3.364-3.373V-3.216C3.364-2.737 3.06-2.479 2.497-2.479Z'/>
+<path id='internals-init-run-g1-104' d='M.682 0H1.862V-3.179C1.862-3.695 2.332-3.953 2.82-3.953C3.382-3.953 3.612-3.603 3.612-2.921V0H4.792V-3.041C4.792-4.239 4.239-4.921 3.253-4.921C2.507-4.921 2.101-4.525 1.908-4.009H1.862V-6.819H.682V0Z'/>
+<path id='internals-init-run-g1-105' d='M1.272-5.511C1.751-5.511 1.963-5.76 1.963-6.101V-6.285C1.963-6.626 1.751-6.875 1.272-6.875C.783-6.875 .581-6.626 .581-6.285V-6.101C.581-5.76 .783-5.511 1.272-5.511ZM.682 0H1.862V-4.81H.682V0Z'/>
+<path id='internals-init-run-g1-109' d='M1.862 0V-3.179C1.862-3.695 2.304-3.953 2.755-3.953C3.281-3.953 3.53-3.612 3.53-2.921V0H4.709V-3.179C4.709-3.695 5.142-3.953 5.603-3.953C6.128-3.953 6.377-3.612 6.377-2.921V0H7.557V-3.041C7.557-4.239 7.022-4.921 6.082-4.921C5.317-4.921 4.783-4.488 4.608-3.953H4.589C4.359-4.599 3.852-4.921 3.198-4.921C2.479-4.921 2.092-4.516 1.908-4.009H1.862V-4.81H.682V0H1.862Z'/>
+<path id='internals-init-run-g1-110' d='M1.862 0V-3.179C1.862-3.695 2.332-3.953 2.82-3.953C3.382-3.953 3.612-3.603 3.612-2.921V0H4.792V-3.041C4.792-4.239 4.239-4.921 3.253-4.921C2.507-4.921 2.101-4.525 1.908-4.009H1.862V-4.81H.682V0H1.862Z'/>
+<path id='internals-init-run-g1-111' d='M2.59 .111C3.972 .111 4.829-.866 4.829-2.414C4.829-3.953 3.972-4.921 2.59-4.921C1.216-4.921 .359-3.953 .359-2.414C.359-.866 1.216 .111 2.59 .111ZM2.59-.839C1.981-.839 1.594-1.235 1.594-1.963V-2.857C1.594-3.576 1.981-3.972 2.59-3.972C3.207-3.972 3.594-3.576 3.594-2.857V-1.963C3.594-1.235 3.207-.839 2.59-.839Z'/>
+<path id='internals-init-run-g1-114' d='M1.862 0V-2.949C1.862-3.474 2.276-3.695 3.069-3.695H3.437V-4.81H3.179C2.414-4.81 2.027-4.322 1.908-3.815H1.862V-4.81H.682V0H1.862Z'/>
+<path id='internals-init-run-g1-115' d='M2.258 .111C3.456 .111 4.239-.534 4.239-1.465C4.239-2.267 3.732-2.737 2.682-2.884L2.193-2.949C1.742-3.023 1.567-3.17 1.567-3.493C1.567-3.788 1.788-3.99 2.295-3.99C2.765-3.99 3.17-3.769 3.447-3.474L4.138-4.165C3.677-4.645 3.198-4.921 2.258-4.921C1.161-4.921 .433-4.331 .433-3.4C.433-2.525 1.004-2.073 2.037-1.944L2.516-1.88C2.94-1.825 3.106-1.65 3.106-1.373C3.106-1.032 2.866-.82 2.304-.82C1.76-.82 1.336-1.069 .986-1.474L.267-.774C.746-.221 1.345 .111 2.258 .111Z'/>
+<path id='internals-init-run-g1-116' d='M2.184 0H3.032V-.94H2.12V-3.87H3.106V-4.81H2.12V-6.128H1.06V-5.308C1.06-4.976 .949-4.81 .599-4.81H.23V-3.87H.94V-1.226C.94-.442 1.373 0 2.184 0Z'/>
+<path id='internals-init-run-g1-117' d='M3.557 0H4.737V-4.81H3.557V-1.631C3.557-1.115 3.087-.866 2.617-.866C2.055-.866 1.806-1.226 1.806-1.889V-4.81H.627V-1.769C.627-.571 1.18 .111 2.166 .111C2.958 .111 3.345-.323 3.511-.802H3.557V0Z'/>
+<path id='internals-init-run-g1-118' d='M3.115 0L4.728-4.81H3.603L2.949-2.737L2.479-1.023H2.414L1.944-2.737L1.272-4.81H.111L1.714 0H3.115Z'/>
+<path id='internals-init-run-g1-119' d='M1.539 0H2.792L3.4-2.12L3.751-3.428H3.778L4.138-2.12L4.755 0H6.027L7.345-4.81H6.248L5.769-2.829L5.391-1.18H5.354L4.903-2.829L4.322-4.81H3.253L2.691-2.829L2.249-1.18H2.212L1.834-2.829L1.345-4.81H.212L1.539 0Z'/>
+<use id='internals-init-run-g5-48' href='#internals-init-run-g3-48' transform='scale(1.081)'/>
+<use id='internals-init-run-g5-49' href='#internals-init-run-g3-49' transform='scale(1.081)'/>
+<use id='internals-init-run-g5-50' href='#internals-init-run-g3-50' transform='scale(1.081)'/>
+<use id='internals-init-run-g5-51' href='#internals-init-run-g3-51' transform='scale(1.081)'/>
+<use id='internals-init-run-g5-52' href='#internals-init-run-g3-52' transform='scale(1.081)'/>
+<use id='internals-init-run-g5-53' href='#internals-init-run-g3-53' transform='scale(1.081)'/>
+<use id='internals-init-run-g5-54' href='#internals-init-run-g3-54' transform='scale(1.081)'/>
+<use id='internals-init-run-g5-55' href='#internals-init-run-g3-55' transform='scale(1.081)'/>
+<use id='internals-init-run-g5-56' href='#internals-init-run-g3-56' transform='scale(1.081)'/>
+<use id='internals-init-run-g5-57' href='#internals-init-run-g3-57' transform='scale(1.081)'/>
+<path id='internals-init-run-g3-28' d='M1.041 0H1.779V-4.11H3.705V0H4.442V-4.755H1.779V-6.174H2.801V-6.819H2.083C1.382-6.819 1.041-6.368 1.041-5.714V-4.755H.267V-4.11H1.041V0ZM4.073-5.87C4.387-5.87 4.525-6.036 4.525-6.285V-6.405C4.525-6.654 4.387-6.819 4.073-6.819S3.622-6.654 3.622-6.405V-6.285C3.622-6.036 3.76-5.87 4.073-5.87Z'/>
+<path id='internals-init-run-g3-39' d='M1.299-6.912C.912-6.912 .737-6.69 .737-6.368V-6.239C.737-5.99 .848-5.806 1.097-5.75C.995-5.317 .774-4.995 .405-4.608H1.023C1.548-5.059 1.862-5.741 1.862-6.239V-6.368C1.862-6.69 1.686-6.912 1.299-6.912Z'/>
+<path id='internals-init-run-g3-44' d='M1.253-1.078C.866-1.078 .691-.857 .691-.534V-.405C.691-.157 .802 .028 1.051 .083C.949 .516 .728 .839 .359 1.226H.977C1.502 .774 1.815 .092 1.815-.405V-.534C1.815-.857 1.64-1.078 1.253-1.078Z'/>
+<path id='internals-init-run-g3-45' d='M3.041-2.405V-3.198H.636V-2.405H3.041Z'/>
+<path id='internals-init-run-g3-46' d='M1.253 .111C1.64 .111 1.815-.111 1.815-.424V-.544C1.815-.857 1.64-1.078 1.253-1.078S.691-.857 .691-.544V-.424C.691-.111 .866 .111 1.253 .111Z'/>
+<path id='internals-init-run-g3-47' d='M.746 1.392L3.152-6.819H2.488L.083 1.392H.746Z'/>
+<path id='internals-init-run-g3-48' d='M2.765 .111C4.304 .111 4.976-1.115 4.976-3.216S4.304-6.543 2.765-6.543S.553-5.317 .553-3.216S1.226 .111 2.765 .111ZM2.765-.562C1.76-.562 1.364-1.447 1.364-2.691V-3.741C1.364-4.986 1.76-5.87 2.765-5.87S4.165-4.986 4.165-3.741V-2.691C4.165-1.447 3.769-.562 2.765-.562Z'/>
+<path id='internals-init-run-g3-49' d='M5.041 0V-.682H3.382V-6.432H2.175L.47-4.838L.922-4.35L2.543-5.861H2.608V-.682H.811V0H5.041Z'/>
+<path id='internals-init-run-g3-50' d='M4.912-.682H1.53L3.262-2.239C4.082-2.977 4.672-3.677 4.672-4.672C4.672-5.769 3.953-6.543 2.7-6.543C1.456-6.543 .885-5.787 .636-5.032L1.327-4.764C1.502-5.373 1.871-5.852 2.663-5.852S3.852-5.363 3.852-4.654V-4.543C3.852-3.926 3.391-3.281 2.792-2.728L.691-.793V0H4.912V-.682Z'/>
+<path id='internals-init-run-g3-51' d='M1.705-3.705V-3.032H2.461C3.364-3.032 3.843-2.599 3.843-1.843V-1.769C3.843-1.014 3.364-.581 2.461-.581C1.677-.581 1.299-.922 .968-1.428L.387-.986C.783-.433 1.355 .111 2.47 .111C3.778 .111 4.654-.654 4.654-1.76C4.654-2.728 3.99-3.244 3.299-3.382V-3.419C3.981-3.594 4.534-4.092 4.534-4.921C4.534-5.962 3.668-6.543 2.58-6.543C1.548-6.543 .986-6.008 .664-5.492L1.235-5.05C1.502-5.538 1.898-5.852 2.562-5.852C3.244-5.852 3.714-5.511 3.714-4.838V-4.774C3.714-4.156 3.271-3.705 2.405-3.705H1.705Z'/>
+<path id='internals-init-run-g3-52' d='M4.193 0V-1.263H5.124V-1.908H4.193V-6.432H3.041L.35-1.944V-1.263H3.456V0H4.193ZM3.41-5.833H3.456V-1.908H1.078L3.41-5.833Z'/>
+<path id='internals-init-run-g3-53' d='M4.589-6.432H1.143L.912-2.894L1.567-2.801C1.834-3.096 2.129-3.345 2.719-3.345C3.594-3.345 4.064-2.857 4.064-2.009V-1.917C4.064-1.069 3.594-.581 2.719-.581C1.944-.581 1.622-.922 1.29-1.428L.71-.986C1.097-.433 1.65 .111 2.719 .111C4.073 .111 4.884-.765 4.884-2.018C4.884-3.262 4.073-4.009 2.967-4.009C2.295-4.009 1.954-3.732 1.65-3.299H1.585L1.769-5.75H4.589V-6.432Z'/>
+<path id='internals-init-run-g3-54' d='M2.774 .111C4.064 .111 4.912-.756 4.912-2.018C4.912-3.235 4.119-4 3.013-4C2.23-4 1.769-3.603 1.465-3.078L1.419-3.096C1.769-4.589 2.534-5.428 3.907-6.432H2.912C1.88-5.76 .617-4.267 .617-2.359C.617-.829 1.438 .111 2.774 .111ZM2.765-.562C1.917-.562 1.419-1.051 1.419-1.917V-1.991C1.419-2.857 1.917-3.345 2.765-3.345S4.11-2.857 4.11-1.991V-1.917C4.11-1.051 3.612-.562 2.765-.562Z'/>
+<path id='internals-init-run-g3-55' d='M2.442 0L4.857-5.75V-6.432H.636V-4.571H1.327V-5.769H4.073L1.613 0H2.442Z'/>
+<path id='internals-init-run-g3-56' d='M2.765 .111C4.23 .111 4.995-.691 4.995-1.751C4.995-2.626 4.469-3.133 3.695-3.345V-3.419C4.368-3.649 4.801-4.193 4.801-4.93C4.801-5.907 4.046-6.543 2.765-6.543S.728-5.907 .728-4.93C.728-4.193 1.161-3.649 1.834-3.419V-3.345C1.06-3.133 .534-2.626 .534-1.751C.534-.691 1.299 .111 2.765 .111ZM2.765-.562C1.871-.562 1.355-.986 1.355-1.714V-1.908C1.355-2.636 1.871-3.06 2.765-3.06S4.175-2.636 4.175-1.908V-1.714C4.175-.986 3.659-.562 2.765-.562ZM2.765-3.705C1.963-3.705 1.53-4.064 1.53-4.718V-4.857C1.53-5.511 1.963-5.87 2.765-5.87S4-5.511 4-4.857V-4.718C4-4.064 3.566-3.705 2.765-3.705Z'/>
+<path id='internals-init-run-g3-57' d='M4.912-4.073C4.912-5.603 4.092-6.543 2.755-6.543C1.465-6.543 .617-5.677 .617-4.414C.617-3.198 1.41-2.433 2.516-2.433C3.299-2.433 3.76-2.829 4.064-3.354L4.11-3.336C3.76-1.843 2.995-1.004 1.622 0H2.617C3.649-.673 4.912-2.166 4.912-4.073ZM2.765-3.087C1.917-3.087 1.419-3.576 1.419-4.442V-4.516C1.419-5.382 1.917-5.87 2.765-5.87S4.11-5.382 4.11-4.516V-4.442C4.11-3.576 3.612-3.087 2.765-3.087Z'/>
+<path id='internals-init-run-g3-58' d='M1.345 .111C1.733 .111 1.908-.111 1.908-.424V-.544C1.908-.857 1.733-1.078 1.345-1.078S.783-.857 .783-.544V-.424C.783-.111 .958 .111 1.345 .111ZM1.345-3.677C1.733-3.677 1.908-3.898 1.908-4.211V-4.331C1.908-4.645 1.733-4.866 1.345-4.866S.783-4.645 .783-4.331V-4.211C.783-3.898 .958-3.677 1.345-3.677Z'/>
+<path id='internals-init-run-g3-67' d='M3.124 .111C4.193 .111 4.976-.452 5.382-1.355L4.764-1.742C4.506-1.041 3.944-.581 3.124-.581C2.018-.581 1.364-1.382 1.364-2.7V-3.659C1.364-4.976 2.018-5.852 3.124-5.852C3.917-5.852 4.451-5.419 4.709-4.755L5.336-5.133C4.93-6.027 4.193-6.543 3.124-6.543C1.502-6.543 .534-5.327 .534-3.179S1.502 .111 3.124 .111Z'/>
+<path id='internals-init-run-g3-80' d='M1.631 0V-2.746H3.419C4.571-2.746 5.216-3.456 5.216-4.589S4.571-6.432 3.419-6.432H.857V0H1.631ZM1.631-5.75H3.419C4.027-5.75 4.387-5.419 4.387-4.829V-4.35C4.387-3.76 4.027-3.428 3.419-3.428H1.631V-5.75Z'/>
+<path id='internals-init-run-g3-82' d='M1.631-2.765H3.133L4.525 0H5.4L3.926-2.838C4.764-3.032 5.216-3.668 5.216-4.608C5.216-5.778 4.543-6.432 3.419-6.432H.857V0H1.631V-2.765ZM1.631-3.428V-5.75H3.419C4.027-5.75 4.387-5.419 4.387-4.829V-4.35C4.387-3.76 4.027-3.428 3.419-3.428H1.631Z'/>
+<path id='internals-init-run-g3-97' d='M4.654 0V-.645H4.11V-3.262C4.11-4.267 3.428-4.866 2.285-4.866C1.428-4.866 .857-4.442 .599-3.935L1.041-3.52C1.299-3.953 1.677-4.23 2.249-4.23C3.004-4.23 3.373-3.861 3.373-3.189V-2.719H2.433C1.051-2.719 .405-2.221 .405-1.327C.405-.442 .995 .111 2 .111C2.663 .111 3.17-.194 3.373-.774H3.419C3.474-.332 3.695 0 4.239 0H4.654ZM2.12-.516C1.548-.516 1.18-.783 1.18-1.253V-1.447C1.18-1.908 1.557-2.166 2.396-2.166H3.373V-1.382C3.373-.894 2.848-.516 2.12-.516Z'/>
+<path id='internals-init-run-g3-98' d='M.783 0H1.521V-.774H1.557C1.843-.184 2.295 .111 2.949 .111C4.138 .111 4.884-.857 4.884-2.378S4.138-4.866 2.949-4.866C2.295-4.866 1.806-4.58 1.557-3.981H1.521V-6.819H.783V0ZM2.746-.553C2.073-.553 1.521-.903 1.521-1.521V-3.29C1.521-3.815 2.073-4.202 2.746-4.202C3.576-4.202 4.092-3.631 4.092-2.783V-1.972C4.092-1.124 3.576-.553 2.746-.553Z'/>
+<path id='internals-init-run-g3-99' d='M2.553 .111C3.456 .111 4.073-.332 4.377-1.014L3.843-1.373C3.585-.829 3.152-.544 2.553-.544C1.677-.544 1.226-1.143 1.226-1.972V-2.783C1.226-3.612 1.677-4.211 2.553-4.211C3.133-4.211 3.539-3.926 3.714-3.437L4.331-3.751C4.055-4.405 3.493-4.866 2.553-4.866C1.216-4.866 .433-3.898 .433-2.378S1.216 .111 2.553 .111Z'/>
+<path id='internals-init-run-g3-100' d='M3.824 0H4.562V-6.819H3.824V-3.981H3.788C3.539-4.58 3.05-4.866 2.396-4.866C1.207-4.866 .461-3.898 .461-2.378S1.207 .111 2.396 .111C3.05 .111 3.502-.184 3.788-.774H3.824V0ZM2.599-.553C1.769-.553 1.253-1.124 1.253-1.972V-2.783C1.253-3.631 1.769-4.202 2.599-4.202C3.271-4.202 3.824-3.815 3.824-3.29V-1.521C3.824-.903 3.271-.553 2.599-.553Z'/>
+<path id='internals-init-run-g3-101' d='M2.571 .111C3.465 .111 4.147-.332 4.451-.977L3.926-1.355C3.677-.829 3.216-.534 2.617-.534C1.733-.534 1.207-1.152 1.207-1.972V-2.193H4.626V-2.543C4.626-3.889 3.843-4.866 2.571-4.866C1.281-4.866 .433-3.889 .433-2.378S1.281 .111 2.571 .111ZM2.571-4.248C3.327-4.248 3.834-3.686 3.834-2.848V-2.746H1.207V-2.811C1.207-3.64 1.769-4.248 2.571-4.248Z'/>
+<path id='internals-init-run-g3-102' d='M1.041 0H1.779V-4.11H2.801V-4.755H1.779V-6.174H2.801V-6.819H2.083C1.382-6.819 1.041-6.368 1.041-5.714V-4.755H.267V-4.11H1.041V0Z'/>
+<path id='internals-init-run-g3-103' d='M4.792 .525C4.792-.258 4.285-.737 3.106-.737H2.092C1.659-.737 1.364-.811 1.364-1.097C1.364-1.392 1.677-1.548 1.991-1.631C2.129-1.603 2.295-1.585 2.451-1.585C3.539-1.585 4.248-2.258 4.248-3.225C4.248-3.732 4.046-4.156 3.705-4.451V-4.755H4.608V-5.4H3.898C3.502-5.4 3.345-5.133 3.345-4.764V-4.681C3.087-4.801 2.783-4.866 2.442-4.866C1.364-4.866 .654-4.193 .654-3.225C.654-2.562 .986-2.037 1.548-1.769V-1.733C1.069-1.613 .728-1.382 .728-.903C.728-.581 .885-.369 1.152-.24V-.138C.682-.009 .396 .267 .396 .783C.396 1.53 1.004 1.954 2.488 1.954C4.018 1.954 4.792 1.502 4.792 .525ZM4.101 .581C4.101 1.097 3.622 1.355 2.801 1.355H2.12C1.373 1.355 1.087 1.014 1.087 .599C1.087 .304 1.226 .092 1.53-.046H3.115C3.852-.046 4.101 .203 4.101 .581ZM2.451-2.175C1.825-2.175 1.428-2.47 1.428-3.096V-3.354C1.428-3.981 1.825-4.276 2.451-4.276S3.474-3.981 3.474-3.354V-3.096C3.474-2.47 3.078-2.175 2.451-2.175Z'/>
+<path id='internals-init-run-g3-104' d='M.783 0H1.521V-3.299C1.521-3.907 2.092-4.202 2.682-4.202C3.391-4.202 3.76-3.769 3.76-2.921V0H4.497V-3.05C4.497-4.202 3.88-4.866 2.903-4.866C2.193-4.866 1.788-4.516 1.557-3.981H1.521V-6.819H.783V0Z'/>
+<path id='internals-init-run-g3-105' d='M1.152-5.87C1.465-5.87 1.603-6.036 1.603-6.285V-6.405C1.603-6.654 1.465-6.819 1.152-6.819S.7-6.654 .7-6.405V-6.285C.7-6.036 .839-5.87 1.152-5.87ZM.783 0H1.521V-4.755H.783V0Z'/>
+<path id='internals-init-run-g3-107' d='M.783 0H1.521V-1.696L2.23-2.424L3.806 0H4.7L2.765-2.875L4.525-4.755H3.631L2.285-3.308L1.557-2.497H1.521V-6.819H.783V0Z'/>
+<path id='internals-init-run-g3-108' d='M2.221 0V-.645H1.521V-6.819H.783V-.765C.783-.323 1.06 0 1.567 0H2.221Z'/>
+<path id='internals-init-run-g3-109' d='M1.521 0V-3.299C1.521-3.907 2.073-4.202 2.654-4.202C3.354-4.202 3.677-3.769 3.677-2.921V0H4.414V-3.299C4.414-3.907 4.949-4.202 5.529-4.202C6.248-4.202 6.571-3.76 6.571-2.921V0H7.308V-3.05C7.308-4.202 6.727-4.866 5.76-4.866C4.949-4.866 4.488-4.414 4.313-3.898H4.294C4.036-4.58 3.465-4.866 2.838-4.866C2.101-4.866 1.769-4.469 1.557-3.981H1.521V-4.755H.783V0H1.521Z'/>
+<path id='internals-init-run-g3-110' d='M1.521 0V-3.299C1.521-3.907 2.092-4.202 2.682-4.202C3.391-4.202 3.76-3.769 3.76-2.921V0H4.497V-3.05C4.497-4.202 3.88-4.866 2.903-4.866C2.193-4.866 1.788-4.516 1.557-3.981H1.521V-4.755H.783V0H1.521Z'/>
+<path id='internals-init-run-g3-111' d='M2.58 .111C3.852 .111 4.728-.866 4.728-2.378S3.852-4.866 2.58-4.866S.433-3.889 .433-2.378S1.309 .111 2.58 .111ZM2.58-.544C1.788-.544 1.226-1.032 1.226-2.037V-2.719C1.226-3.723 1.788-4.211 2.58-4.211S3.935-3.723 3.935-2.719V-2.037C3.935-1.032 3.373-.544 2.58-.544Z'/>
+<path id='internals-init-run-g3-112' d='M.783 1.843H1.521V-.774H1.557C1.843-.184 2.295 .111 2.949 .111C4.138 .111 4.884-.857 4.884-2.378S4.138-4.866 2.949-4.866C2.295-4.866 1.806-4.58 1.557-3.981H1.521V-4.755H.783V1.843ZM2.746-.553C2.073-.553 1.521-.903 1.521-1.521V-3.29C1.521-3.815 2.073-4.202 2.746-4.202C3.576-4.202 4.092-3.631 4.092-2.783V-1.972C4.092-1.124 3.576-.553 2.746-.553Z'/>
+<path id='internals-init-run-g3-114' d='M1.521 0V-3.225C1.521-3.677 2-4.018 2.792-4.018H3.225V-4.755H2.94C2.166-4.755 1.733-4.331 1.567-3.88H1.521V-4.755H.783V0H1.521Z'/>
+<path id='internals-init-run-g3-115' d='M2.212 .111C3.299 .111 3.972-.452 3.972-1.373C3.972-2.092 3.566-2.553 2.516-2.709L2.147-2.765C1.557-2.857 1.235-3.041 1.235-3.502C1.235-3.953 1.557-4.239 2.166-4.239S3.179-3.953 3.391-3.659L3.88-4.101C3.493-4.58 2.986-4.866 2.221-4.866C1.253-4.866 .525-4.405 .525-3.465C.525-2.58 1.18-2.221 2.055-2.092L2.433-2.037C3.06-1.944 3.262-1.659 3.262-1.29C3.262-.802 2.894-.516 2.267-.516C1.668-.516 1.226-.783 .857-1.244L.332-.82C.756-.258 1.336 .111 2.212 .111Z'/>
+<path id='internals-init-run-g3-116' d='M2.755 0V-.645H1.788V-4.11H2.829V-4.755H1.788V-6.073H1.124V-5.188C1.124-4.866 1.023-4.755 .71-4.755H.267V-4.11H1.051V-.783C1.051-.323 1.327 0 1.834 0H2.755Z'/>
+<path id='internals-init-run-g3-117' d='M3.714 0H4.451V-4.755H3.714V-1.465C3.714-.839 3.142-.553 2.562-.553C1.852-.553 1.474-.986 1.474-1.834V-4.755H.737V-1.705C.737-.553 1.364 .111 2.341 .111C3.133 .111 3.493-.323 3.677-.774H3.714V0Z'/>
+<path id='internals-init-run-g3-118' d='M2.691 0L4.368-4.755H3.659L2.811-2.396L2.295-.774H2.249L1.733-2.396L.903-4.755H.166L1.834 0H2.691Z'/>
+<path id='internals-init-run-g3-119' d='M1.557 0H2.451L3.115-2.285L3.52-3.732H3.539L3.953-2.285L4.617 0H5.529L6.792-4.755H6.101L5.585-2.7L5.096-.617H5.078L4.488-2.7L3.87-4.755H3.216L2.617-2.7L2.037-.617H2.018L1.511-2.7L1.004-4.755H.286L1.557 0Z'/>
+<path id='internals-init-run-g3-120' d='M.194 0H1.014L2.35-1.862H2.378L3.612 0H4.479L2.765-2.451L4.442-4.755H3.622L2.368-2.986H2.341L1.133-4.755H.267L1.954-2.396L.194 0Z'/>
+<path id='internals-init-run-g3-121' d='M2.562-1.521L2.304-.746H2.258L2.037-1.521L.894-4.755H.157L1.935 .184L1.576 1.198H.829V1.843H1.207C1.908 1.843 2.101 1.677 2.313 1.106L4.442-4.755H3.714L2.562-1.521Z'/>
+<path id='internals-init-run-g3-122' d='M3.972 0V-.645H1.143L3.898-4.202V-4.755H.387V-4.11H3.004L.304-.617V0H3.972Z'/>
+</defs>
+<g id='internals-init-run-page1'>
+<g stroke-miterlimit='10' transform='matrix(.996 0 0 -.996 -72 -72)' stroke-width='1.12921' class='fig-f-ink fig-s-ink'>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-line fig-s-line'>
+<path d='M15.056-45.168V-72.27H45.168V-45.168ZM45.168-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M15.056-45.168V-72.27H45.168V-45.168ZM45.168-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 99.371 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-49'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-line fig-s-line'>
+<path d='M45.168-45.168V-72.27H75.281V-45.168ZM75.281-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M45.168-45.168V-72.27H75.281V-45.168ZM75.281-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 129.483 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-50'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-line fig-s-line'>
+<path d='M75.281-45.168V-72.27H105.393V-45.168ZM105.393-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M75.281-45.168V-72.27H105.393V-45.168ZM105.393-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 159.596 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-51'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-line fig-s-line'>
+<path d='M105.393-45.168V-72.27H135.505V-45.168ZM135.505-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M105.393-45.168V-72.27H135.505V-45.168ZM135.505-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 189.708 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-52'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-line fig-s-line'>
+<path d='M526.965-45.168V-72.27H557.078V-45.168ZM557.078-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M526.965-45.168V-72.27H557.078V-45.168ZM557.078-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 608.269 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-49'/>
+<use x='-66' y='-72' href='#internals-init-run-g5-56'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s1 fig-s-s1'>
+<path d='M135.505-45.168V-72.27H165.618V-45.168ZM165.618-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M135.505-45.168V-72.27H165.618V-45.168ZM165.618-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 219.82 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-53'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s1 fig-s-s1'>
+<path d='M165.618-45.168V-72.27H195.73V-45.168ZM195.73-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M165.618-45.168V-72.27H195.73V-45.168ZM195.73-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 249.933 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-54'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s1 fig-s-s1'>
+<path d='M195.73-45.168V-72.27H225.842V-45.168ZM225.842-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M195.73-45.168V-72.27H225.842V-45.168ZM225.842-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 280.045 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-55'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s1 fig-s-s1'>
+<path d='M225.842-45.168V-72.27H255.955V-45.168ZM255.955-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M225.842-45.168V-72.27H255.955V-45.168ZM255.955-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 310.157 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-56'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s1 fig-s-s1'>
+<path d='M255.955-45.168V-72.27H286.067V-45.168ZM286.067-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M255.955-45.168V-72.27H286.067V-45.168ZM286.067-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 340.27 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-57'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s2 fig-s-s2'>
+<path d='M286.067-45.168V-72.27H316.179V-45.168ZM316.179-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M286.067-45.168V-72.27H316.179V-45.168ZM316.179-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 367.371 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-49'/>
+<use x='-66' y='-72' href='#internals-init-run-g5-48'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s2 fig-s-s2'>
+<path d='M316.179-45.168V-72.27H346.292V-45.168ZM346.292-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M316.179-45.168V-72.27H346.292V-45.168ZM346.292-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 397.483 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-49'/>
+<use x='-66' y='-72' href='#internals-init-run-g5-49'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s2 fig-s-s2'>
+<path d='M346.292-45.168V-72.27H376.404V-45.168ZM376.404-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M346.292-45.168V-72.27H376.404V-45.168ZM376.404-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 427.595 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-49'/>
+<use x='-66' y='-72' href='#internals-init-run-g5-50'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s2 fig-s-s2'>
+<path d='M376.404-45.168V-72.27H406.516V-45.168ZM406.516-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M376.404-45.168V-72.27H406.516V-45.168ZM406.516-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 457.707 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-49'/>
+<use x='-66' y='-72' href='#internals-init-run-g5-51'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s3 fig-s-s3'>
+<path d='M406.516-45.168V-72.27H436.628V-45.168ZM436.628-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M406.516-45.168V-72.27H436.628V-45.168ZM436.628-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 487.82 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-49'/>
+<use x='-66' y='-72' href='#internals-init-run-g5-52'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s3 fig-s-s3'>
+<path d='M436.628-45.168V-72.27H466.741V-45.168ZM466.741-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M436.628-45.168V-72.27H466.741V-45.168ZM466.741-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 517.932 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-49'/>
+<use x='-66' y='-72' href='#internals-init-run-g5-53'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s3 fig-s-s3'>
+<path d='M466.741-45.168V-72.27H496.853V-45.168ZM496.853-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M466.741-45.168V-72.27H496.853V-45.168ZM496.853-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 548.044 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-49'/>
+<use x='-66' y='-72' href='#internals-init-run-g5-54'/>
+</g>
+<g stroke-opacity='0.16' fill-opacity='0.16' class='fig-f-s3 fig-s-s3'>
+<path d='M496.853-45.168V-72.27H526.965V-45.168ZM526.965-72.27' stroke='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-f-line fig-s-line'>
+<path d='M496.853-45.168V-72.27H526.965V-45.168ZM526.965-72.27' fill='none'/>
+</g>
+<g transform='matrix(1.004 0 0 -1.004 578.157 -134.753)' stroke='none' class='fig-f-ink'>
+<use x='-72' y='-72' href='#internals-init-run-g5-49'/>
+<use x='-66' y='-72' href='#internals-init-run-g5-55'/>
+</g>
+<g stroke-width='1.50562' class='fig-s-accent'>
+<path d='M255.955-21.079V-27.101' fill='none'/>
+<path d='M255.955-43.663V-75.281' fill='none'/>
+<path d='M346.292-21.079V-27.101' fill='none'/>
+<path d='M346.292-43.663V-75.281' fill='none'/>
+<path d='M496.853-21.079V-27.101' fill='none'/>
+<path d='M496.853-43.663V-75.281' fill='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-s-line'>
+<path d='M15.056-91.843H346.292' fill='none'/>
+<path d='M15.056-88.078V-95.607' fill='none'/>
+<path d='M346.292-88.078V-95.607' fill='none'/>
+<path d='M346.292-114.427H406.516' fill='none'/>
+<path d='M346.292-110.663V-118.191' fill='none'/>
+<path d='M406.516-110.663V-118.191' fill='none'/>
+<path d='M406.516-137.011H421.572' fill='none'/>
+<path d='M406.516-133.247V-140.775' fill='none'/>
+<path d='M421.572-133.247V-140.775' fill='none'/>
+<path d='M421.572-159.595H526.965' fill='none'/>
+<path d='M421.572-155.831V-163.359' fill='none'/>
+<path d='M526.965-155.831V-163.359' fill='none'/>
+</g>
+<g stroke-width='0.7528' class='fig-s-grid'>
+<path d='M7.528-192.719H624.83' fill='none'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M15.056-209.281V-274.022C15.056-276.517 17.078-278.539 19.573-278.539H243.91C246.404-278.539 248.427-276.517 248.427-274.022V-209.281C248.427-206.786 246.404-204.764 243.91-204.764H19.573C17.078-204.764 15.056-206.786 15.056-209.281ZM248.427-278.539'/>
+</g>
+<g fill-opacity='0.08' class='fig-s-line fig-f-line'>
+<path d='M271.011-209.281V-274.022C271.011-276.517 273.033-278.539 275.528-278.539H612.785C615.28-278.539 617.302-276.517 617.302-274.022V-209.281C617.302-206.786 615.28-204.764 612.785-204.764H275.528C273.033-204.764 271.011-206.786 271.011-209.281ZM617.302-278.539'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 295.914 -88.832)' class='fig-f-accent'>
+<use x='-72' y='-72' href='#internals-init-run-g3-107'/>
+<use x='-67.283' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-62.251' y='-72' href='#internals-init-run-g3-121'/>
+<use x='-57.635' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-54.24' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-51.928' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-46.674' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-41.79' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-35.102' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-30.597' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-25.519' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-20.579' y='-72' href='#internals-init-run-g3-108'/>
+<use x='-18.063' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-12.985' y='-72' href='#internals-init-run-g3-100'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 384.9 -88.832)' class='fig-f-accent'>
+<use x='-72' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-67.153' y='-72' href='#internals-init-run-g3-117'/>
+<use x='-61.899' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-56.96' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-53.62' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-48.255' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-41.568' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-36.628' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-33.465' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-30.218' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-25.278' y='-72' href='#internals-init-run-g3-99'/>
+<use x='-20.626' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-15.372' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-10.293' y='-72' href='#internals-init-run-g3-100'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 541.088 -88.832)' class='fig-f-accent'>
+<use x='-72' y='-72' href='#internals-init-run-g3-80'/>
+<use x='-66.395' y='-72' href='#internals-init-run-g3-67'/>
+<use x='-60.65' y='-72' href='#internals-init-run-g3-82'/>
+<use x='-52.547' y='-72' href='#internals-init-run-g3-57'/>
+<use x='-44.814' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-39.875' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-34.621' y='-72' href='#internals-init-run-g3-99'/>
+<use x='-29.968' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-24.714' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-19.534' y='-72' href='#internals-init-run-g3-114'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 112.863 -111.416)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-67.495' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-62.417' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-59.254' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-56.007' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-53.694' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-48.44' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-43.556' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-39.098' y='-72' href='#internals-init-run-g3-44'/>
+<use x='-34.399' y='-72' href='#internals-init-run-g3-109'/>
+<use x='-26.324' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-21.144' y='-72' href='#internals-init-run-g3-117'/>
+<use x='-15.89' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-10.636' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-7.389' y='-72' href='#internals-init-run-g3-115'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 240.709 -111.416)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-69.688' y='-72' href='#internals-init-run-g3-109'/>
+<use x='-61.612' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-56.673' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-51.844' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-46.766' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-40.078' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-35.139' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-29.885' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-22.337' y='-72' href='#internals-init-run-g3-107'/>
+<use x='-17.619' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-12.587' y='-72' href='#internals-init-run-g3-121'/>
+<use x='-7.972' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-4.577' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-2.264' y='-72' href='#internals-init-run-g3-110'/>
+<use x='2.99' y='-72' href='#internals-init-run-g3-103'/>
+<use x='7.874' y='-72' href='#internals-init-run-g3-115'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 385.68 -111.416)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-67.153' y='-72' href='#internals-init-run-g3-117'/>
+<use x='-61.899' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-56.96' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-53.62' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-48.255' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-43.797' y='-72' href='#internals-init-run-g3-44'/>
+<use x='-39.098' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-35.703' y='-72' href='#internals-init-run-g3-117'/>
+<use x='-30.449' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-25.195' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-21.948' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-19.636' y='-72' href='#internals-init-run-g3-109'/>
+<use x='-11.561' y='-72' href='#internals-init-run-g3-101'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 481.367 -111.416)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-98'/>
+<use x='-66.635' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-61.455' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-56.275' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-50.845' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-45.841' y='-72' href='#internals-init-run-g3-118'/>
+<use x='-41.364' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-36.286' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-31.032' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-27.785' y='-72' href='#internals-init-run-g3-44'/>
+<use x='-23.086' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-19.738' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-14.659' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-10.219' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-7.01' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-1.83' y='-72' href='#internals-init-run-g3-114'/>
+<use x='1.519' y='-72' href='#internals-init-run-g3-101'/>
+<use x='6.412' y='-72' href='#internals-init-run-g3-44'/>
+<use x='11.111' y='-72' href='#internals-init-run-g3-114'/>
+<use x='14.46' y='-72' href='#internals-init-run-g3-101'/>
+<use x='19.538' y='-72' href='#internals-init-run-g3-103'/>
+<use x='24.422' y='-72' href='#internals-init-run-g3-105'/>
+<use x='26.734' y='-72' href='#internals-init-run-g3-115'/>
+<use x='31.174' y='-72' href='#internals-init-run-g3-116'/>
+<use x='34.384' y='-72' href='#internals-init-run-g3-101'/>
+<use x='39.462' y='-72' href='#internals-init-run-g3-114'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 426.09 -167.124)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-66.746' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-61.566' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-58.319' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-53.065' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-50.753' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-45.499' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-38.432' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-33.492' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-30.329' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-27.082' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-22.143' y='-72' href='#internals-init-run-g3-99'/>
+<use x='-17.49' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-12.236' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-7.158' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-1.793' y='-72' href='#internals-init-run-g3-44'/>
+<use x='2.906' y='-72' href='#internals-init-run-g3-115'/>
+<use x='7.411' y='-72' href='#internals-init-run-g3-101'/>
+<use x='12.489' y='-72' href='#internals-init-run-g3-114'/>
+<use x='15.977' y='-72' href='#internals-init-run-g3-118'/>
+<use x='20.528' y='-72' href='#internals-init-run-g3-105'/>
+<use x='22.84' y='-72' href='#internals-init-run-g3-99'/>
+<use x='27.437' y='-72' href='#internals-init-run-g3-101'/>
+<use x='34.699' y='-72' href='#internals-init-run-g3-115'/>
+<use x='39.203' y='-72' href='#internals-init-run-g3-107'/>
+<use x='44.078' y='-72' href='#internals-init-run-g3-105'/>
+<use x='46.391' y='-72' href='#internals-init-run-g3-112'/>
+<use x='51.756' y='-72' href='#internals-init-run-g3-112'/>
+<use x='57.121' y='-72' href='#internals-init-run-g3-101'/>
+<use x='62.199' y='-72' href='#internals-init-run-g3-100'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 486.314 -189.708)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-67.153' y='-72' href='#internals-init-run-g3-117'/>
+<use x='-61.899' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-56.96' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-53.62' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-48.255' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-41.568' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-36.388' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-31.134' y='-72' href='#internals-init-run-g3-44'/>
+<use x='-26.435' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-21.181' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-13.818' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-10.423' y='-72' href='#internals-init-run-g3-117'/>
+<use x='-5.169' y='-72' href='#internals-init-run-g3-110'/>
+<use x='.085' y='-72' href='#internals-init-run-g3-116'/>
+<use x='3.332' y='-72' href='#internals-init-run-g3-105'/>
+<use x='5.644' y='-72' href='#internals-init-run-g3-109'/>
+<use x='13.72' y='-72' href='#internals-init-run-g3-101'/>
+<use x='18.613' y='-72' href='#internals-init-run-g3-44'/>
+<use x='23.312' y='-72' href='#internals-init-run-g3-115'/>
+<use x='27.817' y='-72' href='#internals-init-run-g3-101'/>
+<use x='32.895' y='-72' href='#internals-init-run-g3-114'/>
+<use x='36.382' y='-72' href='#internals-init-run-g3-118'/>
+<use x='40.933' y='-72' href='#internals-init-run-g3-105'/>
+<use x='43.246' y='-72' href='#internals-init-run-g3-99'/>
+<use x='47.843' y='-72' href='#internals-init-run-g3-101'/>
+<use x='55.104' y='-72' href='#internals-init-run-g3-115'/>
+<use x='59.609' y='-72' href='#internals-init-run-g3-107'/>
+<use x='64.484' y='-72' href='#internals-init-run-g3-105'/>
+<use x='66.796' y='-72' href='#internals-init-run-g3-112'/>
+<use x='72.161' y='-72' href='#internals-init-run-g3-112'/>
+<use x='77.526' y='-72' href='#internals-init-run-g3-101'/>
+<use x='82.604' y='-72' href='#internals-init-run-g3-100'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 501.37 -212.292)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-66.746' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-61.566' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-58.319' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-53.065' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-50.753' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-45.499' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-38.432' y='-72' href='#internals-init-run-g3-112'/>
+<use x='-33.067' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-27.989' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-22.735' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-17.37' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-15.057' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-9.803' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-4.919' y='-72' href='#internals-init-run-g3-58'/>
+<use x='-.035' y='-72' href='#internals-init-run-g3-115'/>
+<use x='4.47' y='-72' href='#internals-init-run-g3-101'/>
+<use x='9.548' y='-72' href='#internals-init-run-g3-114'/>
+<use x='13.035' y='-72' href='#internals-init-run-g3-118'/>
+<use x='17.586' y='-72' href='#internals-init-run-g3-105'/>
+<use x='19.899' y='-72' href='#internals-init-run-g3-99'/>
+<use x='24.496' y='-72' href='#internals-init-run-g3-101'/>
+<use x='31.757' y='-72' href='#internals-init-run-g3-114'/>
+<use x='35.152' y='-72' href='#internals-init-run-g3-117'/>
+<use x='40.406' y='-72' href='#internals-init-run-g3-110'/>
+<use x='45.66' y='-72' href='#internals-init-run-g3-115'/>
+<use x='52.348' y='-72' href='#internals-init-run-g3-105'/>
+<use x='54.66' y='-72' href='#internals-init-run-g3-110'/>
+<use x='59.914' y='-72' href='#internals-init-run-g3-105'/>
+<use x='62.227' y='-72' href='#internals-init-run-g3-116'/>
+<use x='67.656' y='-72' href='#internals-init-run-g3-97'/>
+<use x='72.596' y='-72' href='#internals-init-run-g3-103'/>
+<use x='77.452' y='-72' href='#internals-init-run-g3-97'/>
+<use x='82.392' y='-72' href='#internals-init-run-g3-105'/>
+<use x='84.704' y='-72' href='#internals-init-run-g3-110'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 606.763 -234.876)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-112'/>
+<use x='-66.635' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-61.557' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-56.303' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-50.938' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-48.625' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-43.371' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-36.304' y='-72' href='#internals-init-run-g3-117'/>
+<use x='-31.05' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-25.796' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-22.55' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-20.237' y='-72' href='#internals-init-run-g3-108'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 606.763 -245.416)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-64.878' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-61.529' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-56.451' y='-72' href='#internals-init-run-g3-98'/>
+<use x='-51.086' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-45.906' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-40.726' y='-72' href='#internals-init-run-g3-116'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 87.326 -158.09)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-69.688' y='-72' href='#internals-init-run-g3-102'/>
+<use x='-64.508' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-62.195' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-56.941' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-54.629' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-49.199' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-44.759' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-41.549' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-36.369' y='-72' href='#internals-init-run-g3-112'/>
+<use x='-31.004' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-26.499' y='-72' href='#internals-init-run-g3-58'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 87.326 -258.966)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-67.579' y='-72' href='#internals-init-run-g3-119'/>
+<use x='-60.475' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-58.162' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-54.952' y='-72' href='#internals-init-run-g3-99'/>
+<use x='-50.3' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-42.863' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-39.653' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-32.29' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-29.043' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-23.789' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-16.528' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-13.179' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-7.999' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-2.819' y='-72' href='#internals-init-run-g3-116'/>
+<use x='2.61' y='-72' href='#internals-init-run-g3-28'/>
+<use x='7.855' y='-72' href='#internals-init-run-g3-108'/>
+<use x='10.371' y='-72' href='#internals-init-run-g3-101'/>
+<use x='17.632' y='-72' href='#internals-init-run-g3-115'/>
+<use x='21.971' y='-72' href='#internals-init-run-g3-121'/>
+<use x='26.549' y='-72' href='#internals-init-run-g3-115'/>
+<use x='30.989' y='-72' href='#internals-init-run-g3-116'/>
+<use x='34.199' y='-72' href='#internals-init-run-g3-101'/>
+<use x='39.277' y='-72' href='#internals-init-run-g3-109'/>
+<use x='47.353' y='-72' href='#internals-init-run-g3-58'/>
+<use x='52.237' y='-72' href='#internals-init-run-g3-115'/>
+<use x='56.575' y='-72' href='#internals-init-run-g3-121'/>
+<use x='61.154' y='-72' href='#internals-init-run-g3-115'/>
+<use x='65.594' y='-72' href='#internals-init-run-g3-116'/>
+<use x='68.803' y='-72' href='#internals-init-run-g3-101'/>
+<use x='73.882' y='-72' href='#internals-init-run-g3-109'/>
+<use x='81.957' y='-72' href='#internals-init-run-g3-100'/>
+<use x='89.505' y='-72' href='#internals-init-run-g3-101'/>
+<use x='94.472' y='-72' href='#internals-init-run-g3-120'/>
+<use x='99.162' y='-72' href='#internals-init-run-g3-116'/>
+<use x='102.372' y='-72' href='#internals-init-run-g3-101'/>
+<use x='107.45' y='-72' href='#internals-init-run-g3-110'/>
+<use x='112.704' y='-72' href='#internals-init-run-g3-100'/>
+<use x='118.069' y='-72' href='#internals-init-run-g3-115'/>
+<use x='124.757' y='-72' href='#internals-init-run-g3-80'/>
+<use x='130.362' y='-72' href='#internals-init-run-g3-67'/>
+<use x='136.106' y='-72' href='#internals-init-run-g3-82'/>
+<use x='144.209' y='-72' href='#internals-init-run-g3-49'/>
+<use x='149.759' y='-72' href='#internals-init-run-g3-49'/>
+<use x='157.492' y='-72' href='#internals-init-run-g3-97'/>
+<use x='162.432' y='-72' href='#internals-init-run-g3-116'/>
+<use x='167.862' y='-72' href='#internals-init-run-g3-108'/>
+<use x='170.378' y='-72' href='#internals-init-run-g3-101'/>
+<use x='175.456' y='-72' href='#internals-init-run-g3-97'/>
+<use x='180.321' y='-72' href='#internals-init-run-g3-118'/>
+<use x='184.798' y='-72' href='#internals-init-run-g3-101'/>
+<use x='189.969' y='-72' href='#internals-init-run-g3-45'/>
+<use x='193.66' y='-72' href='#internals-init-run-g3-105'/>
+<use x='195.972' y='-72' href='#internals-init-run-g3-110'/>
+<use x='201.226' y='-72' href='#internals-init-run-g3-105'/>
+<use x='203.539' y='-72' href='#internals-init-run-g3-116'/>
+<use x='206.785' y='-72' href='#internals-init-run-g3-114'/>
+<use x='210.125' y='-72' href='#internals-init-run-g3-100'/>
+<use x='215.49' y='-72' href='#internals-init-run-g3-44'/>
+<use x='220.189' y='-72' href='#internals-init-run-g3-97'/>
+<use x='225.128' y='-72' href='#internals-init-run-g3-110'/>
+<use x='230.382' y='-72' href='#internals-init-run-g3-100'/>
+<use x='237.93' y='-72' href='#internals-init-run-g3-47'/>
+<use x='241.473' y='-72' href='#internals-init-run-g3-114'/>
+<use x='244.868' y='-72' href='#internals-init-run-g3-117'/>
+<use x='250.122' y='-72' href='#internals-init-run-g3-110'/>
+<use x='257.559' y='-72' href='#internals-init-run-g3-109'/>
+<use x='265.634' y='-72' href='#internals-init-run-g3-111'/>
+<use x='270.74' y='-72' href='#internals-init-run-g3-118'/>
+<use x='275.217' y='-72' href='#internals-init-run-g3-101'/>
+<use x='280.295' y='-72' href='#internals-init-run-g3-115'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 96.36 -307.146)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-68.753' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-63.499' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-56.238' y='-72' href='#internals-init-run-g3-112'/>
+<use x='-50.873' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-47.478' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-45.166' y='-72' href='#internals-init-run-g3-118'/>
+<use x='-40.698' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-35.759' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-32.549' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-25.288' y='-72' href='#internals-init-run-g3-98'/>
+<use x='-19.923' y='-72' href='#internals-init-run-g3-112'/>
+<use x='-14.613' y='-72' href='#internals-init-run-g3-102'/>
+<use x='-11.616' y='-72' href='#internals-init-run-g3-102'/>
+<use x='-8.619' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-4.161' y='-72' href='#internals-init-run-g3-44'/>
+<use x='.538' y='-72' href='#internals-init-run-g3-105'/>
+<use x='2.851' y='-72' href='#internals-init-run-g3-116'/>
+<use x='6.098' y='-72' href='#internals-init-run-g3-115'/>
+<use x='12.785' y='-72' href='#internals-init-run-g3-112'/>
+<use x='18.15' y='-72' href='#internals-init-run-g3-105'/>
+<use x='20.463' y='-72' href='#internals-init-run-g3-110'/>
+<use x='25.717' y='-72' href='#internals-init-run-g3-115'/>
+<use x='32.405' y='-72' href='#internals-init-run-g3-97'/>
+<use x='37.344' y='-72' href='#internals-init-run-g3-110'/>
+<use x='42.598' y='-72' href='#internals-init-run-g3-100'/>
+<use x='50.146' y='-72' href='#internals-init-run-g3-109'/>
+<use x='58.221' y='-72' href='#internals-init-run-g3-97'/>
+<use x='63.161' y='-72' href='#internals-init-run-g3-112'/>
+<use x='68.526' y='-72' href='#internals-init-run-g3-115'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 96.36 -320.697)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-68.753' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-63.499' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-56.238' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-52.843' y='-72' href='#internals-init-run-g3-117'/>
+<use x='-47.589' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-42.335' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-39.089' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-36.776' y='-72' href='#internals-init-run-g3-109'/>
+<use x='-28.701' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-21.44' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-16.5' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-11.246' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-3.698' y='-72' href='#internals-init-run-g3-99'/>
+<use x='.899' y='-72' href='#internals-init-run-g3-111'/>
+<use x='6.079' y='-72' href='#internals-init-run-g3-110'/>
+<use x='11.333' y='-72' href='#internals-init-run-g3-28'/>
+<use x='16.578' y='-72' href='#internals-init-run-g3-103'/>
+<use x='23.645' y='-72' href='#internals-init-run-g3-109'/>
+<use x='31.72' y='-72' href='#internals-init-run-g3-111'/>
+<use x='36.9' y='-72' href='#internals-init-run-g3-117'/>
+<use x='42.154' y='-72' href='#internals-init-run-g3-110'/>
+<use x='47.408' y='-72' href='#internals-init-run-g3-116'/>
+<use x='50.655' y='-72' href='#internals-init-run-g3-115'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 96.36 -334.247)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-66.996' y='-72' href='#internals-init-run-g3-118'/>
+<use x='-62.519' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-57.441' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-52.187' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-48.94' y='-72' href='#internals-init-run-g3-108'/>
+<use x='-46.424' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-41.244' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-36.24' y='-72' href='#internals-init-run-g3-46'/>
+<use x='-33.724' y='-72' href='#internals-init-run-g3-112'/>
+<use x='-28.359' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-23.28' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-18.026' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-12.661' y='-72' href='#internals-init-run-g3-105'/>
+<use x='-10.349' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-5.095' y='-72' href='#internals-init-run-g3-103'/>
+<use x='-.091' y='-72' href='#internals-init-run-g3-44'/>
+<use x='4.608' y='-72' href='#internals-init-run-g3-116'/>
+<use x='7.855' y='-72' href='#internals-init-run-g3-104'/>
+<use x='13.109' y='-72' href='#internals-init-run-g3-101'/>
+<use x='20.37' y='-72' href='#internals-init-run-g3-105'/>
+<use x='22.683' y='-72' href='#internals-init-run-g3-110'/>
+<use x='27.937' y='-72' href='#internals-init-run-g3-105'/>
+<use x='30.249' y='-72' href='#internals-init-run-g3-116'/>
+<use x='33.496' y='-72' href='#internals-init-run-g3-114'/>
+<use x='36.835' y='-72' href='#internals-init-run-g3-100'/>
+<use x='42.2' y='-72' href='#internals-init-run-g3-39'/>
+<use x='44.263' y='-72' href='#internals-init-run-g3-115'/>
+<use x='50.951' y='-72' href='#internals-init-run-g3-114'/>
+<use x='54.299' y='-72' href='#internals-init-run-g3-101'/>
+<use x='59.378' y='-72' href='#internals-init-run-g3-99'/>
+<use x='63.975' y='-72' href='#internals-init-run-g3-111'/>
+<use x='69.155' y='-72' href='#internals-init-run-g3-114'/>
+<use x='72.494' y='-72' href='#internals-init-run-g3-100'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 352.314 -307.146)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-99'/>
+<use x='-67.347' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-62.093' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-57.015' y='-72' href='#internals-init-run-g3-99'/>
+<use x='-52.362' y='-72' href='#internals-init-run-g3-107'/>
+<use x='-47.58' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-40.892' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-37.646' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-32.392' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-25.13' y='-72' href='#internals-init-run-g3-102'/>
+<use x='-22.133' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-18.785' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-13.651' y='-72' href='#internals-init-run-g3-122'/>
+<use x='-9.452' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-4.373' y='-72' href='#internals-init-run-g3-110'/>
+<use x='3.064' y='-72' href='#internals-init-run-g3-114'/>
+<use x='6.412' y='-72' href='#internals-init-run-g3-101'/>
+<use x='11.49' y='-72' href='#internals-init-run-g3-99'/>
+<use x='16.088' y='-72' href='#internals-init-run-g3-111'/>
+<use x='21.268' y='-72' href='#internals-init-run-g3-114'/>
+<use x='24.607' y='-72' href='#internals-init-run-g3-100'/>
+<use x='32.155' y='-72' href='#internals-init-run-g3-97'/>
+<use x='37.094' y='-72' href='#internals-init-run-g3-110'/>
+<use x='42.348' y='-72' href='#internals-init-run-g3-100'/>
+<use x='49.896' y='-72' href='#internals-init-run-g3-116'/>
+<use x='53.143' y='-72' href='#internals-init-run-g3-104'/>
+<use x='58.397' y='-72' href='#internals-init-run-g3-101'/>
+<use x='65.658' y='-72' href='#internals-init-run-g3-112'/>
+<use x='71.023' y='-72' href='#internals-init-run-g3-105'/>
+<use x='73.336' y='-72' href='#internals-init-run-g3-110'/>
+<use x='78.59' y='-72' href='#internals-init-run-g3-110'/>
+<use x='83.844' y='-72' href='#internals-init-run-g3-101'/>
+<use x='88.922' y='-72' href='#internals-init-run-g3-100'/>
+<use x='96.47' y='-72' href='#internals-init-run-g3-108'/>
+<use x='98.986' y='-72' href='#internals-init-run-g3-105'/>
+<use x='101.299' y='-72' href='#internals-init-run-g3-110'/>
+<use x='106.553' y='-72' href='#internals-init-run-g3-107'/>
+<use x='111.335' y='-72' href='#internals-init-run-g3-115'/>
+<use x='115.793' y='-72' href='#internals-init-run-g3-44'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 352.314 -320.697)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-67.061' y='-72' href='#internals-init-run-g3-112'/>
+<use x='-61.696' y='-72' href='#internals-init-run-g3-112'/>
+<use x='-56.331' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-51.252' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-45.998' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-40.633' y='-72' href='#internals-init-run-g3-115'/>
+<use x='-33.946' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-28.941' y='-72' href='#internals-init-run-g3-118'/>
+<use x='-24.464' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-19.386' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-14.132' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-10.885' y='-72' href='#internals-init-run-g3-108'/>
+<use x='-8.369' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-3.189' y='-72' href='#internals-init-run-g3-103'/>
+<use x='1.815' y='-72' href='#internals-init-run-g3-46'/>
+<use x='4.331' y='-72' href='#internals-init-run-g3-112'/>
+<use x='9.696' y='-72' href='#internals-init-run-g3-101'/>
+<use x='14.774' y='-72' href='#internals-init-run-g3-110'/>
+<use x='20.028' y='-72' href='#internals-init-run-g3-100'/>
+<use x='25.393' y='-72' href='#internals-init-run-g3-105'/>
+<use x='27.706' y='-72' href='#internals-init-run-g3-110'/>
+<use x='32.96' y='-72' href='#internals-init-run-g3-103'/>
+<use x='37.964' y='-72' href='#internals-init-run-g3-44'/>
+<use x='42.663' y='-72' href='#internals-init-run-g3-99'/>
+<use x='47.316' y='-72' href='#internals-init-run-g3-104'/>
+<use x='52.57' y='-72' href='#internals-init-run-g3-101'/>
+<use x='57.648' y='-72' href='#internals-init-run-g3-99'/>
+<use x='62.301' y='-72' href='#internals-init-run-g3-107'/>
+<use x='67.083' y='-72' href='#internals-init-run-g3-115'/>
+<use x='73.771' y='-72' href='#internals-init-run-g3-116'/>
+<use x='77.017' y='-72' href='#internals-init-run-g3-104'/>
+<use x='82.271' y='-72' href='#internals-init-run-g3-101'/>
+<use x='89.533' y='-72' href='#internals-init-run-g3-99'/>
+<use x='94.13' y='-72' href='#internals-init-run-g3-111'/>
+<use x='99.31' y='-72' href='#internals-init-run-g3-110'/>
+<use x='104.564' y='-72' href='#internals-init-run-g3-28'/>
+<use x='109.809' y='-72' href='#internals-init-run-g3-103'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 352.314 -334.247)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-68.652' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-63.573' y='-72' href='#internals-init-run-g3-99'/>
+<use x='-58.976' y='-72' href='#internals-init-run-g3-111'/>
+<use x='-53.796' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-50.457' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-42.909' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-37.969' y='-72' href='#internals-init-run-g3-110'/>
+<use x='-32.715' y='-72' href='#internals-init-run-g3-100'/>
+<use x='-25.167' y='-72' href='#internals-init-run-g3-116'/>
+<use x='-21.921' y='-72' href='#internals-init-run-g3-104'/>
+<use x='-16.667' y='-72' href='#internals-init-run-g3-101'/>
+<use x='-9.405' y='-72' href='#internals-init-run-g3-97'/>
+<use x='-4.466' y='-72' href='#internals-init-run-g3-114'/>
+<use x='-1.117' y='-72' href='#internals-init-run-g3-99'/>
+<use x='3.535' y='-72' href='#internals-init-run-g3-104'/>
+<use x='8.789' y='-72' href='#internals-init-run-g3-105'/>
+<use x='11.102' y='-72' href='#internals-init-run-g3-118'/>
+<use x='15.579' y='-72' href='#internals-init-run-g3-101'/>
+<use x='20.472' y='-72' href='#internals-init-run-g3-44'/>
+<use x='25.171' y='-72' href='#internals-init-run-g3-97'/>
+<use x='30.111' y='-72' href='#internals-init-run-g3-100'/>
+<use x='35.476' y='-72' href='#internals-init-run-g3-100'/>
+<use x='40.841' y='-72' href='#internals-init-run-g3-115'/>
+<use x='47.528' y='-72' href='#internals-init-run-g3-110'/>
+<use x='52.782' y='-72' href='#internals-init-run-g3-111'/>
+<use x='60.145' y='-72' href='#internals-init-run-g3-114'/>
+<use x='63.494' y='-72' href='#internals-init-run-g3-101'/>
+<use x='68.572' y='-72' href='#internals-init-run-g3-103'/>
+<use x='73.456' y='-72' href='#internals-init-run-g3-105'/>
+<use x='75.769' y='-72' href='#internals-init-run-g3-115'/>
+<use x='80.209' y='-72' href='#internals-init-run-g3-116'/>
+<use x='83.418' y='-72' href='#internals-init-run-g3-101'/>
+<use x='88.497' y='-72' href='#internals-init-run-g3-114'/>
+<use x='94.074' y='-72' href='#internals-init-run-g3-101'/>
+<use x='99.079' y='-72' href='#internals-init-run-g3-118'/>
+<use x='103.555' y='-72' href='#internals-init-run-g3-101'/>
+<use x='108.634' y='-72' href='#internals-init-run-g3-110'/>
+<use x='113.888' y='-72' href='#internals-init-run-g3-116'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 96.36 -292.09)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g1-99'/>
+<use x='-67.255' y='-72' href='#internals-init-run-g1-114'/>
+<use x='-63.666' y='-72' href='#internals-init-run-g1-111'/>
+<use x='-58.458' y='-72' href='#internals-init-run-g1-115'/>
+<use x='-53.907' y='-72' href='#internals-init-run-g1-115'/>
+<use x='-49.291' y='-72' href='#internals-init-run-g1-101'/>
+<use x='-44.13' y='-72' href='#internals-init-run-g1-115'/>
+<use x='-37.331' y='-72' href='#internals-init-run-g1-119'/>
+<use x='-29.755' y='-72' href='#internals-init-run-g1-105'/>
+<use x='-27.202' y='-72' href='#internals-init-run-g1-116'/>
+<use x='-23.743' y='-72' href='#internals-init-run-g1-104'/>
+<use x='-16.121' y='-72' href='#internals-init-run-g1-47'/>
+<use x='-12.143' y='-72' href='#internals-init-run-g1-114'/>
+<use x='-8.508' y='-72' href='#internals-init-run-g1-117'/>
+<use x='-3.069' y='-72' href='#internals-init-run-g1-110'/>
+<use x='2.37' y='-72' href='#internals-init-run-g1-47'/>
+<use x='6.412' y='-72' href='#internals-init-run-g1-115'/>
+<use x='11.028' y='-72' href='#internals-init-run-g1-104'/>
+<use x='16.467' y='-72' href='#internals-init-run-g1-105'/>
+<use x='19.02' y='-72' href='#internals-init-run-g1-114'/>
+<use x='22.655' y='-72' href='#internals-init-run-g1-117'/>
+<use x='28.094' y='-72' href='#internals-init-run-g1-100'/>
+<use x='33.644' y='-72' href='#internals-init-run-g1-111'/>
+</g>
+<g stroke='none' transform='matrix(1.004 0 0 -1.004 352.314 -292.09)' class='fig-f-muted'>
+<use x='-72' y='-72' href='#internals-init-run-g1-115'/>
+<use x='-67.384' y='-72' href='#internals-init-run-g1-104'/>
+<use x='-61.945' y='-72' href='#internals-init-run-g1-105'/>
+<use x='-59.392' y='-72' href='#internals-init-run-g1-114'/>
+<use x='-55.757' y='-72' href='#internals-init-run-g1-117'/>
+<use x='-50.318' y='-72' href='#internals-init-run-g1-100'/>
+<use x='-44.768' y='-72' href='#internals-init-run-g1-111'/>
+<use x='-39.708' y='-72' href='#internals-init-run-g1-46'/>
+<use x='-36.952' y='-72' href='#internals-init-run-g1-115'/>
+<use x='-32.336' y='-72' href='#internals-init-run-g1-101'/>
+<use x='-27.175' y='-72' href='#internals-init-run-g1-114'/>
+<use x='-23.465' y='-72' href='#internals-init-run-g1-118'/>
+<use x='-18.618' y='-72' href='#internals-init-run-g1-105'/>
+<use x='-16.065' y='-72' href='#internals-init-run-g1-99'/>
+<use x='-11.366' y='-72' href='#internals-init-run-g1-101'/>
+<use x='-6.353' y='-72' href='#internals-init-run-g1-44'/>
+<use x='-1.413' y='-72' href='#internals-init-run-g1-102'/>
+<use x='1.824' y='-72' href='#internals-init-run-g1-114'/>
+<use x='5.413' y='-72' href='#internals-init-run-g1-111'/>
+<use x='10.621' y='-72' href='#internals-init-run-g1-109'/>
+<use x='21.018' y='-72' href='#internals-init-run-g1-116'/>
+<use x='24.477' y='-72' href='#internals-init-run-g1-104'/>
+<use x='29.916' y='-72' href='#internals-init-run-g1-101'/>
+<use x='37.261' y='-72' href='#internals-init-run-g1-114'/>
+<use x='40.896' y='-72' href='#internals-init-run-g1-117'/>
+<use x='46.335' y='-72' href='#internals-init-run-g1-110'/>
+<use x='51.774' y='-72' href='#internals-init-run-g1-116'/>
+<use x='55.234' y='-72' href='#internals-init-run-g1-105'/>
+<use x='57.787' y='-72' href='#internals-init-run-g1-109'/>
+<use x='66.001' y='-72' href='#internals-init-run-g1-101'/>
+<use x='73.345' y='-72' href='#internals-init-run-g1-105'/>
+<use x='75.898' y='-72' href='#internals-init-run-g1-109'/>
+<use x='84.112' y='-72' href='#internals-init-run-g1-97'/>
+<use x='89.283' y='-72' href='#internals-init-run-g1-103'/>
+<use x='94.269' y='-72' href='#internals-init-run-g1-101'/>
+</g>
+</g>
+</g>
+</svg>

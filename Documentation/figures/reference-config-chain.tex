@@ -1,0 +1,62 @@
+% SPDX-License-Identifier: BSD-2-Clause
+% Copyright (c) 2026 Authors of shirudo
+%
+% Where a target's settings come from and what authenticates each file:
+% the UKI carries the initrd bootstrap, whose root hash pins the runtime
+% image, whose bootstrap and certificates select and verify the config
+% image (reference/configuration.rst, operate/deploy/boot-integration.rst).
+\documentclass[tikz,dvisvgm]{standalone}
+\usepackage{shirudo-figure}
+
+\begin{document}
+\begin{tikzpicture}
+  \useasboundingbox (0,0) rectangle (840,262);
+
+  \draw[box] (10,10) rectangle (210,206);
+  \draw[box] (310,10) rectangle (530,206);
+  \draw[box] (630,10) rectangle (830,206);
+  \foreach \x/\w in {22/176, 322/196, 642/176}
+    \draw[link, rounded corners=3bp] (\x,74) rectangle ++(\w,96);
+  \draw[frame, draw=fig-muted] (10,222) rectangle (830,256);
+
+  \draw[flow] (198,124) -- (320,124);
+  \draw[flow] (518,108) -- (640,108);
+  \draw[flow] (518,188) -- (604,188) -- (604,150) -- (640,150);
+
+  \begin{scope}[every node/.append style={anchor=base}]
+    \node[title] at (110,34) {UKI};
+    \node[small, note] at (110,54) {signed for Secure Boot};
+    \node[small] at (110,94) {the initrd's bootstrap};
+    \node[mono] at (110,118) {runtime.image};
+    \node[mono] at (110,134) {runtime.root\_hash};
+    \node[mono] at (110,150) {tpm.*};
+
+    \node[title] at (420,34) {Runtime image};
+    \node[small, note] at (420,54) {dm-verity};
+    \node[small] at (420,94) {runtime bootstrap};
+    \node[mono] at (420,112) {config.image};
+    \node[mono] at (420,128) {config.verification\_key};
+    \node[mono] at (420,144) {config.pcr};
+    \node[mono] at (420,160) {tpm.*, tls.*};
+    \node[small] at (420,192) {the config certificates};
+
+    \node[title] at (730,34) {Config image};
+    \node[small, note] at (730,54) {signed dm-verity root};
+    \node[small] at (730,94) {settings and files};
+    \node[mono] at (730,112) {eventlog.*};
+    \node[mono] at (730,128) {map\_export.*};
+    \node[small] at (730,146) {repositories, upatch tree,};
+    \node[small] at (730,162) {node labels, keys};
+
+    \node[small, note] at (259,106) {its root hash};
+    \node[small, note] at (259,148) {pins the image};
+    \node[small, note] at (579,100) {selects it};
+    \node[small, note] at (567,160) {verify};
+    \node[small, note] at (567,176) {its root};
+
+    \node[small, note] at (420,244) {Not authenticated: the host file
+      /etc/shirudo/shirudo.conf, read on operator hosts only, and the
+      unit environment files.};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

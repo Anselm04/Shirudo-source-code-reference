@@ -1,0 +1,5 @@
+# /etc/shirudo/node.labels
+role = edge
+site=fra1
+
+  zone =  b  

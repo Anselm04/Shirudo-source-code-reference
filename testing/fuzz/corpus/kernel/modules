@@ -1,0 +1,5 @@
+nf_tables 368640 2 nft_chain_nat,nft_compat, Live 0x0000000000000000
+nft_chain_nat 12288 1 - Live 0x0000000000000000
+nft_compat 20480 0 - Live 0x0000000000000000
+x_tables 65536 1 nft_compat, Live 0x0000000000000000
+tpm_crb 20480 0 - Live 0x0000000000000000 (E)
