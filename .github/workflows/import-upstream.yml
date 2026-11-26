@@ -1,0 +1,63 @@
+name: Import upstream reference source
+on:
+  push:
+    paths: ['.github/workflows/import-upstream.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: reference-import
+  cancel-in-progress: false
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import pinned reference snapshot without executing upstream code
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git init "$RUNNER_TEMP/upstream"
+          git -C "$RUNNER_TEMP/upstream" remote add origin https://github.com/shirudo-dev/shirudo.git
+          git -C "$RUNNER_TEMP/upstream" fetch --depth=1 origin 2a560729814a9ac0ac702bb15d39c2145522c143
+          git -C "$RUNNER_TEMP/upstream" checkout --detach FETCH_HEAD
+          test "$(git -C "$RUNNER_TEMP/upstream" rev-parse HEAD)" = "2a560729814a9ac0ac702bb15d39c2145522c143"
+          python3 - <<'PY'
+          import os, pathlib, shutil, subprocess, hashlib, re
+          src = pathlib.Path(os.environ['RUNNER_TEMP']) / 'upstream'
+          dst = pathlib.Path.cwd()
+          rows = subprocess.check_output(['git','-C',str(src),'ls-files','--stage','-z']).decode().split('\0')
+          copied, excluded = [], []
+          for row in filter(None, rows):
+              attrs, name = row.split('\t',1)
+              mode, expected, stage = attrs.split()
+              p = src / name
+              if name.startswith('.github/workflows/') or mode not in ('100644','100755') or not p.is_file() or p.is_symlink():
+                  excluded.append(name); continue
+              data = p.read_bytes()
+              if 'Shirudo' == 'Archestra' and name not in ('LICENSE.md','LICENSE_AGPL','LICENSE_ENTERPRISE'):
+                  if 'ee' in pathlib.PurePosixPath(name).parts or re.search(r'\.ee\.',name) or b'LicenseRef-Archestra-Enterprise' in data or b'SPDX-SnippetBegin' in data:
+                      excluded.append(name); continue
+              if len(data) >= 100 * 1024 * 1024:
+                  excluded.append(name); continue
+              actual = hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+              if actual != expected:
+                  excluded.append(name); continue
+              target = dst / name
+              target.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(p,target)
+              copied.append(expected+'  '+name)
+          meta = dst / '.trillionai-reference'
+          meta.mkdir(exist_ok=True)
+          (meta/'SOURCE.txt').write_text('Upstream: https://github.com/shirudo-dev/shirudo\nRevision: 2a560729814a9ac0ac702bb15d39c2145522c143\nSource snapshot; upstream automation, unsupported entries, and restricted enterprise code where applicable excluded. Original licences retained. Commercial reuse requires licence audit.\nCopied files: '+str(len(copied))+'\nExcluded files: '+str(len(excluded))+'\n')
+          (meta/'FILES.txt').write_text('\n'.join(copied)+'\n')
+          (meta/'EXCLUDED.txt').write_text('\n'.join(excluded)+'\n')
+          assert copied
+          print('Copied:',len(copied),'Excluded:',len(excluded))
+          PY
+          git add -A
+          git commit -m "Import pinned upstream reference source snapshot"
+          git push origin HEAD:main
